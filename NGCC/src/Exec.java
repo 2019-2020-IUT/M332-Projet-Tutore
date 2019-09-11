@@ -41,6 +41,7 @@ public class Exec {
 			}
 
 			
+			
 		} catch (ArrayIndexOutOfBoundsException e) {
 			CommandLine cmd = new CommandLine(new Help());
 			System.out.println(cmd.execute(args));
