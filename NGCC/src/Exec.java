@@ -32,12 +32,12 @@ public class Exec {
 				CommandLine cmd = new CommandLine(new Evaluate());
 				cmd.execute(args);
 				
-			} else if (args[0].contentEquals("--help")) {
+			} else if (args[0].contentEquals("help") || args[0].contentEquals("--help")) {
 				CommandLine cmd = new CommandLine(new Help());
 				cmd.execute(args);
 				
 			} else {
-				System.out.println(args[0] + " : command not found");
+				System.err.println("NGCC: "+args[0] + " : command not found");
 			}
 
 			
