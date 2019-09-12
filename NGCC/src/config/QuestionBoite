@@ -1,0 +1,13 @@
+package config;
+
+public class QuestionBoite extends Question{
+private int nbligne;
+
+public int getNbligne() {
+	return nbligne;
+}
+
+public void setNbligne(int nbligne) {
+	this.nbligne = nbligne;
+}
+}
