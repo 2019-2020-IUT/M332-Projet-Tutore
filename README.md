@@ -6,7 +6,7 @@ NGCC - Nicely Generated and Corrected Copies
 
 **Auteurs**
 ============ 
-- Anthony DuBaou
+- Anthony Malvesin
 - Antoine Héraud
 - Arnaud Lysensoone-Bijou
 - Audouard Florian
