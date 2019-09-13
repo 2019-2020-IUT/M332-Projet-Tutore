@@ -2,12 +2,12 @@
 
 **Nom du projet
 **
-
+============ 
 NGCC - Nicely Generated and Corrected Copies
 
 **Auteurs
 **
-
+============ 
 - Anthony DuBaou
 - Antoine Héraud
 - Arnaud Lysensoone-Bijou
@@ -30,8 +30,10 @@ NGCC - Nicely Generated and Corrected Copies
 
 **Présentation du projet
 **
-
+============ 
 
 **Comment l'utiliser:
 **
+============ 
+
 
