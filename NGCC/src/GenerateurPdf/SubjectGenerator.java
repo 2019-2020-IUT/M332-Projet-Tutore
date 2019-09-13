@@ -1,4 +1,4 @@
-package util;
+package GenerateurPdf;
 
 import java.awt.Color;
 import java.io.IOException;
@@ -83,12 +83,20 @@ public class SubjectGenerator {
 				pdPageContentStream.newLineAtOffset(width - 236, height - 156);
 				pdPageContentStream.showText("Ecrivez votre Nom");
 				pdPageContentStream.endText();
+				// --- TODO : a optimiser --- \\
 				// dot lines
 				pdPageContentStream.moveTo(width - 233, height - 175);
 				for (int i = (width - 233); i <= (width - 90); i += 3) {
 					pdPageContentStream.lineTo(i, height - 175);
 					pdPageContentStream.moveTo(i + 2, height - 175);
+
 				}
+				pdPageContentStream.moveTo(width - 233, height - 190);
+				for (int i = (width - 233); i <= (width - 90); i += 3) {
+					pdPageContentStream.lineTo(i, height - 190);
+					pdPageContentStream.moveTo(i + 2, height - 190);
+				}
+				// --- TODO : a optimiser --- \\
 
 				pdPageContentStream.stroke(); // stroke
 
@@ -101,6 +109,34 @@ public class SubjectGenerator {
 
 				// pdPageContentStream.lineTo(width - 28, height - 239);
 				pdPageContentStream.stroke(); // stroke
+
+				pdPageContentStream.setFont(font, 11);
+
+				// number (top of page) +n/n/nn+
+				pdPageContentStream.beginText();
+				pdPageContentStream.newLineAtOffset((width / 2) + 86, height - 30);
+				pdPageContentStream.showText("+1/1/60+");
+				pdPageContentStream.endText();
+
+				pdPageContentStream.setFont(font, 12);
+				// Sujet
+				// center text : https://stackoverflow.com/a/6531362
+				String subject = "Exemple PT S3T : de 1970 à l’an 2000, 30 ans d’histoire";
+				int fontSize = 12;
+				float titleWidth = (font.getStringWidth(subject) / 1000) * fontSize;
+				float titleHeight = (font.getFontDescriptor().getFontBoundingBox().getHeight() / 1000) * fontSize;
+				pdPageContentStream.beginText();
+				pdPageContentStream.newLineAtOffset((width - titleWidth) / 2, (height - 57 - titleHeight));
+				pdPageContentStream.showText(subject);
+				pdPageContentStream.endText();
+
+				String subtitle = "Tricherie : Toutes consultations de sources numériques sont interdites !!";
+				titleWidth = (font.getStringWidth(subtitle) / 1000) * fontSize;
+				pdPageContentStream.beginText();
+				pdPageContentStream.newLineAtOffset((width - titleWidth) / 2, (height - 71 - titleHeight));
+				pdPageContentStream.showText(subtitle);
+				pdPageContentStream.endText();
+
 				pdPageContentStream.close();
 
 			} catch (IOException ioe) {
