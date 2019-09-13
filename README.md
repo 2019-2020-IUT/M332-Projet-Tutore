@@ -1,8 +1,12 @@
 # NGCC - Projet Tutoré S3TG4
 
+**Nom du projet
+**
+
 NGCC - Nicely Generated and Corrected Copies
 
-##Membres
+**Auteurs
+**
 
 - Anthony DuBaou
 - Antoine Héraud
@@ -20,3 +24,14 @@ NGCC - Nicely Generated and Corrected Copies
 - Poissonier Hugo
 - Saad Ahmed
 - Yessine Ben El Bey
+
+
+
+
+**Présentation du projet
+**
+
+
+**Comment l'utiliser:
+**
+
