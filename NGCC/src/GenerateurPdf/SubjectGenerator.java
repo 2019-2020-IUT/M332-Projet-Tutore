@@ -25,10 +25,40 @@ public class SubjectGenerator {
 		contentStream.fill();
 	}
 
+	public static PDDocument generateFooter(PDDocument pdDocument) {
+		int nbTotal = pdDocument.getNumberOfPages();
+		int count = 1;
+
+		try {
+			for (PDPage page : pdDocument.getPages()) {
+				PDPageContentStream pdPageContentStream = new PDPageContentStream(pdDocument, page,
+						PDPageContentStream.AppendMode.APPEND, true);
+				PDFont font = PDType1Font.TIMES_ROMAN;
+				int width = (int) page.getMediaBox().getWidth();
+				int fontSize = 10;
+				pdPageContentStream.setFont(font, fontSize);
+				String footer = String.valueOf(count) + " / " + String.valueOf(nbTotal);
+				float titleWidth = (font.getStringWidth(footer) / 1000) * fontSize;
+				float titleHeight = (font.getFontDescriptor().getFontBoundingBox().getHeight() / 1000) * fontSize;
+				pdPageContentStream.beginText();
+				pdPageContentStream.newLineAtOffset((width - titleWidth) / 2, (35 - titleHeight));
+				pdPageContentStream.showText(footer);
+				pdPageContentStream.endText();
+				pdPageContentStream.close();
+				count++;
+			}
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		}
+		return pdDocument;
+
+	}
+
 	public static PDDocument generateMarks(PDDocument pdDocument) {
 		for (PDPage page : pdDocument.getPages()) {
 			try {
-				PDPageContentStream pdPageContentStream = new PDPageContentStream(pdDocument, page);
+				PDPageContentStream pdPageContentStream = new PDPageContentStream(pdDocument, page,
+						PDPageContentStream.AppendMode.APPEND, true);
 				PDFont font = PDType1Font.TIMES_ROMAN;
 
 				int height = (int) page.getMediaBox().getHeight();
@@ -118,11 +148,11 @@ public class SubjectGenerator {
 				pdPageContentStream.showText("+1/1/60+");
 				pdPageContentStream.endText();
 
-				pdPageContentStream.setFont(font, 12);
 				// Sujet
 				// center text : https://stackoverflow.com/a/6531362
 				String subject = "Exemple PT S3T : de 1970 à l’an 2000, 30 ans d’histoire";
 				int fontSize = 12;
+				pdPageContentStream.setFont(font, fontSize);
 				float titleWidth = (font.getStringWidth(subject) / 1000) * fontSize;
 				float titleHeight = (font.getFontDescriptor().getFontBoundingBox().getHeight() / 1000) * fontSize;
 				pdPageContentStream.beginText();
@@ -135,6 +165,36 @@ public class SubjectGenerator {
 				pdPageContentStream.beginText();
 				pdPageContentStream.newLineAtOffset((width - titleWidth) / 2, (height - 71 - titleHeight));
 				pdPageContentStream.showText(subtitle);
+				pdPageContentStream.endText();
+
+				fontSize = 10;
+
+				// 1st line
+				pdPageContentStream.setFont(font, fontSize);
+				String numConsignePart1 = "          Veuillez coder votre numéro";
+
+				titleWidth = (font.getStringWidth(numConsignePart1) / 1000) * fontSize;
+				pdPageContentStream.beginText();
+				pdPageContentStream.newLineAtOffset(width - 224, height - 94 - titleHeight);
+				pdPageContentStream.showText(numConsignePart1);
+				pdPageContentStream.endText();
+
+				// 2nd line
+				String numConsignePart2 = " d’étudiant ci-contre et écrire votre nom";
+
+				titleWidth = (font.getStringWidth(numConsignePart2) / 1000) * fontSize;
+				pdPageContentStream.beginText();
+				pdPageContentStream.newLineAtOffset(width - 244, height - 105 - titleHeight);
+				pdPageContentStream.showText(numConsignePart2);
+				pdPageContentStream.endText();
+
+				// 3rd line
+				String numConsignePart3 = " dans la case ci-dessous.";
+
+				titleWidth = (font.getStringWidth(numConsignePart3) / 1000) * fontSize;
+				pdPageContentStream.beginText();
+				pdPageContentStream.newLineAtOffset(width - 244, height - 118 - titleHeight);
+				pdPageContentStream.showText(numConsignePart3);
 				pdPageContentStream.endText();
 
 				pdPageContentStream.close();
@@ -159,12 +219,17 @@ public class SubjectGenerator {
 		// Create a Document object.
 		PDDocument pdDocument = new PDDocument();
 		// Create a Page object
-		PDPage pdPage = new PDPage(PDRectangle.A4);
+		PDPage pdPage1 = new PDPage(PDRectangle.A4);
+		PDPage pdPage2 = new PDPage(PDRectangle.A4);
+		PDPage pdPage3 = new PDPage(PDRectangle.A4);
 
 		// Add the page to the document and save the document to a desired file.
-		pdDocument.addPage(pdPage);
+		pdDocument.addPage(pdPage1);
+		pdDocument.addPage(pdPage2);
+		pdDocument.addPage(pdPage3);
 
 		pdDocument = SubjectGenerator.generateMarks(pdDocument);
+		pdDocument = SubjectGenerator.generateFooter(pdDocument);
 
 		// pdDocument.save("C:\\Users\\Nico\\Desktop\\testPDFMarks.pdf");
 		pdDocument.save("E:\\testPDFMarks.pdf");
