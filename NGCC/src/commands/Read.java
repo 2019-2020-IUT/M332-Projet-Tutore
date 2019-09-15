@@ -1,25 +1,28 @@
 package commands;
+
+import picocli.CommandLine;
+import picocli.CommandLine.*;
+import progressbar.ProgressBar;
+
+import java.io.PrintStream;
 import java.util.concurrent.Callable;
 
-//import picocli.CommandLine;
-import picocli.CommandLine.*;
 
+
+@SuppressWarnings("unused")
 
 @Command(
-	name = "read",
+	name = "-r",
 	version = "Version 1.0",
 	sortOptions = false,
 	usageHelpWidth = 60,
-	header = " --  Nicely Generated and Corrected Copies  -- \n",
+	header = "Read command",
 	footer = "\n Provided by IUT Info Nice S3T-G4",
 	description = "description"		
 )
 
 
 public class Read implements Callable <Void> {
-	
-	@Option(names= {"-r","--read"}, arity = "0", order = 1, description = "read mode")
-	boolean read;
 	
 	@Option(names= {"-u"}, arity = "1", order = 2, description = "update mode")
 	int step;
@@ -37,6 +40,11 @@ public class Read implements Callable <Void> {
 	String source_path;
 	
 	
+	public Read(PrintStream out) {
+		
+		
+	}
+
 	public boolean isCsv(String file) {
 		return file.endsWith(".csv");
 		
@@ -44,23 +52,30 @@ public class Read implements Callable <Void> {
 
 	@Override
 	public Void call() throws Exception {
-		if(read) {
-			System.out.println("Read mode activated ...");
-			System.out.println("Update : "+step);
-			System.out.println("Verbose : "+vb_level);
-			System.out.println("Directory : "+directory_name);
-			
-			if (isCsv(result_name)) {
-				System.out.println("Result : "+result_name);
-			}
-			else {
-				System.out.println("The specified for the result file is invalid");
-			}
-			
-			System.out.println("Source : "+source_path);
-		}
 		
-			return null;
 		
+		ProgressBar bar = new ProgressBar();
+		
+        System.out.println("\nReading pdf ...\n");
+
+        bar.update(0, 1000);
+        for(int i=0;i<1000;i++) {
+                        // do something!
+            for(int j=0;j<10000000;j++)
+                for(int p=0;p<10000000;p++);
+            // update the progress bar
+            bar.update(i, 1000);
+        }
+        
+        System.out.println("\nCopies correction succeed !\n");
+		
+		
+			System.out.println("\nUpdate : "+step               +"\n"+
+							   "Verbose : "+vb_level          +"\n"+
+							   "Directory : "+directory_name  +"\n"+
+							   "Result : "+result_name        +"\n"+
+							   "Source : "+source_path        +"\n");
+		
+			return null;	
 	}
 }

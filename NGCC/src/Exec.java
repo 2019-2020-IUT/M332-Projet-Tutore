@@ -1,52 +1,42 @@
-
-import commands.*;
+import java.util.concurrent.Callable;
+import commands.Read;
 import picocli.CommandLine;
+import picocli.CommandLine.*;
 
-public class Exec {
+@Command(
+		name = "Exec",
+		version = "Version 1.0",
+		sortOptions = false,
+		usageHelpWidth = 60,
+		header = "\n ----  Nicely Generated and Corrected Copies  ----        \n\n" +
+				 "  _______    _________________  ________              \n" +											 
+				 "  \\      \\  /  _____/\\_   ___ \\\\_   ___ \\       \n"	+											
+				 "  /   |   \\/   \\  ___/    \\  \\//    \\  \\/       \n"	+											 
+				 " /    |    \\    \\_ \\ \\     \\___\\     \\___      \n"	+			
+			     " \\____|__  /\\______  /\\______  /\\______  /        \n"	+										
+				 "         \\/        \\/        \\/        \\/         \n"	+
+				 "  											        \n" ,
+		footer = "\n\n  ---- Provided by IUT Info Nice S3T-G4 ---- \n",
+		description = "description"		
+	)
 
-	public static void main(String[] args) {
 
-		try {
+public class Exec implements Callable <Void> {
 
-			if (args[0].contentEquals("-b") || args[0].contentEquals("--build")) {
-				CommandLine cmd = new CommandLine(new Build());
-				cmd.execute(args);
-				
-			} else if (args[0].contentEquals("-r") || args[0].contentEquals("--read")) {
-				CommandLine cmd = new CommandLine(new Read());
-				cmd.execute(args);
-				
-			} else if (args[0].contentEquals("-g") || args[0].contentEquals("--generate")) {
-				CommandLine cmd = new CommandLine(new Generate());
-				cmd.execute(args);
-				
-			} else if (args[0].contentEquals("-p") || args[0].contentEquals("--produce")) {
-				CommandLine cmd = new CommandLine(new Produce());
-				cmd.execute(args);
-				
-			} else if (args[0].contentEquals("-a") || args[0].contentEquals("--analyse")) {
-				CommandLine cmd = new CommandLine(new Analyse());
-				cmd.execute(args);
-				
-			} else if (args[0].contentEquals("-e") || args[0].contentEquals("--evaluate")) {
-				CommandLine cmd = new CommandLine(new Evaluate());
-				cmd.execute(args);
-				
-			} else if (args[0].contentEquals("help") || args[0].contentEquals("--help")) {
-				CommandLine cmd = new CommandLine(new Help());
-				cmd.execute(args);
-				
-			} else {
-				System.err.println("NGCC: "+args[0] + " : command not found");
-			}
-
-			
-			
-		} catch (ArrayIndexOutOfBoundsException e) {
-			CommandLine cmd = new CommandLine(new Help());
-			System.out.println(cmd.execute(args));
-		}
-
+	public static void main(String[] args) throws InterruptedException {
+		
+		CommandLine cmd = new CommandLine (new Exec())
+				.addSubcommand("-r", new Read(System.out))
+				.addSubcommand("help", new HelpCommand());
+		
+		cmd.execute(args);
+		
 	}
 
+	@Override
+	public Void call() throws Exception {
+		
+		return null;
+	}
+		
 }

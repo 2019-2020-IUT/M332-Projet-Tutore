@@ -6,7 +6,7 @@ import picocli.CommandLine.*;
 
 
 @Command(
-	name = "help",
+	name = "Help command",
 	version = "Version 1.0",
 	sortOptions = false,
 	usageHelpWidth = 60,
