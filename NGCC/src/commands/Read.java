@@ -16,13 +16,21 @@ import java.util.concurrent.Callable;
 	version = "Version 1.0",
 	sortOptions = false,
 	usageHelpWidth = 60,
-	header = "Read command",
-	footer = "\n Provided by IUT Info Nice S3T-G4",
-	description = "description"		
+	header = "Read command - Automatic entry",
+	footer = "",
+	description = "\nAnalyzes all scanned copies (pdf files) provided to recognize student's name and mark.\n"		
 )
 
 
+
+
 public class Read implements Callable <Void> {
+	
+	@Spec
+	Model.CommandSpec spec;
+	
+	@Option(names= {"-help"}, arity = "0", order = 1, description = "command help")
+	boolean help;
 	
 	@Option(names= {"-u"}, arity = "1", order = 2, description = "update mode")
 	int step;
@@ -40,42 +48,66 @@ public class Read implements Callable <Void> {
 	String source_path;
 	
 	
+	// Flux de sortie si nécéssaire
 	public Read(PrintStream out) {
-		
-		
 	}
 
-	public boolean isCsv(String file) {
-		return file.endsWith(".csv");
-		
-	}
+	
+//	public boolean isCsv(String file) {
+//		return file.endsWith(".csv");
+//		
+//	}
+	
 
 	@Override
 	public Void call() throws Exception {
 		
+		if(help) {
+			CommandLine.usage(this.spec, System.out);
+		}
+		else {
 		
-		ProgressBar bar = new ProgressBar();
+			
+//************* Progress Bar Prototype **************	
 		
-        System.out.println("\nReading pdf ...\n");
+//		ProgressBar bar = new ProgressBar();
+//		
+//        System.out.println("\nReading pdf ...\n");
+//
+//        bar.update(0, 1000);
+//        for(int i=0;i<1000;i++) {
+//                        // do something!
+//            for(int j=0;j<10000000;j++)
+//                for(int p=0;p<10000000;p++);
+//            // update the progress bar
+//            bar.update(i, 1000);
+//        }
+//        
+//        System.out.println("\nCopies correction succeed !\n");
 
-        bar.update(0, 1000);
-        for(int i=0;i<1000;i++) {
-                        // do something!
-            for(int j=0;j<10000000;j++)
-                for(int p=0;p<10000000;p++);
-            // update the progress bar
-            bar.update(i, 1000);
-        }
-        
-        System.out.println("\nCopies correction succeed !\n");
+//***************************************************
 		
-		
-			System.out.println("\nUpdate : "+step               +"\n"+
-							   "Verbose : "+vb_level          +"\n"+
-							   "Directory : "+directory_name  +"\n"+
-							   "Result : "+result_name        +"\n"+
-							   "Source : "+source_path        +"\n");
-		
+			
+			System.out.println("\nRead mode activated ...\n");		   // Debug des paramètres à exploiter plus tard
+			System.out.println("Update : "+step               +"\n"+
+							   "Verbose : "+vb_level            +"\n"+
+							   "Directory : "+directory_name    +"\n"+
+							   "Result : "+result_name          +"\n"+
+							   "Source : "+source_path          +"\n");
+			
+			
+//			********VOIR EQUIPE********
+			
+//			List imgList = PdfConvertor.toImage(directory_name); //retourne liste d'images
+//			
+//			CSV.setConfig(source_path);
+//			Map resultMap = OCR.read(imgList); // retourne HMap nom - note par ex
+//			
+//			ExportCSV.createCSV(resultMap,result_name);  // crée fichier csv selon HMAp avec le nom donné
+			
+			
+			
+		}
 			return null;	
 	}
 }

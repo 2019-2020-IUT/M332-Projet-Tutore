@@ -1,26 +1,31 @@
 package commands;
+import java.io.PrintStream;
 import java.util.concurrent.Callable;
 
+import picocli.CommandLine;
 //import picocli.CommandLine;
 import picocli.CommandLine.*;
 
 
 @Command(
-	name = "analyse",
+	name = "-a",
 	version = "Version 1.0",
 	sortOptions = false,
 	usageHelpWidth = 60,
-	header = " --  Nicely Generated and Corrected Copies  -- \n",
-	footer = "\n Provided by IUT Info Nice S3T-G4",
-	description = "description"		
+	header = "Analyse command - Questions' answers identification",
+	footer = "",
+	description = "\nAnalyzes scanned copies (pdf files) provided to identify student and questions' answers\n"		
 )
 
 
 public class Analyse implements Callable <Void> {
 	
-	@Option(names= {"-a","--analyse"}, arity = "0", order = 1, description = "analyse mode")
-	boolean analyse;
+	@Spec
+	Model.CommandSpec spec;
 	
+	@Option(names= {"-help"}, arity = "0", order = 1, description = "command help")
+	boolean help;
+
 	@Option(names= {"-u"}, arity = "1", order = 2, description = "update mode")
 	int step;
 	
@@ -28,24 +33,33 @@ public class Analyse implements Callable <Void> {
 	int vb_level;
 	
 	@Option(names= {"-d"}, arity = "1", order = 4, defaultValue = "copies", description ="directory")
-	String directory;
+	String directory_name;
 	
 	@Parameters(arity = "0..1", defaultValue = "./source.txt", description ="source path")
 	String source_path;
 	
 	
+	
+	public Analyse(PrintStream out) {	
+	}
 
 
 	@Override
 	public Void call() throws Exception {
-		if(analyse) {
-			System.out.println("Analyse mode activated ...");
-			System.out.println("Update : "+step);
-			System.out.println("Verbose : "+vb_level);
-			System.out.println("Directory : "+directory);			
-			System.out.println("Source : "+source_path);
-		}
 		
+		if(help){
+			CommandLine.usage(this.spec, System.out);
+		}
+		else {
+	
+		
+		System.out.println("\nAnalyse mode activated ...\n");
+		System.out.println("Update : "+step               +"\n"+
+						   "Verbose : "+vb_level            +"\n"+
+						   "Directory : "+directory_name    +"\n"+
+						   "Source : "+source_path          +"\n");
+		
+		}
 			return null;
 		
 	}

@@ -1,25 +1,30 @@
 package commands;
+import java.io.PrintStream;
 import java.util.concurrent.Callable;
 
+import picocli.CommandLine;
 //import picocli.CommandLine;
 import picocli.CommandLine.*;
 
 
 @Command(
-	name = "produce",
+	name = "-p",
 	version = "Version 1.0",
 	sortOptions = false,
 	usageHelpWidth = 60,
-	header = " --  Nicely Generated and Corrected Copies  -- \n",
-	footer = "\n Provided by IUT Info Nice S3T-G4",
+	header = "Produce command - Correction subject generation",
+	footer = "\nProduce correction subject associated to the source file.\n",
 	description = "description"		
 )
 
 
 public class Produce implements Callable <Void> {
 	
-	@Option(names= {"-p","--produce"}, arity = "0", order = 1, description = "produce mode")
-	boolean produce;
+	@Spec
+	Model.CommandSpec spec;
+	
+	@Option(names= {"-help"}, arity = "0", order = 1, description = "command help")
+	boolean help;
 	
 	@Option(names= {"-u"}, arity = "1", order = 2, description = "update mode")
 	int step;
@@ -34,27 +39,29 @@ public class Produce implements Callable <Void> {
 	String source_path;
 	
 	
-	public boolean isPdf(String file) {
-		return file.endsWith(".pdf");
-		
+//	public boolean isPdf(String file) {
+//		return file.endsWith(".pdf");
+//		
+//	}
+	
+	
+	public Produce(PrintStream out) {
 	}
+	
 
 	@Override
 	public Void call() throws Exception {
-		if(produce) {
-			System.out.println("Produce mode activated ...");
-			System.out.println("Update : "+step);
-			System.out.println("Verbose : "+vb_level);
-			
-			if (isPdf(sheet_name)) {
-				System.out.println("Sheet : "+sheet_name);
-			}
-			else {
-				System.out.println("The specified name for the result file is invalid");
-				//System.out.println("Sheet : "+sheet_name+".pdf");
-			}
-			
-			System.out.println("Source : "+source_path);
+		
+		if(help){
+			CommandLine.usage(this.spec, System.out);
+		}
+		else {
+		
+		System.out.println("\nProduce mode activated ...\n");
+		System.out.println("Update : "+step               +"\n"+
+						   "Verbose : "+vb_level            +"\n"+
+						   "Sheet : "+sheet_name            +"\n"+
+						   "Source : "+source_path          +"\n");
 		}
 		
 			return null;

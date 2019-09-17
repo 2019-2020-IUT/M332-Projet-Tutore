@@ -1,25 +1,31 @@
 package commands;
+import java.io.PrintStream;
 import java.util.concurrent.Callable;
 
+import picocli.CommandLine;
 //import picocli.CommandLine;
 import picocli.CommandLine.*;
 
 
 @Command(
-	name = "evaluate",
+	name = "-e",
 	version = "Version 1.0",
 	sortOptions = false,
 	usageHelpWidth = 60,
-	header = " --  Nicely Generated and Corrected Copies  -- \n",
-	footer = "\n Provided by IUT Info Nice S3T-G4",
-	description = "description"		
+	header = "Evaluate command - Mark evaluation ",
+	footer = "",
+	description = "\nEvaluate each copies' mark based on the analysis performed previously."
+				+ " Can be executed several times to take changes into account.\n"		
 )
 
 
 public class Evaluate implements Callable <Void> {
 	
-	@Option(names= {"-e","--evaluate"}, arity = "0", order = 1, description = "evaluate mode")
-	boolean evaluate;
+	@Spec
+	Model.CommandSpec spec;
+	
+	@Option(names= {"-help"}, arity = "0", order = 1, description = "command help")
+	boolean help;
 	
 	@Option(names= {"-u"}, arity = "1", order = 2, description = "update mode")
 	int step;
@@ -34,27 +40,29 @@ public class Evaluate implements Callable <Void> {
 	String source_path;
 	
 	
-	public boolean isCsv(String file) {
-		return file.endsWith(".csv");
-		
+//	public boolean isCsv(String file) {
+//		return file.endsWith(".csv");
+//		
+//	}
+	
+	
+	public Evaluate(PrintStream out) {	
 	}
 
+	
 	@Override
 	public Void call() throws Exception {
-		if(evaluate) {
-			System.out.println("Generate mode activated ...");
-			System.out.println("Update : "+step);
-			System.out.println("Verbose : "+vb_level);
-			
-			if (isCsv(result_name)) {
-				System.out.println("Result : "+result_name);
-			}
-			else {
-				System.out.println("The specified name for the result file is invalid");
-				//System.out.println("Result : "+result_name+".csv");
-			}
-			
-			System.out.println("Source : "+source_path);
+		
+		if(help){
+			CommandLine.usage(this.spec, System.out);
+		}
+		else {
+		
+		System.out.println("\nEvaluate mode activated ...\n");
+		System.out.println("Update : "+step               +"\n"+
+						   "Verbose : "+vb_level            +"\n"+
+						   "Result : "+result_name          +"\n"+
+						   "Source : "+source_path          +"\n");
 		}
 		
 			return null;
