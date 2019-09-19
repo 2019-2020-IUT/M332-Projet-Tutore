@@ -87,51 +87,7 @@ public class SubjectGenerator {
 					// + 9 * i = position du ieme carre
 				}
 
-				// generate rectangles numero etudiant
-				for (int i = 0; i <= 9; i++) {
-					// draw first range of rectangles
-					pdPageContentStream.addRect(80 + (22 * i), height - 107, 11, 11);
-					// write first range of numbers
-					pdPageContentStream.beginText();
-					pdPageContentStream.newLineAtOffset(80 + (22 * i) + 12, height - 105);
-					pdPageContentStream.showText(String.valueOf(i));
-					pdPageContentStream.endText();
-					// draw second range of rectangles
-					pdPageContentStream.addRect(80 + (22 * i), height - 124, 11, 11);
-					// write second range of numbers
-					pdPageContentStream.beginText();
-					pdPageContentStream.newLineAtOffset(80 + (22 * i) + 12, height - 122);
-					pdPageContentStream.showText(String.valueOf(i));
-					pdPageContentStream.endText();
-				}
-
 				pdPageContentStream.setFont(font, 10);
-				// generate rectangle nom
-				pdPageContentStream.addRect(width - 238, height - 196, 155, 50); // RECT
-				// text
-				pdPageContentStream.beginText();
-				pdPageContentStream.newLineAtOffset(width - 236, height - 156);
-				pdPageContentStream.showText("Ecrivez votre Nom");
-				pdPageContentStream.endText();
-				// --- TODO : a optimiser --- \\
-				// dot lines
-				pdPageContentStream.moveTo(width - 233, height - 175);
-				for (int i = (width - 233); i <= (width - 90); i += 3) {
-					pdPageContentStream.lineTo(i, height - 175);
-					pdPageContentStream.moveTo(i + 2, height - 175);
-
-				}
-				pdPageContentStream.moveTo(width - 233, height - 190);
-				for (int i = (width - 233); i <= (width - 90); i += 3) {
-					pdPageContentStream.lineTo(i, height - 190);
-					pdPageContentStream.moveTo(i + 2, height - 190);
-				}
-				// --- TODO : a optimiser --- \\
-
-				pdPageContentStream.stroke(); // stroke
-
-				// pdPageContentStream.fill();
-				pdPageContentStream.closeAndStroke();
 
 				// draw the separative line
 				pdPageContentStream.moveTo(28, height - 239);
@@ -206,6 +162,101 @@ public class SubjectGenerator {
 		return pdDocument;
 	}
 
+	/*
+	 * public static PDDocument generateIDPageArea(PDDocument pdDocument) {
+	 *
+	 * }
+	 */
+
+	public static PDDocument generateNameArea(PDDocument pdDocument) {
+		try {
+			PDPage page = pdDocument.getPage(0);
+			PDPageContentStream pdPageContentStream = new PDPageContentStream(pdDocument, page,
+					PDPageContentStream.AppendMode.APPEND, true);
+			PDFont font = PDType1Font.TIMES_ROMAN;
+
+			// Set a Color for the marks
+			pdPageContentStream.setNonStrokingColor(Color.BLACK);
+			pdPageContentStream.setNonStrokingColor(0, 0, 0); // black text
+			pdPageContentStream.setFont(font, 9);
+
+			int height = (int) page.getMediaBox().getHeight();
+			int width = (int) page.getMediaBox().getWidth();
+
+			// generate rectangle nom
+			pdPageContentStream.addRect(width - 238, height - 196, 155, 50); // RECT
+			// text
+			pdPageContentStream.beginText();
+			pdPageContentStream.newLineAtOffset(width - 236, height - 156);
+			pdPageContentStream.showText("Ecrivez votre Nom");
+			pdPageContentStream.endText();
+			// --- TODO : a optimiser --- \\
+			// dot lines
+			pdPageContentStream.moveTo(width - 233, height - 175);
+			for (int i = (width - 233); i <= (width - 90); i += 3) {
+				pdPageContentStream.lineTo(i, height - 175);
+				pdPageContentStream.moveTo(i + 2, height - 175);
+
+			}
+			pdPageContentStream.moveTo(width - 233, height - 190);
+			for (int i = (width - 233); i <= (width - 90); i += 3) {
+				pdPageContentStream.lineTo(i, height - 190);
+				pdPageContentStream.moveTo(i + 2, height - 190);
+			}
+			// --- TODO : a optimiser --- \\
+
+			pdPageContentStream.stroke(); // stroke
+
+			// pdPageContentStream.fill();
+			pdPageContentStream.closeAndStroke();
+
+			pdPageContentStream.close();
+
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		}
+		return pdDocument;
+	}
+
+	public static PDDocument generateNumEtudArea(PDDocument pdDocument) {
+		try {
+			PDPage page = pdDocument.getPage(0);
+			PDPageContentStream pdPageContentStream = new PDPageContentStream(pdDocument, page,
+					PDPageContentStream.AppendMode.APPEND, true);
+			PDFont font = PDType1Font.TIMES_ROMAN;
+
+			// Set a Color for the marks
+			pdPageContentStream.setNonStrokingColor(Color.BLACK);
+			pdPageContentStream.setNonStrokingColor(0, 0, 0); // black text
+			pdPageContentStream.setFont(font, 9);
+
+			int height = (int) page.getMediaBox().getHeight();
+
+			// generate rectangles numero etudiant
+			for (int i = 0; i <= 9; i++) {
+				// draw first range of rectangles
+				pdPageContentStream.addRect(80 + (22 * i), height - 107, 11, 11);
+				// write first range of numbers
+				pdPageContentStream.beginText();
+				pdPageContentStream.newLineAtOffset(80 + (22 * i) + 12, height - 105);
+				pdPageContentStream.showText(String.valueOf(i));
+				pdPageContentStream.endText();
+				// draw second range of rectangles
+				pdPageContentStream.addRect(80 + (22 * i), height - 124, 11, 11);
+				// write second range of numbers
+				pdPageContentStream.beginText();
+				pdPageContentStream.newLineAtOffset(80 + (22 * i) + 12, height - 122);
+				pdPageContentStream.showText(String.valueOf(i));
+				pdPageContentStream.endText();
+			}
+
+			pdPageContentStream.close();
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		}
+		return pdDocument;
+	}
+
 	public void generateHeader(PDDocument pdDocument) {
 		try {
 			PDPageContentStream pdPageContentStream = new PDPageContentStream(pdDocument, pdDocument.getPage(0));
@@ -229,6 +280,8 @@ public class SubjectGenerator {
 		pdDocument.addPage(pdPage3);
 
 		pdDocument = SubjectGenerator.generateMarks(pdDocument);
+		pdDocument = SubjectGenerator.generateNumEtudArea(pdDocument);
+		pdDocument = SubjectGenerator.generateNameArea(pdDocument);
 		pdDocument = SubjectGenerator.generateFooter(pdDocument);
 
 		// pdDocument.save("C:\\Users\\Nico\\Desktop\\testPDFMarks.pdf");
