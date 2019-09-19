@@ -1,4 +1,4 @@
-package genCSV;
+package csv;
 
 public class Generate {
 
