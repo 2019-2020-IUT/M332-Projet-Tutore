@@ -3,13 +3,22 @@ package config;
 import java.util.ArrayList;
 
 public class Question {
-	private String titre; // intitulé de la question
-	private boolean multiple = false; // boolean pour savoir si c'est une question à choix multiple
+	private String titre; // intitul de la question
+	private int coeff; // coefficient de la question, vide par dÃ©faut mais c'est une option possible
+	private boolean multiple = false; // boolean pour savoir si c'est une question choix multiple
 	private ArrayList<Reponse> reponses = new ArrayList<Reponse>(); // liste des reponses
 
+    //constructeur d'une question sans coeff
 	public Question(String t, boolean b) {
 		titre = t;
 		multiple = b;
+	}
+	
+	//constructeur d'une question avec coeff
+	public Question(String t, boolean b, int n) {
+		titre = t;
+		multiple = b;
+		coeff = n
 	}
 
 	public ArrayList<Reponse> getReponses() {
@@ -20,6 +29,14 @@ public class Question {
 		this.reponses = reponses;
 	}
 
+    public String getCoeff() {
+		return coeff;
+	}
+
+	public void setCoeff(int n) {
+		this.coeff = n;
+	}
+	
 	public String getTitre() {
 		return titre;
 	}
@@ -36,7 +53,7 @@ public class Question {
 		this.multiple = multiple;
 	}
 
-//rajout des reponses à la question
+//rajout des reponses a la question
 //prend en parametre un string qui commence par + ou -
 //si le string commence pas par + ou - alors c'est la suite du titre
 	public void addReponse(String ligne) {
@@ -53,7 +70,7 @@ public class Question {
 			break;
 
 		default:
-			// si pas + ou - alors c'est la suite à la ligne du titre
+			// si pas + ou - alors c'est la suite a la ligne du titre
 			titre = (titre + "\n" + ligne);
 		}
 	}
