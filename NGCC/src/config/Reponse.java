@@ -4,7 +4,7 @@ public class Reponse {
 	private String intitule;
 	private boolean juste = false;
 
-	public String getIntitulé() {
+	public String getIntitule() {
 		return intitule;
 	}
 
