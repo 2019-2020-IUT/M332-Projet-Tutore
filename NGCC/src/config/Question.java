@@ -18,7 +18,7 @@ public class Question {
 	public Question(String t, boolean b, int n) {
 		titre = t;
 		multiple = b;
-		coeff = n
+		coeff = n;
 	}
 
 	public ArrayList<Reponse> getReponses() {
@@ -29,7 +29,7 @@ public class Question {
 		this.reponses = reponses;
 	}
 
-    public String getCoeff() {
+    public int getCoeff() {
 		return coeff;
 	}
 
