@@ -33,7 +33,6 @@ public class CSV {
 	public static boolean checkStudentNumber(String s) {
 		int i = 0;
 		boolean retour = false;
-		System.out.println(s.length());
 		if (s.length() >= 1 && s.length() <= 16) {
 			while (i < s.length())
 				{
