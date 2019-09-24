@@ -42,3 +42,6 @@ local.properties
 # Locally stored "Eclipse launch configurations"
 *.launch
 /.clover/
+
+# Exclude csv files on push/pull
+*.csv
