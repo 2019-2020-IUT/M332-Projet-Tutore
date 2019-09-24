@@ -13,21 +13,12 @@ public class Generate {
 	BufferedReader csvReader;
 	private static ArrayList<CSV> csvList = new ArrayList<CSV>();
 
-	public static void main(String[] args) {
-		addList("1234", "6.");
-		addList("96543", "16.8");
-		addList("12345678910", "20.");
-		start();
-	}
-
 	public static void start() {
 		createFile();
-		generateFile();
 	}
 	
 	public static void start(String p) {
 		createFile(p);
-		generateFile();
 	}
 	
 	public static void addList(String n, String g) {
@@ -50,35 +41,21 @@ public class Generate {
 			sb.append('\n');
 
 			writer.write(sb.toString());
+			
+			for (int i = 0; i < csvList.size(); i++) {
 
+					sb.delete(0, sb.length());
+					sb.append(csvList.get(i).getStudentNumber());
+					sb.append("; ");
+					sb.append(csvList.get(i).getGrade());
+
+					writer.write(sb + System.getProperty("line.separator"));
+					
+			}
 			System.out.println("Create File Done!");
 
 		} catch (FileNotFoundException e) {
-			System.out.println(e.getMessage());
-		}
-	}
-
-	public static void generateFile() {
-		System.out.println(csvList.size());
-		System.out.println(csvList.get(0));
-		System.out.println(csvList.get(1));
-		System.out.println(csvList.get(2));
-		for (int i = 0; i < csvList.size(); i++) {
-			try (PrintWriter writer = new PrintWriter(new File(path + ".csv"))) {
-
-				StringBuilder sb = new StringBuilder();
-				sb.append(csvList.get(i).getStudentNumber());
-				sb.append(',');
-				sb.append(csvList.get(i).getGrade());
-				sb.append('\n');
-
-				writer.println((csvList.get(i).getStudentNumber() + ',' + csvList.get(i).getGrade()).toString()+ System.getProperty("line.separator"));
-				
-				System.out.println("Write File Done!");
-
-			} catch (FileNotFoundException e) {
-				System.out.println(e.getMessage());
-			}
+			System.err.println(e.getMessage());
 		}
 	}
 
