@@ -14,6 +14,17 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
 public class SubjectGenerator {
 
+	private static void drawDotedLine(PDPageContentStream contentStream, int xi, int yi, int xf, int yf)
+			throws IOException {
+		contentStream.moveTo(xi, yi);
+		for (int i = xi; i <= xf; i += 3) {
+			contentStream.lineTo(i, yf);
+			contentStream.moveTo(i + 2, yf);
+
+		}
+		// contentStream.fill();
+	}
+
 	private static void drawCircle(PDPageContentStream contentStream, int cx, int cy, int r) throws IOException {
 		// https://stackoverflow.com/a/42836210
 		final float k = 0.552284749831f;
@@ -190,20 +201,13 @@ public class SubjectGenerator {
 			pdPageContentStream.newLineAtOffset(width - 236, height - 156);
 			pdPageContentStream.showText("Ecrivez votre Nom");
 			pdPageContentStream.endText();
-			// --- TODO : a optimiser --- \\
-			// dot lines
-			pdPageContentStream.moveTo(width - 233, height - 175);
-			for (int i = (width - 233); i <= (width - 90); i += 3) {
-				pdPageContentStream.lineTo(i, height - 175);
-				pdPageContentStream.moveTo(i + 2, height - 175);
 
-			}
-			pdPageContentStream.moveTo(width - 233, height - 190);
-			for (int i = (width - 233); i <= (width - 90); i += 3) {
-				pdPageContentStream.lineTo(i, height - 190);
-				pdPageContentStream.moveTo(i + 2, height - 190);
-			}
-			// --- TODO : a optimiser --- \\
+			// dot lines
+			// TODO: Enleve car difficulte d'ocr du fait de la presence des pointilles
+			// SubjectGenerator.drawDotedLine(pdPageContentStream, width - 233, height -
+			// 175, width - 90, height - 175);
+			// SubjectGenerator.drawDotedLine(pdPageContentStream, width - 233, height -
+			// 190, width - 90, height - 190);
 
 			pdPageContentStream.stroke(); // stroke
 
@@ -212,6 +216,47 @@ public class SubjectGenerator {
 
 			pdPageContentStream.close();
 
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		}
+		return pdDocument;
+	}
+
+	public static PDDocument generateNumEtudAreaBis(PDDocument pdDocument) {
+		try {
+			PDPage page = pdDocument.getPage(0);
+			PDPageContentStream pdPageContentStream = new PDPageContentStream(pdDocument, page,
+					PDPageContentStream.AppendMode.APPEND, true);
+			PDFont font = PDType1Font.TIMES_ROMAN;
+
+			// Set a Color for the marks
+			pdPageContentStream.setNonStrokingColor(Color.BLACK);
+			pdPageContentStream.setNonStrokingColor(0, 0, 0); // black text
+			pdPageContentStream.setFont(font, 9);
+
+			int height = (int) page.getMediaBox().getHeight();
+			int width = (int) page.getMediaBox().getWidth();
+
+			// num rectangle
+			pdPageContentStream.addRect(width / 4, height - 146, 150, 40);
+			pdPageContentStream.beginText();
+			pdPageContentStream.newLineAtOffset((width / 4) + 2, height - 115);
+			pdPageContentStream.showText("Ecrivez votre Numéro d'étudiant");
+			pdPageContentStream.endText();
+
+			// note rectangle
+			pdPageContentStream.addRect(width / 4, height - 200, 150, 40);
+			pdPageContentStream.beginText();
+			pdPageContentStream.newLineAtOffset((width / 4) + 2, height - 170);
+			pdPageContentStream.showText("Note");
+			pdPageContentStream.endText();
+
+			// dotedlines
+
+			// SubjectGenerator.drawDotedLine(pdPageContentStream, width - 233, height -
+			// 175, width - 90, height - 175);
+
+			pdPageContentStream.close();
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
@@ -271,6 +316,8 @@ public class SubjectGenerator {
 		PDDocument pdDocument = new PDDocument();
 		// Create a Page object
 		PDPage pdPage1 = new PDPage(PDRectangle.A4);
+		// System.out.println("Height : " + pdPage1.getMediaBox().getHeight());
+		// System.out.println("Width : " + pdPage1.getMediaBox().getWidth());
 		PDPage pdPage2 = new PDPage(PDRectangle.A4);
 		PDPage pdPage3 = new PDPage(PDRectangle.A4);
 
@@ -280,7 +327,7 @@ public class SubjectGenerator {
 		pdDocument.addPage(pdPage3);
 
 		pdDocument = SubjectGenerator.generateMarks(pdDocument);
-		pdDocument = SubjectGenerator.generateNumEtudArea(pdDocument);
+		pdDocument = SubjectGenerator.generateNumEtudAreaBis(pdDocument);
 		pdDocument = SubjectGenerator.generateNameArea(pdDocument);
 		pdDocument = SubjectGenerator.generateFooter(pdDocument);
 
