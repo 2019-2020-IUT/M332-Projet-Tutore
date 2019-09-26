@@ -92,7 +92,6 @@ public class Read implements Callable <Void> {
 //***************************************************
 		
 			
-			
 			System.out.println("\nRead mode activated ...\n");		   // Debug des paramètres à exploiter plus tard
 			System.out.println("Update : "+step               +"\n"+
 							   "Verbose : "+vb_level            +"\n"+
