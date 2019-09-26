@@ -7,6 +7,9 @@ import progressbar.ProgressBar;
 import java.io.PrintStream;
 import java.util.concurrent.Callable;
 
+import config.Config;
+import ocr_orm.ControleurOCR;
+
 
 
 @SuppressWarnings("unused")
@@ -101,15 +104,17 @@ public class Read implements Callable <Void> {
 			
 //			********VOIR EQUIPE********
 			
-//			List imgList = PdfConvertor.toImage(directory_name); //retourne liste d'images
-//			
-//			CSV.setConfig(source_path);
-//			
-//			Map resultMap = OCR.read(imgList); // retourne HMap nom - note par ex
-//			
-//			ExportCSV.createCSV(resultMap,result_name);  // crée fichier csv selon HMAp avec le nom donné
+			
+			Config config = new Config(source_path);	//Initialise le fichier de configuration selon le path donné
+			ControleurOCR ocr = new ControleurOCR();	//Initialise le controle de l'OCR
 			
 			
+			ocr.setConfig(config); 	//Configure l'OCR en fonction du fichier de configuration initialisé
+			
+			
+			GenerateCSV.createFile(ocr.getNumNote(directory_name),result_name);  //Génère le fichier csv à partir de la HMap retournée par l'OCR
+			
+			//Done !
 			
 		}
 			return null;	
