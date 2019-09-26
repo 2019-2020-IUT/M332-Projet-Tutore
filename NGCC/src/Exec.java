@@ -37,6 +37,7 @@ public class Exec implements Callable <Void> {
 	@Option(names= {"-v","--version"}, versionHelp = true, arity = "0", order = 1, description = "Displays version info")
 	boolean version; 	// Paramètre associé (versionHelp génere l'aide de version automatiquement)
 
+
 	public static void main(String[] args) throws InterruptedException {
 		
 		// Système de subcommand semblable à celui de git permettant d'appeler les classes relatives
@@ -53,6 +54,7 @@ public class Exec implements Callable <Void> {
 		cmd.execute(args);
 		
 	}
+	
 
 	@Override
 	public Void call() throws Exception {

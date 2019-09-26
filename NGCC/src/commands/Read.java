@@ -77,10 +77,11 @@ public class Read implements Callable <Void> {
 //        bar.update(0, 1000);
 //        for(int i=0;i<1000;i++) {
 //                        // do something!
+//        	//imgList.lenght * temps estimé par img
 //            for(int j=0;j<10000000;j++)
 //                for(int p=0;p<10000000;p++);
 //            // update the progress bar
-//            bar.update(i, 1000);
+//            bar.update(i, 1000); // On ajoute 100/imgList.length à chaque temps estimé par image
 //        }
 //        
 //        System.out.println("\nCopies correction succeed !\n");
@@ -88,12 +89,14 @@ public class Read implements Callable <Void> {
 //***************************************************
 		
 			
+			
 			System.out.println("\nRead mode activated ...\n");		   // Debug des paramètres à exploiter plus tard
 			System.out.println("Update : "+step               +"\n"+
 							   "Verbose : "+vb_level            +"\n"+
 							   "Directory : "+directory_name    +"\n"+
 							   "Result : "+result_name          +"\n"+
 							   "Source : "+source_path          +"\n");
+		
 			
 			
 //			********VOIR EQUIPE********
@@ -101,6 +104,7 @@ public class Read implements Callable <Void> {
 //			List imgList = PdfConvertor.toImage(directory_name); //retourne liste d'images
 //			
 //			CSV.setConfig(source_path);
+//			
 //			Map resultMap = OCR.read(imgList); // retourne HMap nom - note par ex
 //			
 //			ExportCSV.createCSV(resultMap,result_name);  // crée fichier csv selon HMAp avec le nom donné
