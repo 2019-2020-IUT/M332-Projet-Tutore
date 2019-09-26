@@ -1,0 +1,37 @@
+package ocr;
+
+import java.awt.image.BufferedImage;
+
+public abstract class Img {
+
+	BufferedImage img;
+	String description;
+	
+	public Img(BufferedImage img) {
+		
+		this.img = img;
+		
+	}
+	
+	public abstract void applyOcrImg();
+	
+	public BufferedImage getImg() {
+		return img;
+	}
+
+	public void setImg(BufferedImage img) {
+		this.img = img;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	
+	
+	
+}
