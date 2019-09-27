@@ -1,26 +1,40 @@
-package ocr_orm;
+package ocr;
+
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
+import java.util.Map;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 
-public class ControleurOCR {
 
-	public HashMap<String,String> getNumNote(String path){
+public class GestionnaireCopies {
+
+	private List<Copie> listeCopie;
+	
+	private List<BufferedImage> copies;
+	
+	public GestionnaireCopies(String chemin) {
+		
+		copies = createImagesCopies(chemin);
+		listeCopie = new ArrayList<Copie>();
+		
+		for(BufferedImage i : copies)
+		{
+			listeCopie.add(new Copie(i));
+		}
+	}
+	
+	public List<BufferedImage> createImagesCopies(String path){
 
 		PdfToImage pdfAnalyzer = new PdfToImage();
 		File pdfFile;
 		PDDocument document = null;
 		//LISTE DES IMAGES 
-		ArrayList<BufferedImage> images = new ArrayList<>(); // stockera les images (resultat)
-		//HASHMAP POUR LE CSV
-		HashMap<String,String> listeNumNote = new HashMap<String, String>();
-		
+		List<BufferedImage> images = new ArrayList<>(); // stockera les images (resultat)
 		// CONVERT PAGES TO IMAGES
 		try {
 			String pdfFilesDirectory = "C:\\Users\\ph807242\\eclipse-workspace\\PT\\pdf\\";
@@ -37,10 +51,20 @@ public class ControleurOCR {
 		}
 		
 		//LISTE DES IMAGES COMPRENANT L'IMAGE DE LA NOTE ET DU NUM ETUDIANT
-		ListeImageNGCC liNGCC = new ListeImageNGCC(images);
-		
-		listeNumNote = liNGCC.doOCR();
-		return listeNumNote;
+	
+		return images;
 		
 	}
+	
+	public Map<String,String> createHashMapforCSV(){
+		
+		Map<String,String> temp = new HashMap<>();
+		for(Copie c : listeCopie)
+		{
+			temp.put(c.getBase().gethMapImgs().get("NumEtu").getDescription(), c.getBase().gethMapImgs().get("Note").getDescription());	
+		}
+		return temp;
+	
+	}
+	
 }
