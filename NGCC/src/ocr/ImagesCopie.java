@@ -10,6 +10,7 @@ public abstract class ImagesCopie {
 	
 	public ImagesCopie(BufferedImage imgOriginale) {
 		
+		
 		hMapImgs = Rogneur.createHMapImgs(imgOriginale);
 	}
 	

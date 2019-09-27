@@ -2,7 +2,7 @@ package ocr;
 
 import java.awt.image.BufferedImage;
 
-import ocr_orm.OCR;
+
 
 public class ImgNumEtu extends Img{
 
@@ -12,7 +12,7 @@ public class ImgNumEtu extends Img{
 
 	@Override
 	public void applyOcrImg() {
-		setDescription(OCR.applyOcrNumber(getImg()));;
+		setDescription(OCR.applyOcrNumber(getImg()));
 	}
 
 }

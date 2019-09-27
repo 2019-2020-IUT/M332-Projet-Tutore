@@ -10,34 +10,28 @@ public class Rogneur {
 	public static Map<String, Img> createHMapImgs(BufferedImage imgOriginale) {
 		
 		Map<String,Img> temp = new HashMap<>();
-		temp.put("NumEtu", rogneurFormatNote(BufferedImage imgOriginale));
-		temp.put("Note", rogneurFormatNote(BufferedImage imgOriginale));
-		temp.put("FormatNote", rogneurFormatNote(BufferedImage imgOriginale));
+		temp.put("NumEtu", rogneurFormatNote(imgOriginale));
+		temp.put("Note", rogneurFormatNote(imgOriginale));
+		temp.put("FormatNote", rogneurFormatNote(imgOriginale));
 		
 		return temp;
 	}
 
 	// rogne la partie du numEtu
-	public Img rogneurNumEtu(BufferedImage imgOriginale)
+	public static Img rogneurNumEtu(BufferedImage imgOriginale)
 	{
-		
-		// A FAIRE
-		//return new ImgNum();
+		return imgOriginale.getSubimage(x, y, w, h);
 	}
 	
 	// rogne la partie de la note
-	public Img rogneurNote(BufferedImage imgOriginale)
+	public static Img rogneurNote(BufferedImage imgOriginale)
 	{
-		
-		// A FAIRE
-		//return new ImgNum();
+		return imgOriginale.getSubimage(x, y, w, h);
 	}
 	
 	// rogne la partie du format de la note
-	public Img rogneurFormatNote(BufferedImage imgOriginale)
+	public static Img rogneurFormatNote(BufferedImage imgOriginale)
 	{
-		
-		// A FAIRE
-		//return new ImgNum();
+		return imgOriginale.getSubimage(x, y, w, h);
 	}
 }

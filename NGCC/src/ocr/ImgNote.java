@@ -2,7 +2,7 @@ package ocr;
 
 import java.awt.image.BufferedImage;
 
-import ocr_orm.OCR;
+
 
 public class ImgNote extends Img{
 
@@ -13,7 +13,7 @@ public class ImgNote extends Img{
 
 	@Override
 	public void applyOcrImg() {
-		setDescription(OCR.applyOcrNumber(getImg()));;
+		setDescription(OCR.applyOcrNumber(getImg()));
 	}
 
 }
