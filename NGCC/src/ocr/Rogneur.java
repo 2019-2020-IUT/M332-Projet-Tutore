@@ -10,9 +10,9 @@ public class Rogneur {
 	public static Map<String, Img> createHMapImgs(BufferedImage imgOriginale) {
 		
 		Map<String,Img> temp = new HashMap<>();
-		temp.put("NumEtu", rogneurFormatNote(imgOriginale));
-		temp.put("Note", rogneurFormatNote(imgOriginale));
-		temp.put("FormatNote", rogneurFormatNote(imgOriginale));
+		temp.put("NumEtu", rogneurNumEtu(imgOriginale));
+		temp.put("Note", rogneurNote(imgOriginale));
+		//temp.put("FormatNote", rogneurFormatNote(imgOriginale));
 		
 		return temp;
 	}
@@ -20,18 +20,24 @@ public class Rogneur {
 	// rogne la partie du numEtu
 	public static Img rogneurNumEtu(BufferedImage imgOriginale)
 	{
-		return imgOriginale.getSubimage(x, y, w, h);
+		return (new ImgNumEtu(imgOriginale.getSubimage((imgOriginale.getWidth()/4)+4
+				, imgOriginale.getHeight()-imgOriginale.getHeight()+115
+				, (imgOriginale.getWidth()/4+150)-(imgOriginale.getWidth()/4+4) 
+				, imgOriginale.getHeight()-imgOriginale.getHeight()+146-(imgOriginale.getHeight()-imgOriginale.getHeight()+115) )));
 	}
 	
 	// rogne la partie de la note
 	public static Img rogneurNote(BufferedImage imgOriginale)
 	{
-		return imgOriginale.getSubimage(x, y, w, h);
+		return (new ImgNumEtu(imgOriginale.getSubimage((imgOriginale.getWidth()/4)+4
+				, imgOriginale.getHeight()-imgOriginale.getHeight()+160
+				, (imgOriginale.getWidth()/4+150)-(imgOriginale.getWidth()/4+4) 
+				, imgOriginale.getHeight()-imgOriginale.getHeight()+200-(imgOriginale.getHeight()-imgOriginale.getHeight()+160) )));
 	}
 	
 	// rogne la partie du format de la note
-	public static Img rogneurFormatNote(BufferedImage imgOriginale)
+	/*public static Img rogneurFormatNote(BufferedImage imgOriginale)
 	{
 		return imgOriginale.getSubimage(x, y, w, h);
-	}
+	}*/
 }

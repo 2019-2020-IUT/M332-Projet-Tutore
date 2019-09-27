@@ -21,4 +21,14 @@ public class ImagesCopie {
 			hMapImgs.get(s).applyOcrImg();
 		}
 	}
+
+	public Map<String, Img> gethMapImgs() {
+		return hMapImgs;
+	}
+
+	public void sethMapImgs(Map<String, Img> hMapImgs) {
+		this.hMapImgs = hMapImgs;
+	}
+	
+	
 }
