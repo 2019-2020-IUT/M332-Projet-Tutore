@@ -1,0 +1,18 @@
+image: openjdk:11
+
+variables:
+  GIT_SSL_NO_VERIFY: "1"
+
+compileAndTests : 
+# References to libraries should be managed by any other ways (maven, npm, pip, ...)
+  before_script:
+    - ls -la
+    - mkdir bin
+    - javac -cp LIB/junit-platform-console-standalone-1.5.1.jar:bin:. -d bin src/*/*.java
+    - ls bin
+    - javac -cp LIB/junit-platform-console-standalone-1.5.1.jar:bin:. -d bin tests/*/*.java
+  script:
+    - java -jar LIB/junit-platform-console-standalone-1.5.1.jar --class-path bin --scan-class-path
+  #allow_failure: true
+  
+
