@@ -3,7 +3,7 @@ package ocr;
 import java.awt.image.BufferedImage;
 import java.util.Map;
 
-public abstract class ImagesCopie {
+public class ImagesCopie {
 
 	private Map<String,Img> hMapImgs;
 	
