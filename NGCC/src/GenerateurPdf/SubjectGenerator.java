@@ -251,6 +251,9 @@ public class SubjectGenerator {
 			pdPageContentStream.showText("Note");
 			pdPageContentStream.endText();
 
+			pdPageContentStream.moveTo((width / 4) + 75, height - 160);
+			pdPageContentStream.lineTo((width / 4) + 75, height - 200);
+
 			// dotedlines
 
 			// SubjectGenerator.drawDotedLine(pdPageContentStream, width - 233, height -
