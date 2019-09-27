@@ -1,4 +1,4 @@
-package ocr_orm;
+package ocr;
 import java.awt.image.BufferedImage;
  
 
@@ -9,13 +9,13 @@ public class OCR {
 	
 	
 
-	public String getOCR(BufferedImage img) {
+	public static String applyOcrNumber(BufferedImage img) {
 		//FAIRE L'OCR
 		Tesseract tesseract = new Tesseract();
 		String str="";
 		try {
 			tesseract.setOcrEngineMode(2);
-			tesseract.setTessVariable("tessedit_char_whitelist", "A-Za-z1-9");
+			tesseract.setTessVariable("tessedit_char_whitelist","0-9");
 			str=tesseract.doOCR(img);
 		} catch (TesseractException e) {
 			
