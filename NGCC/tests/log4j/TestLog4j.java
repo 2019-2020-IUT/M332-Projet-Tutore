@@ -13,11 +13,13 @@ class TestLog4j {
 	 private static Logger logger = LogManager.getLogger();
 
 	  public static void main(String[] args) {
+		  
 	    logger.debug("msg de debogage");
 	    logger.info("msg d'information");
 	    logger.warn("msg d'avertissement");
 	    logger.error("msg d'erreur");
-	    logger.fatal("msg d'erreur fatale");   
+	    logger.fatal("msg d'erreur fatale");  
+
 	  }
 
 }
