@@ -13,7 +13,6 @@
 *.tar.gz
 *.rar
 
-*.jar
 *.war
 *.ear
 *.class
