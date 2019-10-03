@@ -8,6 +8,9 @@ import progressbar.ProgressBar;
 import java.io.PrintStream;
 import java.util.concurrent.Callable;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import config.Config;
 import csv.GenerateCSV;
 import ocr.GestionnaireCopies;
@@ -30,6 +33,8 @@ import ocr.GestionnaireCopies;
 
 
 public class Read implements Callable <Void> {
+	
+	 private static Logger logger;
 	
 	@Spec
 	Model.CommandSpec spec;
@@ -67,7 +72,17 @@ public class Read implements Callable <Void> {
 	@Override
 	public Void call() throws Exception {
 		
+		if (vb_level >= 0 && vb_level <=2) {
+			logger = LogManager.getFormatterLogger("fatalLogger");
+		}
+		else {
+			logger = LogManager.getFormatterLogger("debugLogger");
+		}
+		
+		
 		if(help) {
+			logger.fatal("help command for -r used");
+			logger.debug("debug");
 			CommandLine.usage(this.spec, System.out);
 		}
 		else {
@@ -93,6 +108,8 @@ public class Read implements Callable <Void> {
 
 //***************************************************
 		
+			logger.fatal("Read command executed");
+			logger.debug("Reading begin");
 			
 			System.out.println("\nRead mode activated ...\n");		   // Debug des paramètres à exploiter plus tard
 			System.out.println("Update : "+step               +"\n"+
