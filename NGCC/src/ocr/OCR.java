@@ -1,7 +1,5 @@
 package ocr;
 import java.awt.image.BufferedImage;
- 
-
 import net.sourceforge.tess4j.Tesseract; 
 import net.sourceforge.tess4j.TesseractException; 
   

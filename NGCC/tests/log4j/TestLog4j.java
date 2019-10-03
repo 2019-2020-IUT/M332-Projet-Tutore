@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 class TestLog4j {
 
 	 
-	 private static Logger logger = LogManager.getLogger();
+	 private static Logger logger = LogManager.getLogger(LogManager.getLogger("ngccLog"));
 
 	  public static void main(String[] args) {
 		  

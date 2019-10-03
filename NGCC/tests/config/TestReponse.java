@@ -7,8 +7,8 @@ import org.junit.jupiter.api.Test;
 public class TestReponse {
 	@Test
 	void testReponse() {
-	Reponse r=new Reponse("Je suis la réponse",true);
-	 assertEquals("Je suis la réponse",r.getIntitulé());
+	Reponse r=new Reponse("Je suis la rï¿½ponse",true);
+	 assertEquals("Je suis la rï¿½ponse",r.getIntitule());
 	 assertEquals(true,r.isJuste());
 	 
 	}

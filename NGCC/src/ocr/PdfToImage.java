@@ -79,7 +79,7 @@ public class PdfToImage {
 				images.add(bim);
 				System.out.println("Ajout n°" + pageCounter);
 			}
-			// document.close();
+			 document.close();
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}

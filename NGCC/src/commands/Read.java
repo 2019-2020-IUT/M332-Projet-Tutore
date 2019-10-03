@@ -1,6 +1,7 @@
 package commands;
 
 import picocli.CommandLine;
+
 import picocli.CommandLine.*;
 import progressbar.ProgressBar;
 
@@ -8,7 +9,8 @@ import java.io.PrintStream;
 import java.util.concurrent.Callable;
 
 import config.Config;
-import ocr_orm.ControleurOCR;
+import csv.GenerateCSV;
+import ocr.GestionnaireCopies;
 
 
 
@@ -105,13 +107,16 @@ public class Read implements Callable <Void> {
 			
 			
 			Config config = new Config(source_path);	//Initialise le fichier de configuration selon le path donné
-			ControleurOCR ocr = new ControleurOCR();	//Initialise le controle de l'OCR
+			config.readConfig();
 			
 			
-			ocr.setConfig(config); 	//Configure l'OCR en fonction du fichier de configuration initialisé
+			GestionnaireCopies ocr = new GestionnaireCopies(directory_name);
+			GenerateCSV csv = new GenerateCSV(ocr.createHashMapforCSV(),config.getParam().get("Code"), result_name);
 			
 			
-			GenerateCSV.createFile(ocr.getNumNote(directory_name),result_name);  //Génère le fichier csv à partir de la HMap retournée par l'OCR
+			//ocr.setConfig(config); 	//Configure l'OCR en fonction du fichier de configuration initialisé
+			
+			csv.createFile();  //Génère le fichier csv à partir de la HMap retournée par l'OCR
 			
 			//Done !
 			

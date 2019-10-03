@@ -41,7 +41,7 @@ public class Exec implements Callable <Void> {
 	public static void main(String[] args) throws InterruptedException {
 		
 		// Système de subcommand semblable à celui de git permettant d'appeler les classes relatives
-		
+		String[] t = {"-r","-d","pdf"};
 		CommandLine cmd = new CommandLine (new Exec())
 				.addSubcommand("-r", new Read(System.out)) 			// nom commande, objet commande
 				.addSubcommand("-b", new Build(System.out))
@@ -51,7 +51,7 @@ public class Exec implements Callable <Void> {
 				.addSubcommand("-e", new Evaluate(System.out))	
 				.addSubcommand("help", new HelpCommand()); 			// Aide générée automatiquement par l'API
 		
-		cmd.execute(args);
+		cmd.execute(t);
 		
 	}
 	

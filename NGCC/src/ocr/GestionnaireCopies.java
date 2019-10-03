@@ -1,6 +1,7 @@
 package ocr;
 
 import java.awt.image.BufferedImage;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -37,7 +38,7 @@ public class GestionnaireCopies {
 		List<BufferedImage> images = new ArrayList<>(); // stockera les images (resultat)
 		// CONVERT PAGES TO IMAGES
 		try {
-			String pdfFilesDirectory = "C:\\Users\\ph807242\\eclipse-workspace\\PT\\pdf\\";
+			String pdfFilesDirectory = "/Users/louis/Desktop/IUT_S3/PT/pt-s3t-g4/pdf";
 			// nom du fichier pdf à ouvrir (TODO: changer le chemin)
 			List<String> files = pdfAnalyzer.listAllFiles(pdfFilesDirectory, ".pdf");
 			for (String fname : files) {
@@ -56,9 +57,9 @@ public class GestionnaireCopies {
 		
 	}
 	
-	public Map<String,String> createHashMapforCSV(){
+	public HashMap<String,String> createHashMapforCSV(){
 		
-		Map<String,String> temp = new HashMap<>();
+		HashMap<String,String> temp = new HashMap<>();
 		for(Copie c : listeCopie)
 		{
 			temp.put(c.getBase().gethMapImgs().get("NumEtu").getDescription(), c.getBase().gethMapImgs().get("Note").getDescription());	

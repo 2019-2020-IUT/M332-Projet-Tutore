@@ -20,15 +20,15 @@ public class TestQuestion {
 	}
 	@Test
 	void testAddReponse() {
-		Reponse r1=new Reponse("+ Au collège des ninjas",true);
-		Question q=new Question("Selon la serie diffusée en 1991 sur TF1, où le petit Nicolas doit il travailler et s'appliquer ?",false);
-		q.addReponse(r1.getIntitulé());
-		assertEquals("Au collège des ninjas",q.getReponses().get(0).getIntitulé());
-		Reponse r2=new Reponse("- A l'académie des ninjas",false);
-		q.addReponse(r2.getIntitulé());
-		assertEquals("A l'académie des ninjas",q.getReponses().get(1).getIntitulé());
+		Reponse r1=new Reponse("+ Au collï¿½ge des ninjas",true);
+		Question q=new Question("Selon la serie diffusï¿½e en 1991 sur TF1, oï¿½ le petit Nicolas doit il travailler et s'appliquer ?",false);
+		q.addReponse(r1.getIntitule());
+		assertEquals("Au collï¿½ge des ninjas",q.getReponses().get(0).getIntitule());
+		Reponse r2=new Reponse("- A l'acadï¿½mie des ninjas",false);
+		q.addReponse(r2.getIntitule());
+		assertEquals("A l'acadï¿½mie des ninjas",q.getReponses().get(1).getIntitule());
 		q.addReponse("Suite de la question");
-		assertEquals("Selon la serie diffusée en 1991 sur TF1, où le petit Nicolas doit il travailler et s'appliquer ?\nSuite de la question",q.getTitre());
+		assertEquals("Selon la serie diffusï¿½e en 1991 sur TF1, oï¿½ le petit Nicolas doit il travailler et s'appliquer ?\nSuite de la question",q.getTitre());
 		
 	}
 	
