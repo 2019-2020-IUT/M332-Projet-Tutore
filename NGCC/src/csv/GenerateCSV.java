@@ -11,33 +11,37 @@ public class GenerateCSV {
 	int numLength;
 	String path = "../export";
 	
-	public GenerateCSV(HashMap<String,String> map, String s, String p) {
+	public GenerateCSV(HashMap<String,String> map, String length, String pth) {
 		this.etudiants = map;
-		this.numLength = Integer.parseInt(s);
-		this.path = path+"/"+p;
+		this.numLength = Integer.parseInt(length);
+		this.path = path+"/"+pth;
 	}
 	
-//	public boolean isValid(String s) {
-//		int i = 0;
-//		if (s.length() == this.numLength) {
-//			while (i < s.length())
-//				{
-//					   if (s.charAt(i) != '0' && s.charAt(i) == '1' || s.charAt(i) == '2' || s.charAt(i) == '3'
-//						|| s.charAt(i) == '4' || s.charAt(i) == '5' || s.charAt(i) == '6' || s.charAt(i) == '7'
-//						|| s.charAt(i) == '8' || s.charAt(i) == '9')
-//					   		{
-//						   		return true;
-//						   		
-//					   		} else {
-//					   			return false;
-//					   			break;
-//					   		}
-//					   i++;
-//				}
-//		}
-//		
-//		return true;
-//	}
+	
+	// TO DO : exploiter dans generation
+	public boolean isValid(String s) {
+		int i = 0;
+		if (s.length() == this.numLength) {
+			while (i < s.length()) {
+				
+				int nb = Character.getNumericValue(s.charAt(i));
+				
+				if (nb <= 0 || nb >= 9) {
+					System.err.println("Student id's characters are not recognized");
+					return false;
+				}
+				else {
+					i++;
+				}
+				 	
+			}
+			return true;
+		}
+		else {
+			System.err.println("Student id's length is not correct");
+			return false;
+		}
+	}
 	
 
 	
