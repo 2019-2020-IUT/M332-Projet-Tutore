@@ -41,7 +41,7 @@ public class Exec implements Callable <Void> {
 	public static void main(String[] args) throws InterruptedException {
 		
 		// Système de subcommand semblable à celui de git permettant d'appeler les classes relatives
-		//String[] t = {"-r","-v1","-d","pdf"};
+		//String[] t = {"-r","-v9","-d","pdf"};
 		CommandLine cmd = new CommandLine (new Exec())
 				.addSubcommand("-r", new Read(System.out)) 			// nom commande, objet commande
 				.addSubcommand("-b", new Build(System.out))

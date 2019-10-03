@@ -72,17 +72,28 @@ public class Read implements Callable <Void> {
 	@Override
 	public Void call() throws Exception {
 		
+		// Niveau de debug selon verbosite
+		
 		if (vb_level >= 0 && vb_level <=2) {
 			logger = LogManager.getFormatterLogger("fatalLogger");
+		}
+		else if (vb_level >= 3 && vb_level <=4) {
+			logger = LogManager.getFormatterLogger("errorLogger");
+		}
+		else if (vb_level >= 5 && vb_level <=6) {
+			logger = LogManager.getFormatterLogger("warnLogger");
+		}
+		else if (vb_level >= 7 && vb_level <=8) {
+			logger = LogManager.getFormatterLogger("infoLogger");
 		}
 		else {
 			logger = LogManager.getFormatterLogger("debugLogger");
 		}
 		
+		// Help genere de la commande
 		
 		if(help) {
-			logger.fatal("help command for -r used");
-			logger.debug("debug");
+			logger.info("Help for 'read' command executed");
 			CommandLine.usage(this.spec, System.out);
 		}
 		else {
@@ -107,31 +118,29 @@ public class Read implements Callable <Void> {
 //        System.out.println("\nCopies correction succeed !\n");
 
 //***************************************************
+			
 		
-			logger.fatal("Read command executed");
-			logger.debug("Reading begin");
+			// Log des parametres
 			
-			System.out.println("\nRead mode activated ...\n");		   // Debug des paramètres à exploiter plus tard
-			System.out.println("Update : "+step               +"\n"+
-							   "Verbose : "+vb_level            +"\n"+
-							   "Directory : "+directory_name    +"\n"+
-							   "Result : "+result_name          +"\n"+
-							   "Source : "+source_path          +"\n");
+			logger.info("Read mode activated");		   
+			logger.debug("Update : "+step);
+			logger.debug("Verbose : "+vb_level);				  
+			logger.debug("Directory : "+directory_name);
+			logger.debug("Result : "+result_name);          
+			logger.debug("Source : "+source_path);
 		
 			
 			
-//			********VOIR EQUIPE********
+
 			
 			
-			Config config = new Config(source_path);	//Initialise le fichier de configuration selon le path donné
+			Config config = new Config(source_path);	//Initialise le fichier de configuration selon le chemin donné
 			config.readConfig();
 			
 			
-			GestionnaireCopies ocr = new GestionnaireCopies(directory_name);
+			GestionnaireCopies ocr = new GestionnaireCopies(directory_name);	// Instantie l'ocr
 			GenerateCSV csv = new GenerateCSV(ocr.createHashMapforCSV(),config.getParam().get("Code"), result_name);
 			
-			
-			//ocr.setConfig(config); 	//Configure l'OCR en fonction du fichier de configuration initialisé
 			
 			csv.createFile();  //Génère le fichier csv à partir de la HMap retournée par l'OCR
 			
