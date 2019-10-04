@@ -8,8 +8,8 @@ compileAndTests :
   before_script:
     - ls -la
     - mkdir bin
+    - javac -cp LIB/junit-platform-console-standalone-1.5.1.jar:bin:. -d bin NGCC/jar/* # compile and add external jar to classpath
     - javac -cp LIB/junit-platform-console-standalone-1.5.1.jar:bin:. -d bin NGCC/src/*/*.java
-    - javac -cp LIB/junit-platform-console-standalone-1.5.1.jar:bin:. -d bin NGCC/jar/*
     - ls bin
     - javac -cp LIB/junit-platform-console-standalone-1.5.1.jar:bin:. -d bin NGCC/tests/*/*.java
   script:
