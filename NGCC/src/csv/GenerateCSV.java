@@ -79,6 +79,7 @@ public class GenerateCSV {
 						
 					}
 					else {
+						
 						logger.debug("Null id not added to csv");
 					}
 						
