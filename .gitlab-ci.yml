@@ -8,9 +8,9 @@ compileAndTests :
   before_script:
     - ls -la
     - mkdir bin
-    - javac -cp LIB/junit-platform-console-standalone-1.5.1.jar:bin:. -d bin src/*/*.java
+    - javac -cp LIB/junit-platform-console-standalone-1.5.1.jar:bin:. -d bin NGCC/src/*/*.java
     - ls bin
-    - javac -cp LIB/junit-platform-console-standalone-1.5.1.jar:bin:. -d bin tests/*/*.java
+    - javac -cp LIB/junit-platform-console-standalone-1.5.1.jar:bin:. -d bin NGCC/tests/*/*.java
   script:
     - java -jar LIB/junit-platform-console-standalone-1.5.1.jar --class-path bin --scan-class-path
   #allow_failure: true
