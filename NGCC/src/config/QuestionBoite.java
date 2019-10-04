@@ -1,7 +1,7 @@
 package config;
 
 public class QuestionBoite extends Question {
-// Type de question differente du normal, c'est une question avec une boite de texte où l'étudiant saisira du texte
+// Type de question differente du normal, c'est une question avec une boite de texte oÃ¹ l'Ã©tudiant saisira du texte
 	private int nbligne; // nb de lignes dans la boite
 
 	public QuestionBoite(String t, boolean b, int nb) {
