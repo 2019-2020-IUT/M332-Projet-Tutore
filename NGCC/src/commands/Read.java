@@ -137,10 +137,8 @@ public class Read implements Callable <Void> {
 			Config config = new Config(source_path);	//Initialise le fichier de configuration selon le chemin donné
 			config.readConfig();
 			
-			
 			GestionnaireCopies ocr = new GestionnaireCopies(directory_name);	// Instantie l'ocr
-			GenerateCSV csv = new GenerateCSV(ocr.createHashMapforCSV(),config.getParam().get("Code"), result_name);
-			
+			GenerateCSV csv = new GenerateCSV(ocr.createHashMapforCSV(),config.getParam().get("Code"), result_name, logger);
 			
 			csv.createFile();  //Génère le fichier csv à partir de la HMap retournée par l'OCR
 			

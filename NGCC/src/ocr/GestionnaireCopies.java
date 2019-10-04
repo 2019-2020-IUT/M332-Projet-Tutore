@@ -61,9 +61,10 @@ public class GestionnaireCopies {
 		
 		HashMap<String,String> temp = new HashMap<>();
 		for(Copie c : listeCopie)
-		{
-			temp.put(c.getBase().gethMapImgs().get("NumEtu").getDescription(), c.getBase().gethMapImgs().get("Note").getDescription());	
+		{		
+			temp.put(c.getBase().gethMapImgs().get("NumEtu").getDescription(), c.getBase().gethMapImgs().get("Note").getDescription());
 		}
+		
 		return temp;
 	
 	}
