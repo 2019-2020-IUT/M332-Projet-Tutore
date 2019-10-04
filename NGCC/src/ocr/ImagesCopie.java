@@ -16,10 +16,12 @@ public class ImagesCopie {
 	
 	public void applyOcrForEach() {
 		
-		for(String s : hMapImgs.keySet())
-		{
-			hMapImgs.get(s).applyOcrImg();
+		for(Img s : hMapImgs.values())
+		{	
+			s.applyOcrImg();
+			System.out.println("Desc : "+s.getDescription());
 		}
+		
 	}
 
 	public Map<String, Img> gethMapImgs() {

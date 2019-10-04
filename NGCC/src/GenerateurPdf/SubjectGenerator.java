@@ -195,6 +195,7 @@ public class SubjectGenerator {
 			int width = (int) page.getMediaBox().getWidth();
 
 			// generate rectangle nom
+			
 			pdPageContentStream.addRect(width - 238, height - 196, 155, 50); // RECT
 			// text
 			pdPageContentStream.beginText();

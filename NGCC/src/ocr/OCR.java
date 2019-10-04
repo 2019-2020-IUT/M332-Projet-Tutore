@@ -3,7 +3,7 @@ import java.awt.image.BufferedImage;
 import net.sourceforge.tess4j.Tesseract; 
 import net.sourceforge.tess4j.TesseractException; 
   
-public class OCR {
+public abstract class OCR {
 	
 	
 
@@ -12,7 +12,9 @@ public class OCR {
 		Tesseract tesseract = new Tesseract();
 		String str="";
 		try {
-			tesseract.setOcrEngineMode(2);
+			tesseract.setDatapath("E:\\S3T\\Projet\\pt-s3t-g4\\NGCC\\Tess4J");
+		
+			//tesseract.setOcrEngineMode(2);
 			tesseract.setTessVariable("tessedit_char_whitelist","0-9");
 			str=tesseract.doOCR(img);
 		} catch (TesseractException e) {

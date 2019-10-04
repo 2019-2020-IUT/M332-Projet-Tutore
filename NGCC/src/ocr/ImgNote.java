@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 
 
 
+
 public class ImgNote extends Img{
 
 	public ImgNote(BufferedImage img) {
@@ -13,7 +14,9 @@ public class ImgNote extends Img{
 
 	@Override
 	public void applyOcrImg() {
+		
 		setDescription(OCR.applyOcrNumber(getImg()));
+		
 	}
 
 }

@@ -13,13 +13,13 @@ public class TestConfig {
 		q=c.makeQuestion("* Dans M.A.S.K. qui sont les pilotes ou copilote de Rhino (un camion tracteur Kenworth w900)?");
 		assertEquals("Dans M.A.S.K. qui sont les pilotes ou copilote de Rhino (un camion tracteur Kenworth w900)?",q.getTitre());
 		
-		Question q2=new Question("Selon la serie diffusée en 1991 sur TF1, où le petit Nicolas doit il travailler et s'appliquer ?",false);
+		Question q2=new Question("Selon la serie diffusï¿½e en 1991 sur TF1, oï¿½ le petit Nicolas doit il travailler et s'appliquer ?",false);
 		q2=c.makeQuestion("** Dans M.A.S.K. qui sont les pilotes ou copilote de Rhino (un camion tracteur Kenworth w900)?");
 		assertEquals("Dans M.A.S.K. qui sont les pilotes ou copilote de Rhino (un camion tracteur Kenworth w900)?",q2.getTitre());
 		
-		Question q3=new Question("Quelles sont les bonnes réponses",false);
-		q3=c.makeQuestion("*<lines=1> Cette jeune fille vient d'emménager à Sunnydale avec sa mère et rencontre son nouvel observateur. Quel est le nom de ce dernier ?");
-		assertEquals("Cette jeune fille vient d'emménager à Sunnydale avec sa mère et rencontre son nouvel observateur. Quel est le nom de ce dernier ?",q3.getTitre());
+		Question q3=new Question("Quelles sont les bonnes rï¿½ponses",false);
+		q3=c.makeQuestion("*<lines=1> Cette jeune fille vient d'emmï¿½nager ï¿½ Sunnydale avec sa mï¿½re et rencontre son nouvel observateur. Quel est le nom de ce dernier ?");
+		assertEquals("Cette jeune fille vient d'emmï¿½nager ï¿½ Sunnydale avec sa mï¿½re et rencontre son nouvel observateur. Quel est le nom de ce dernier ?",q3.getTitre());
 		
 	}
 }

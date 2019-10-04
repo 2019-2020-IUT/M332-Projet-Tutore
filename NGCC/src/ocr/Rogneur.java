@@ -4,10 +4,17 @@ import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Rogneur {
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 
+public abstract class Rogneur {
+
+
+	
 	// Retourne une hashmap contenant une image et la description de son contenu
 	public static Map<String, Img> createHMapImgs(BufferedImage imgOriginale) {
+		
 		
 		Map<String,Img> temp = new HashMap<>();
 		temp.put("NumEtu", rogneurNumEtu(imgOriginale));
@@ -20,19 +27,51 @@ public class Rogneur {
 	// rogne la partie du numEtu
 	public static Img rogneurNumEtu(BufferedImage imgOriginale)
 	{
-		return (new ImgNumEtu(imgOriginale.getSubimage((imgOriginale.getWidth()/4)+4
-				, imgOriginale.getHeight()-imgOriginale.getHeight()+115
-				, (imgOriginale.getWidth()/4+150)-(imgOriginale.getWidth()/4+4) 
-				, imgOriginale.getHeight()-imgOriginale.getHeight()+146-(imgOriginale.getHeight()-imgOriginale.getHeight()+115) )));
+		int ratioX = (imgOriginale.getWidth()/595);
+		int ratioY = (imgOriginale.getWidth()/841);
+				
+		int numEtuX1 = ratioX*((595/4)+ 4);
+		int numEtuY1 = ratioY*115;
+		
+		int numEtuX2 = ratioX*((595/4)+150);
+		int numEtuY2 = ratioY*146;
+		
+		System.out.println("X1 + X2 : " +numEtuX1 + " " + numEtuX2);
+		System.out.println("Y1 + Y2 : " +numEtuY1 + " " + numEtuY2);
+		
+		BufferedImage temp = imgOriginale.getSubimage(numEtuX1, numEtuY1, numEtuX2-numEtuX1, numEtuY2-numEtuY1);
+		
+		JFrame frame = new JFrame();
+		frame.getContentPane().add(new JLabel(new ImageIcon(temp)));
+		//frame.getContentPane().add(new JLabel(new ImageIcon(images.get(0))));
+		frame.setVisible(true);
+		
+		return new ImgNumEtu(temp);
+		
 	}
 	
 	// rogne la partie de la note
 	public static Img rogneurNote(BufferedImage imgOriginale)
 	{
-		return (new ImgNumEtu(imgOriginale.getSubimage((imgOriginale.getWidth()/4)+4
-				, imgOriginale.getHeight()-imgOriginale.getHeight()+160
-				, (imgOriginale.getWidth()/4+150)-(imgOriginale.getWidth()/4+4) 
-				, imgOriginale.getHeight()-imgOriginale.getHeight()+200-(imgOriginale.getHeight()-imgOriginale.getHeight()+160) )));
+		int ratioX = (imgOriginale.getWidth()/595);
+		int ratioY = (imgOriginale.getWidth()/841);
+		
+		int numNoteX1 = ratioX*((595/4) + 4);
+		int numNoteY1 = ratioY*160;
+		
+		int numNoteX2 = ratioX*((595/4) +75);
+		int numNoteY2 = ratioY*200;
+		
+		System.out.println("X1 + X2 : " +numNoteX1 + " " + numNoteX2);
+		System.out.println("Y1 + Y2 : " +numNoteY1 + " " + numNoteY2);
+		BufferedImage temp = imgOriginale.getSubimage(numNoteX1, numNoteY1, numNoteX2-numNoteX1, numNoteY2-numNoteY1);
+		
+		JFrame frame = new JFrame();
+		frame.getContentPane().add(new JLabel(new ImageIcon(temp)));
+		//frame.getContentPane().add(new JLabel(new ImageIcon(images.get(0))));
+		frame.setVisible(true);
+		
+		return new ImgNote(temp);
 	}
 	
 	// rogne la partie du format de la note

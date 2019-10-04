@@ -63,7 +63,7 @@ public class PdfToImage {
 		return true;
 	}
 
-	public ArrayList<BufferedImage> convertPagesToBWJPG(PDDocument document) {
+	public ArrayList<BufferedImage> convertPagesToBWJPG(PDDocument document, int n) {
 		// convertit chaque page d'un document pdf en image noir et blanc
 		// retourne une array liste d'images
 		ArrayList<BufferedImage> images = new ArrayList<BufferedImage>();
@@ -71,6 +71,9 @@ public class PdfToImage {
 		try {
 			int pageCounter = 0;
 			for (PDPage page : document.getPages()) {
+				if (pageCounter == n) {
+					return images;
+				}
 				System.out.println("page.getRotation() : " + page.getRotation());
 				System.out.println("pageCounter : " + pageCounter);
 				BufferedImage bim = pdfRenderer.renderImageWithDPI(pageCounter++, 300, ImageType.BINARY); // BINARY =
@@ -86,8 +89,9 @@ public class PdfToImage {
 		return images;
 	}
 
-	public void saveOnDisk(ArrayList<BufferedImage> images, String originalFileDir) {
+	public void saveOnDisk(List<BufferedImage> images, String originalFileDir) {
 		// sauvegarde sur le disque les images
+	
 		int pageCounter = 0;
 		try {
 			for (BufferedImage img : images) {
