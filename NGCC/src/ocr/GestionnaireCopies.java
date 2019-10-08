@@ -1,7 +1,6 @@
 package ocr;
 
-import java.awt.Graphics2D;
-import java.awt.Image;
+
 import java.awt.image.BufferedImage;
 
 import java.io.File;
@@ -11,10 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 
@@ -36,6 +31,7 @@ public class GestionnaireCopies {
 			
 		}
 		applyOcr();
+		
 	}
 	
 	public List<BufferedImage> createImagesCopies(String path){
@@ -49,9 +45,11 @@ public class GestionnaireCopies {
 		
 		
 		try {
-			String pdfFilesDirectory = "E:\\S3T\\Projet\\pt-s3t-g4\\pdf";
+			
+			
 			// nom du fichier pdf à ouvrir (TODO: changer le chemin)
-			List<String> files = pdfAnalyzer.listAllFiles(pdfFilesDirectory, ".pdf");
+			List<String> files = pdfAnalyzer.listAllFiles(path, ".pdf");
+			
 			for (String fname : files) {
 				pdfFile = new File(fname);
 				document = PDDocument.load(pdfFile); // charge le fichier pdf cree pour le traiter

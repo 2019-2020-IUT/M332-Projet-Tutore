@@ -5,6 +5,7 @@ import picocli.CommandLine;
 import picocli.CommandLine.*;
 import progressbar.ProgressBar;
 
+import java.io.File;
 import java.io.PrintStream;
 import java.util.concurrent.Callable;
 
@@ -137,10 +138,11 @@ public class Read implements Callable <Void> {
 			Config config = new Config(source_path);	//Initialise le fichier de configuration selon le chemin donné
 			config.readConfig();
 			
-			GestionnaireCopies ocr = new GestionnaireCopies(directory_name);	// Instantie l'ocr
+			String filePath = new File("").getAbsolutePath();
 			
 			
-		
+			GestionnaireCopies ocr = new GestionnaireCopies("..\\"+directory_name+"\\");
+						// Instantie l'ocr
 			
 			
 			GenerateCSV csv = new GenerateCSV(ocr.createHashMapforCSV(),config.getParam().get("Code"), result_name, logger);

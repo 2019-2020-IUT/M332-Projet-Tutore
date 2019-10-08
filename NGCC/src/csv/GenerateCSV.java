@@ -50,7 +50,7 @@ public class GenerateCSV {
 	}
 
 	public void createFile() {
-		try (PrintWriter writer = new PrintWriter(new File("E:\\S3T\\Projet\\pt-s3t-g4\\pdf"))) {
+		try (PrintWriter writer = new PrintWriter(new File("pdf"))) {
 
 			logger.info("Creating csv file");
 			StringBuilder sb = new StringBuilder();

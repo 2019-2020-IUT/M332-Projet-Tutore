@@ -30,14 +30,11 @@ public abstract class Rogneur {
 		int ratioX = (imgOriginale.getWidth()/595);
 		int ratioY = (imgOriginale.getWidth()/841);
 				
-		int numEtuX1 = ratioX*((595/4)+ 4);
-		int numEtuY1 = ratioY*115;
+		int numEtuX1 = ratioX*((595/4)+ 4)+10;
+		int numEtuY1 = ratioY*115 + 275;
 		
 		int numEtuX2 = ratioX*((595/4)+150);
-		int numEtuY2 = ratioY*146;
-		
-		System.out.println("X1 + X2 : " +numEtuX1 + " " + numEtuX2);
-		System.out.println("Y1 + Y2 : " +numEtuY1 + " " + numEtuY2);
+		int numEtuY2 = ratioY*146 + 310;
 		
 		BufferedImage temp = imgOriginale.getSubimage(numEtuX1, numEtuY1, numEtuX2-numEtuX1, numEtuY2-numEtuY1);
 		
@@ -56,14 +53,13 @@ public abstract class Rogneur {
 		int ratioX = (imgOriginale.getWidth()/595);
 		int ratioY = (imgOriginale.getWidth()/841);
 		
-		int numNoteX1 = ratioX*((595/4) + 4);
-		int numNoteY1 = ratioY*160;
+		int numNoteX1 = ratioX*((595/4) + 4)+60;
+		int numNoteY1 = ratioY*160+400;
 		
-		int numNoteX2 = ratioX*((595/4) +75);
-		int numNoteY2 = ratioY*200;
+		int numNoteX2 = ratioX*((595/4) +80);
+		int numNoteY2 = ratioY*200+400;
 		
-		System.out.println("X1 + X2 : " +numNoteX1 + " " + numNoteX2);
-		System.out.println("Y1 + Y2 : " +numNoteY1 + " " + numNoteY2);
+		
 		BufferedImage temp = imgOriginale.getSubimage(numNoteX1, numNoteY1, numNoteX2-numNoteX1, numNoteY2-numNoteY1);
 		
 		JFrame frame = new JFrame();
