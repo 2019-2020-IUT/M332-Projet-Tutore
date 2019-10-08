@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class GenerateCSV {
@@ -13,13 +14,12 @@ public class GenerateCSV {
 	Map<String, String> etudiants;
 	int numLength;
 	String path = "../export";
-	Logger logger;
+	Logger logger = LogManager.getLogger(GenerateCSV.class);
 
-	public GenerateCSV(Map<String, String> map, String length, String pth, Logger lg) {
+	public GenerateCSV(Map<String, String> map, String length, String pth) {
 		this.etudiants = map;
 		this.numLength = Integer.parseInt(length);
 		this.path = path + "/" + pth;
-		this.logger = lg;
 	}
 
 	// Teste validité du numero etudiant (selon param de la config passé :
@@ -50,7 +50,7 @@ public class GenerateCSV {
 	}
 
 	public void createFile() {
-		try (PrintWriter writer = new PrintWriter(new File("pdf"))) {
+		try (PrintWriter writer = new PrintWriter(new File(this.path))) {
 
 			logger.info("Creating csv file");
 			StringBuilder sb = new StringBuilder();
@@ -68,9 +68,12 @@ public class GenerateCSV {
 					// Si etudiant HashMap est null, pas ecrit
 					if (etud != null) {
 
-						if (this.isValid(etud)) {
+						//if (this.isValid(etud)) {
 							writer.write(etud + ";" + etudiants.get(etud) + System.getProperty("line.separator"));
-						}
+						//}
+//						else {
+//							logger.debug("Invalid not added to csv");
+//						}
 
 					} else {
 

@@ -9,8 +9,10 @@ import java.io.File;
 import java.io.PrintStream;
 import java.util.concurrent.Callable;
 
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.config.Configurator;
 
 import config.Config;
 import csv.GenerateCSV;
@@ -35,7 +37,7 @@ import ocr.GestionnaireCopies;
 
 public class Read implements Callable <Void> {
 	
-	 private static Logger logger;
+	 private static Logger logger = LogManager.getLogger(Read.class);
 	
 	@Spec
 	Model.CommandSpec spec;
@@ -47,7 +49,7 @@ public class Read implements Callable <Void> {
 	int step;
 	
 	@Option(names= {"-v"}, arity = "0..*", order = 3, defaultValue = "1", description ="verbose mode")
-	int vb_level;
+	public int vb_level;
 	
 	@Option(names= {"-d"}, arity = "1", order = 4, defaultValue = "copies", description ="directory")
 	String directory_name;
@@ -76,19 +78,19 @@ public class Read implements Callable <Void> {
 		// Niveau de debug selon verbosite
 		
 		if (vb_level >= 0 && vb_level <=2) {
-			logger = LogManager.getFormatterLogger("fatalLogger");
+			Configurator.setLevel("commands", Level.FATAL);
 		}
 		else if (vb_level >= 3 && vb_level <=4) {
-			logger = LogManager.getFormatterLogger("errorLogger");
+			Configurator.setLevel("commands", Level.ERROR);
 		}
 		else if (vb_level >= 5 && vb_level <=6) {
-			logger = LogManager.getFormatterLogger("warnLogger");
+			Configurator.setLevel("commands", Level.WARN);
 		}
 		else if (vb_level >= 7 && vb_level <=8) {
-			logger = LogManager.getFormatterLogger("infoLogger");
+			Configurator.setLevel("commands", Level.INFO);
 		}
 		else {
-			logger = LogManager.getFormatterLogger("debugLogger");
+			Configurator.setLevel("commands", Level.DEBUG);
 		}
 		
 		// Help genere de la commande
@@ -141,11 +143,11 @@ public class Read implements Callable <Void> {
 			String filePath = new File("").getAbsolutePath();
 			
 			
-			GestionnaireCopies ocr = new GestionnaireCopies("..\\"+directory_name+"\\");
+			GestionnaireCopies ocr = new GestionnaireCopies("../"+directory_name);
 						// Instantie l'ocr
 			
 			
-			GenerateCSV csv = new GenerateCSV(ocr.createHashMapforCSV(),config.getParam().get("Code"), result_name, logger);
+			GenerateCSV csv = new GenerateCSV(ocr.createHashMapforCSV(),config.getParam().get("Code"), result_name);
 			
 			csv.createFile();  //Génère le fichier csv à partir de la HMap retournée par l'OCR
 			
