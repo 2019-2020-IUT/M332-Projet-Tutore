@@ -1,7 +1,5 @@
 # NGCC - Nicely Generated and Corrected Copies
-
 **Projet Tutoré S3TG4**
-
 
 ## Auteurs
 + Anthony Malvesin
