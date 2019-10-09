@@ -151,6 +151,7 @@ public class Read implements Callable <Void> {
 			GestionnaireCopies ocr = new GestionnaireCopies("../"+directory_name);
 						// Instantie l'ocr
 			
+			logger.debug("CSV initialized with : "+ocr.createHashMapforCSV()+" , "+config.getParam().get("Code")+" , "+result_name);
 			
 			GenerateCSV csv = new GenerateCSV(ocr.createHashMapforCSV(),config.getParam().get("Code"), result_name);
 			
