@@ -120,7 +120,7 @@ public class Recadrage  {
 		roar2[0]=roar[0];
 		for (int l=0;l<img.getHeight()*img.getWidth() && (roar[l][1]!=0 || roar[l][0]!=0);l++) {
 			if((roar[l][0]-roar2[tmp-1][0])<5 || roar[l][1]-roar2[tmp-1][1]<5 ){		//x-(x-1)>5 ou y-(y-1)>5
-				roar2[tmp][0]=roar[l][0];			//efface le precedent roar2 si il était a 1 pixel de diff
+				roar2[tmp][0]=roar[l][0];			//efface le precedent roar2 si il Ã©tait a 1 pixel de diff
 				roar2[tmp][1]=roar[l][1];
 			}
 			else {
@@ -175,7 +175,7 @@ public class Recadrage  {
 				int diffy=	Math.abs(lastRoar[l][1]-points[li][1]);
 				boolean testx=		diffx>img.getWidth()*0.85 	|| diffx<img.getWidth()*0.2;	//diff   <0.1 ou >0.8 x la largeur de feuille
 				boolean testy=		diffy>img.getHeight()*0.8 	|| diffy<img.getWidth()*0.2;
-				boolean Repeat=	diffx+diffy>img.getWidth()*0.2;	 //si point deja présent
+				boolean Repeat=	diffx+diffy>img.getWidth()*0.2;	 //si point deja prÃ©sent
 
 				if (!Repeat || (!testx || !testy) )	// si 0.2>diffx>0.8 ou "diffy" et  
 				{
@@ -207,9 +207,9 @@ public class Recadrage  {
 	public boolean checkCircle(int x,int y,int radius) {
 		double pi=Math.PI; //3.14
 		Color tmp;
-		for (double k=-1;k<=1;k+=0.05) {						// de 0 à 2 pi
-			int px=x+(int)Math.round(radius*Math.cos(k*pi));		//px = pos x du contour du supposé cercle
-			int py=y+(int)Math.round(radius*Math.sin(k*pi));		//diam calculé +/- 42 pixels
+		for (double k=-1;k<=1;k+=0.05) {						// de 0 Ã  2 pi
+			int px=x+(int)Math.round(radius*Math.cos(k*pi));		//px = pos x du contour du supposÃ© cercle
+			int py=y+(int)Math.round(radius*Math.sin(k*pi));		//diam calculÃ© +/- 42 pixels
 			if(py<0)py=0;
 			if(py>img.getHeight())py=img.getHeight()-1;
 			if(px<0)px=0;
@@ -261,7 +261,7 @@ public class Recadrage  {
 				System.out.println("dadj "+dadj + " dhypo "+dhypo);
 				
 				
-				if (dhypo<img.getWidth() && dhypo!=0) {	//deux points selectionnés sont des diagonales
+				if (dhypo<img.getWidth() && dhypo!=0) {	//deux points selectionnÃ©s sont des diagonales
 					double retour=Math.acos(dadj/dhypo)*(180/Math.PI);
 					if (retour>90/2)
 						retour=180-90-retour;
@@ -384,7 +384,7 @@ public class Recadrage  {
     	int x=5,y=5,radius=2;
     	double pi= Math.PI;
     	double k=-0.75;    		//k=0 = droit du cercle
-    	int px=x+(int)Math.round(radius*Math.cos(k*pi));		//px = pos x du contour du supposé cercle
+    	int px=x+(int)Math.round(radius*Math.cos(k*pi));		//px = pos x du contour du supposÃ© cercle
 		int py=y+(int)Math.round(radius*Math.sin(k*pi));
     	//System.out.println("x : "+px+"   y: "+py);
 		 */
