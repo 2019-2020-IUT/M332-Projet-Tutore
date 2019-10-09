@@ -27,6 +27,15 @@ public class Config {
 		this.questions = questions;
 	}
 
+    public boolean isParsable(String s) {
+	    try {
+	        Integer.valueOf(s);
+	        return true;
+	    } catch (NumberFormatException e) {
+	        return false;
+	    }
+	}
+	
 	public Config(String s) {
 		// Constructeur, prend en parametre le chemin vers le fichier source
 		source = s;
@@ -215,9 +224,11 @@ public class Config {
 
 	public void setCode(String s) {
 		s = s.trim();
-		int n = Integer.parseInt(s);
-		if (n >= 1 && n <= 16) {
-			param.replace("Code", s);
+		if (isParsable(s)) {
+			int n = Integer.parseInt(s);
+			if (n >= 1 && n <= 16) {
+				param.replace("Code", s);
+			}
 		}
 	}
 
