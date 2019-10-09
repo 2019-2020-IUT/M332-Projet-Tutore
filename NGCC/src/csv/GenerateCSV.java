@@ -22,6 +22,7 @@ public class GenerateCSV {
 		this.path = path + "/" + pth;
 		
 	}
+	
 
 	// Teste validité du numero etudiant (selon param de la config passé :
 	// numLength)
@@ -75,7 +76,7 @@ public class GenerateCSV {
 							writer.write(etud + ";" + etudiants.get(etud) + System.getProperty("line.separator"));
 						//}
 //						else {
-//							logger.debug("Invalid not added to csv");
+//							logger.debug("Invalid id not added to csv");
 //						}
 
 					} else {

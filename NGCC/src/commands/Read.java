@@ -79,18 +79,23 @@ public class Read implements Callable <Void> {
 		
 		if (vb_level >= 0 && vb_level <=2) {
 			Configurator.setLevel("commands", Level.FATAL);
+			Configurator.setLevel("csv", Level.FATAL);
 		}
 		else if (vb_level >= 3 && vb_level <=4) {
 			Configurator.setLevel("commands", Level.ERROR);
+			Configurator.setLevel("csv", Level.ERROR);
 		}
 		else if (vb_level >= 5 && vb_level <=6) {
 			Configurator.setLevel("commands", Level.WARN);
+			Configurator.setLevel("csv", Level.WARN);
 		}
 		else if (vb_level >= 7 && vb_level <=8) {
 			Configurator.setLevel("commands", Level.INFO);
+			Configurator.setLevel("csv", Level.INFO);
 		}
 		else {
 			Configurator.setLevel("commands", Level.DEBUG);
+			Configurator.setLevel("csv", Level.DEBUG);
 		}
 		
 		// Help genere de la commande
