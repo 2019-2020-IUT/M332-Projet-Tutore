@@ -35,5 +35,5 @@ Cela va permettre d'aider dans la saisie des notes et la correction des copies Ã
 
 ## License
 
-Ce projet est disponible sous license [GNU General Public License v2.0](https://choosealicense.com/licenses/gpl-2.0/) (voir [LICENSE.MD](https://git-iutinfo.unice.fr/rey/pt-s3t-g4/raw/master/LICENSE)
+Ce projet est disponible sous license [GNU General Public License v2.0](https://choosealicense.com/licenses/gpl-2.0/) (voir [LICENSE.MD](https://git-iutinfo.unice.fr/rey/pt-s3t-g4/raw/master/LICENSE))
 
