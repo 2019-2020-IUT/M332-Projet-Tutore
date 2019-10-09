@@ -37,7 +37,7 @@ import ocr.GestionnaireCopies;
 
 public class Read implements Callable <Void> {
 	
-	 private static Logger logger = LogManager.getLogger(Read.class);
+	 public Logger logger = LogManager.getLogger(Read.class);
 	
 	@Spec
 	Model.CommandSpec spec;

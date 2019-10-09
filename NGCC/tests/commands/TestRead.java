@@ -2,8 +2,10 @@ package commands;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import ch.qos.logback.classic.Level;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.HelpCommand;
@@ -27,24 +29,35 @@ import picocli.CommandLine.HelpCommand;
 
 
 class TestRead {	
-
 	
-	@Test
-	void test() {	
+	Read read = new Read(System.out);
+	
+	@BeforeEach
+	void setUp () {
 		
-		Read read = new Read(System.out);
+		read = new Read(System.out);
 		
 		CommandLine cmd = new CommandLine (new TestRead())
-				.addSubcommand("-r", read) 			
-				.addSubcommand("help", new HelpCommand()); 			
+				.addSubcommand("-r", read); 			
 		
 		String[] t = {"-r","-v9","-d","pdf","config.txt"};
 		cmd.execute(t);
+	}
+
+	
+	@Test
+	void testCommand() {	
+		
+		assertFalse(read == null);
 		
 		assertEquals("pdf",read.directory_name);
+		assertEquals(false,read.help);
 		assertEquals(9,read.vb_level);
 		assertEquals("config.txt",read.source_path);
 		assertEquals("result.csv",read.result_name);
+		
+		assertFalse(read.logger == null);
+		assertEquals(Level.DEBUG.toString(), read.logger.getLevel().toString());
 	}
 
 }
