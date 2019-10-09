@@ -3,7 +3,7 @@ package config;
 import java.util.ArrayList;
 
 public class Question {
-	private String titre; // intitul de la question
+	private String titre; // intitulé de la question
 	private int coeff; // coefficient de la question, vide par défaut mais c'est une option possible
 	private boolean multiple = false; // boolean pour savoir si c'est une question choix multiple
 	private ArrayList<Reponse> reponses = new ArrayList<Reponse>(); // liste des reponses
