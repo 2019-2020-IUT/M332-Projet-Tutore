@@ -16,6 +16,7 @@ public class ImgNote extends Img{
 	public void applyOcrImg() {
 		
 		setDescription(OCR.applyOcrNumber(getImg()));
+		this.sanitizeDesc();
 		
 	}
 

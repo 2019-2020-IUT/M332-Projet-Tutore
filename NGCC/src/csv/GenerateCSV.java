@@ -20,6 +20,7 @@ public class GenerateCSV {
 		this.etudiants = map;
 		this.numLength = Integer.parseInt(length);
 		this.path = path + "/" + pth;
+		
 	}
 
 	// Teste validité du numero etudiant (selon param de la config passé :
@@ -33,7 +34,9 @@ public class GenerateCSV {
 
 				int nb = Character.getNumericValue(s.charAt(i));
 
+				
 				if (nb <= 0 || nb >= 9) {
+					
 					logger.fatal("Student id's characters are not recognized");
 					return false;
 				} else {

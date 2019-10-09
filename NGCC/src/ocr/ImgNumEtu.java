@@ -13,6 +13,8 @@ public class ImgNumEtu extends Img{
 	@Override
 	public void applyOcrImg() {
 		setDescription(OCR.applyOcrNumber(getImg()));
+		this.sanitizeDesc();
+		
 	}
 
 }

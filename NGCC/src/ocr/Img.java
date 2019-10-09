@@ -31,7 +31,11 @@ public abstract class Img {
 		this.description = description;
 	}
 
-	
+	public void sanitizeDesc()
+	{
+		this.description = this.description.replace(" ", "");
+		this.description = this.description.replace("\n", "");
+	}
 	
 	
 }

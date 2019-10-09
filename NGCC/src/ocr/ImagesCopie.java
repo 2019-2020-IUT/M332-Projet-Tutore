@@ -19,7 +19,7 @@ public class ImagesCopie {
 		for(Img s : hMapImgs.values())
 		{	
 			s.applyOcrImg();
-			System.out.println("Desc : "+s.getClass().getCanonicalName()+" "+s.getDescription());
+			
 		}
 		
 	}

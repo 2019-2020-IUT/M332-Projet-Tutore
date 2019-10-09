@@ -37,12 +37,12 @@ public abstract class Rogneur {
 		int numEtuY2 = ratioY*146 + 310;
 		
 		BufferedImage temp = imgOriginale.getSubimage(numEtuX1, numEtuY1, numEtuX2-numEtuX1, numEtuY2-numEtuY1);
-		
+		/*
 		JFrame frame = new JFrame();
 		frame.getContentPane().add(new JLabel(new ImageIcon(temp)));
 		//frame.getContentPane().add(new JLabel(new ImageIcon(images.get(0))));
 		frame.setVisible(true);
-		
+		*/
 		return new ImgNumEtu(temp);
 		
 	}
@@ -62,11 +62,12 @@ public abstract class Rogneur {
 		
 		BufferedImage temp = imgOriginale.getSubimage(numNoteX1, numNoteY1, numNoteX2-numNoteX1, numNoteY2-numNoteY1);
 		
+		/*
 		JFrame frame = new JFrame();
 		frame.getContentPane().add(new JLabel(new ImageIcon(temp)));
 		//frame.getContentPane().add(new JLabel(new ImageIcon(images.get(0))));
 		frame.setVisible(true);
-		
+		*/
 		return new ImgNote(temp);
 	}
 	
