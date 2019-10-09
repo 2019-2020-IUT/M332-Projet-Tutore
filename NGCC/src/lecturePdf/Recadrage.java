@@ -16,6 +16,7 @@ import java.util.List;
 import javax.imageio.ImageIO;
 
 
+
 public class Recadrage  {
 	String dir="";
 	String filename="";
@@ -36,6 +37,8 @@ public class Recadrage  {
 	public Recadrage(BufferedImage image) {
 		img=image;
 	}
+	public Recadrage(){
+	}
 
 	public boolean estDroite() {	//determine si l'image png/jpg du pdf est droite  (doit etre en noir et blanc)
 		int count=0;
@@ -55,37 +58,40 @@ public class Recadrage  {
 		return false;
 	}
 
+	public void setImage(BufferedImage entree){
+		this.img=entree;
+	}
 	
 	
 	
 	
 	
 	
-	
-	public void automation() throws IOException {
+	public BufferedImage automation() throws IOException {
 		if (!this.estDroite()) {
 			int[][] points=RdB();
 			double angle=getAngle(points);
-			System.out.println("l'angle est de = "+angle);
-			//this.pivot(angle);
-			/*AffineTransform tx = new AffineTransform();
-		    tx.rotate(angle, img.getWidth() / 2,img.getHeight() / 2);
-		    AffineTransformOp op = new AffineTransformOp(tx,
-		        AffineTransformOp.TYPE_BILINEAR);
-		    BufferedImage image = op.filter(img, null);*/
-			
-		    
+			System.out.println("l'angle est de = "+angle);		    
 		    img=rotate(img,angle);
 		    String nomImage="sortie";
 			File nomfichier = new File("C:\\Users\\Xxsafirex\\Desktop\\Image\\" + nomImage + ".jpg");// ou jpg
 			ImageIO.write(img, "JPG", nomfichier);//ou JPG
 			
-		}
+		}	
+		return img;
 	}
 
 	
 	
-	
+	public BufferedImage[] listAutomation(BufferedImage[] list){
+		BufferedImage[] retour=new BufferedImage[list.length];
+		int i=0;
+		for (BufferedImage imag:list)
+			this.img=imag;
+			this.automation();
+			retour[i]=this.img;
+			i++;
+	}
 	
 	
 	
@@ -130,6 +136,7 @@ public class Recadrage  {
 			
 		}
 		
+		
 		//boucle de determination des points noirs
 		//System.out.println("roar2debut");
 		int points[][]=new int [4][2];
@@ -164,7 +171,6 @@ public class Recadrage  {
 		for (int l=0;l<=lastRoar.length && (lastRoar[l][1]!=0 || lastRoar[l][0]!=0);l++) {
 			//System.out.println("x: "+lastRoar[l][0]+"   y: "+lastRoar[l][1]);	//reste a grouper les coord pour avoir le centre des ronds
 		}
-		
 		
 		
 		for (int l=0;l<=lastRoar.length && (lastRoar[l][1]!=0 || lastRoar[l][0]!=0);l++) {	
@@ -281,78 +287,11 @@ public class Recadrage  {
 			}
 			
 			
-		}
-		
-		
-		
+		}		
 		return 0;
 	}
 
 
-
-
-	private int[] circle()  //code de paul
-	{
-
-
-		int[] coor = new int[2];
-		for (int y=0; y<img.getHeight();y++) {		//y de 0 a ymax
-			for (int x=0; x<img.getWidth();x++) {	// x a xmax
-
-				Color tmp=new Color(img.getRGB(x, y));
-				if(tmp.getBlue() < 10)				//si pixel noir
-				{
-					int tempX = x;
-					int tempY = y;
-
-					int tempX2 = x;
-					int tempY2 = y;
-
-					int longueur = 0;
-					int diam = 0;
-
-					Color tmp2 = new Color(img.getRGB(tempX, y));
-					while(tmp2.getBlue()< 10)
-					{
-
-						tempX++;
-						longueur++;
-						tmp2 =new Color(img.getRGB(tempX, y));
-
-					}
-
-					tempX2 = x+(longueur/2);
-
-					tmp2 = new Color(img.getRGB(tempX2, tempY));
-
-					while(tmp2.getBlue() < 10)
-					{
-
-						tempY++;
-						diam++;
-						tmp2 =new Color(img.getRGB(tempX2, tempY));
-
-					}
-
-					tempY2 = y+(diam/2);
-
-
-					while(tmp2.getBlue() < 10)
-					{
-						if(x == tempX2 + (int)(Math.sin(x)) && y == (int)(Math.cos(y))) return new int[] {tempX,tempY};
-
-						tmp2 = new Color(img.getRGB((int)(tempX+Math.sin(x)),(int) (tempY+Math.cos(y))));	
-						x++;
-						y++;
-					}
-					x = tempX2;
-					y = tempY2;
-				}
-			}
-
-		}
-		return new int[] {-1,-1};
-	}
 
 	//rotation de https://stackoverflow.com/questions/37758061/rotate-a-buffered-image-in-java
 	public static BufferedImage rotate(BufferedImage bimg, double angle) {		
@@ -367,43 +306,5 @@ public class Recadrage  {
 	    return rotated;
 	}
 
-	public static void main(String avg[]) throws IOException 
-	{
-		//Recadrage3 rec=new Recadrage3 ("P:\\Bureau\\ptut s3\\eclipse\\image\\","sujet1.jpg");
-		Recadrage rec=new Recadrage ("C:\\Users\\Xxsafirex\\Desktop\\Image\\","sujet1.4.jpg");		
-    	
-    	/*
-		int[] listPos=new int[500];
-		listPos[0]=5+900;
-		listPos[1]=7+800;
-		//System.out.println(listPos[0]==905);
-		 */
-
-		//System.out.println(rec.estDroite());
-		/*
-    	int x=5,y=5,radius=2;
-    	double pi= Math.PI;
-    	double k=-0.75;    		//k=0 = droit du cercle
-    	int px=x+(int)Math.round(radius*Math.cos(k*pi));		//px = pos x du contour du supposé cercle
-		int py=y+(int)Math.round(radius*Math.sin(k*pi));
-    	//System.out.println("x : "+px+"   y: "+py);
-		 */
-		
-
-		String nomImage="rendu";
-		File nomfichier = new File("C:\\Users\\Xxsafirex\\Desktop\\Image\\" + nomImage + ".jpg");// ou jpg
-		ImageIO.write(rec.img, "JPG", nomfichier);//ou JPG
-		
-
-		rec.automation();
-		
-		
-		
-		//rec.circlePixel();
-
-		/*int[] tmp= new int[2];
-    			tmp=rec.circle(); 								code de paul
-    	//System.out.println("x= "+tmp[0]+"    y="+tmp[1]);*/
-	}
 
 }
