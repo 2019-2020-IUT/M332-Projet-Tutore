@@ -8,10 +8,10 @@ import org.junit.jupiter.api.Test;
 public class TestQuestionBoite {
 	@Test
 	void testQuestionBoite() {
-		QuestionBoite q=new QuestionBoite("Quelles sont les bonnes réponses",false,3);
+		QuestionBoite q=new QuestionBoite("Quelles sont les bonnes rÃ©ponses",false,3);
 		assertEquals(3,q.getNbligne());
 		assertEquals(false,q.isMultiple());
-		assertEquals("Quelles sont les bonnes réponses",q.getTitre());
-		assertNotEquals("quelles sont les bonnes réponses",q.getTitre());
+		assertEquals("Quelles sont les bonnes rÃ©ponses",q.getTitre());
+		assertNotEquals("quelles sont les bonnes rÃ©ponses",q.getTitre());
 	}
 }
