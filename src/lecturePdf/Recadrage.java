@@ -140,7 +140,7 @@ public class Recadrage {
 	
 	
 	public BufferedImage automation() throws IOException {
-		if (!this.estDroite2()) {
+		if (!this.estDroite()) {
 			int[][] points=RdB();
 			double angle=getAngle(points);
 			    
