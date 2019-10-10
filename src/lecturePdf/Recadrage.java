@@ -72,7 +72,7 @@ public class Recadrage {
 					count++;
 				}
 			}
-			if (count>img.getWidth()/5.4 && count <img.getWidth()/5)
+			if (count>img.getWidth()*0.1 && count <img.getWidth()*0.2)
 				return true;
 			count=0;
 			if (ty>img.getHeight()*0.1)
@@ -131,7 +131,7 @@ public class Recadrage {
 	}
 	
 	public boolean entreEnvers() {		//compte pour 10 dern % de la page le nb de pixels noirs si > bas de la page alors retourner
-		System.out.println("roar");
+		//System.out.println("roar");
 		boolean stop2=false;
 		int countH=0;
 		int countB=0;
@@ -212,10 +212,7 @@ public class Recadrage {
 	public int[][] RdB() {		// cherche les 4 points noirs
 		int[][] pixNoirs = new int[img.getWidth()*img.getHeight()][2];
 
-		int[][] regroupY = new int[img.getWidth()*img.getHeight()][2];
-		int boucleY=0;int groupYi=0;
 		int i=0;
-		int diamMax=0;
 		int radius=8;			// 19= limite de detection de checkCircle
 		for (int ty=0; ty<img.getHeight();ty++) {
 			for (int tx=0;tx<img.getWidth();tx++) {
@@ -231,7 +228,6 @@ public class Recadrage {
 			}
 		}
 		//System.out.println("fin");
-		int tempora=0;
 		int tmp=1;
 		int centreX[][]=new int [img.getWidth()*img.getHeight()][2];
 		centreX[0]=pixNoirs[0];
