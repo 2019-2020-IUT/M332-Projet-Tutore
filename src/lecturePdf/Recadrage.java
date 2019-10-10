@@ -78,7 +78,7 @@ public class Recadrage {
 			if (ty>img.getHeight()*0.1)
 				stop=true;
 		}
-		if (entreeEnvers())
+		if (entreEnvers())
 			this.img=Recadrage.rotate(img, 180);
 		return false;
 	}
@@ -105,30 +105,61 @@ public class Recadrage {
 		return false;
 	}
 	
-	public boolean entreeEnvers() {
+	public boolean entreeEnvers() {		//compte pour 10 dern % de la page le nb de pixels noirs si > bas de la page alors retourner
+		
 		boolean stop2=false;
 		int count=0;
-		int maxwid=img.getWidth();
-		for (int ty2=img.getHeight()-100; ty2<img.getHeight() && !stop2;ty2++) {	
+		int largeur=img.getWidth();
+		for (int ty2=(int)(img.getHeight()*0.9); ty2<img.getHeight() && !stop2;ty2++) {	
 			
-			for (int tx2=(int)(maxwid*0.1);tx2<maxwid*0.9;tx2++) {
+			for (int tx2=(int)(largeur*0.1);tx2<largeur*0.9;tx2++) {	
 				
 				Color tmp=new Color(img.getRGB(tx2, ty2));
 				if (tmp.getGreen()<20) {
 					count++;						//detecte si le nombre de pix noir present au milieu haut
-				}									// de la copie correspond au carré sinon swap
+				}									// de la copie correspond au carrÃ© sinon swap
 			}
 			if (ty2>img.getHeight()*0.1)
 				stop2=true;
 		
 		}
-		if (count<img.getWidth()/5.4) 
+		if (count<largeur*0.2 && count >largeur*0.05) //min de 5% de largeur 
 			return true;
 			
 		return false;
 	
 	}
 	
+	public boolean entreEnvers() {		//compte pour 10 dern % de la page le nb de pixels noirs si > bas de la page alors retourner
+		System.out.println("roar");
+		boolean stop2=false;
+		int countH=0;
+		int countB=0;
+		int largeur=img.getWidth();
+		
+		for (int ty=0;ty<(int)(img.getHeight()*0.05);ty++) {	
+			for (int tx=(int)(largeur*0.1);tx<largeur*0.9;tx++) {	
+				Color tmp=new Color(img.getRGB(tx, ty));
+				if (tmp.getGreen()<20) {
+					countH++;						//detecte si le nombre de pix noir present au milieu haut
+				}									// de la copie correspond au carrÃ© sinon swap
+			}
+		}
+		for (int ty=(int)(img.getHeight()*0.95);ty<img.getHeight();ty++) {	
+			for (int tx=(int)(largeur*0.1);tx<largeur*0.9;tx++) {	
+				Color tmp=new Color(img.getRGB(tx, ty));
+				if (tmp.getGreen()<20) {
+					countB++;						//detecte si le nombre de pix noir present au milieu haut
+				}									// de la copie correspond au carrÃ© sinon swap
+			}
+		}
+		
+		if (countB>countH)
+			return true;
+		return false;
+		
+	
+	}
 
 	public void setImage(BufferedImage entree){
 		this.img=entree;
@@ -179,7 +210,7 @@ public class Recadrage {
 	
 	
 	public int[][] RdB() {		// cherche les 4 points noirs
-		int[][] roar = new int[img.getWidth()*img.getHeight()][2];
+		int[][] pixNoirs = new int[img.getWidth()*img.getHeight()][2];
 
 		int[][] regroupY = new int[img.getWidth()*img.getHeight()][2];
 		int boucleY=0;int groupYi=0;
@@ -192,8 +223,8 @@ public class Recadrage {
 				Color tmp=new Color(img.getRGB(tx, ty));
 				if (tmp.getGreen()<20) { 	//si le pixel  est noir
 					if (checkCircle(tx,ty,radius) ) {	//verifie si un cercle de radius entoure le pixel
-						roar[i][0]=tx;
-						roar[i][1]=ty;
+						pixNoirs[i][0]=tx;
+						pixNoirs[i][1]=ty;
 						i++;
 					}
 				}
@@ -202,16 +233,16 @@ public class Recadrage {
 		//System.out.println("fin");
 		int tempora=0;
 		int tmp=1;
-		int roar2[][]=new int [img.getWidth()*img.getHeight()][2];
-		roar2[0]=roar[0];
-		for (int l=0;l<img.getHeight()*img.getWidth() && (roar[l][1]!=0 || roar[l][0]!=0);l++) {
-			if((roar[l][0]-roar2[tmp-1][0])<5 || roar[l][1]-roar2[tmp-1][1]<5 ){		//x-(x-1)>5 ou y-(y-1)>5
-				roar2[tmp][0]=roar[l][0];			//efface le precedent roar2 si il était a 1 pixel de diff
-				roar2[tmp][1]=roar[l][1];
+		int centreX[][]=new int [img.getWidth()*img.getHeight()][2];
+		centreX[0]=pixNoirs[0];
+		for (int l=0;l<img.getHeight()*img.getWidth() && (pixNoirs[l][1]!=0 || pixNoirs[l][0]!=0);l++) {
+			if((pixNoirs[l][0]-centreX[tmp-1][0])<5 || pixNoirs[l][1]-centreX[tmp-1][1]<5 ){		//x-(x-1)>5 ou y-(y-1)>5
+				centreX[tmp][0]=pixNoirs[l][0];			//efface le precedent roar2 si il Ã©tait a 1 pixel de diff
+				centreX[tmp][1]=pixNoirs[l][1];
 			}
 			else {
 				tmp++;
-				roar2[tmp]=roar[l];
+				centreX[tmp]=pixNoirs[l];
 			}
 			
 		}
@@ -220,18 +251,18 @@ public class Recadrage {
 		//boucle de determination des points noirs
 		//System.out.println("roar2debut");
 		int points[][]=new int [4][2];
-		int lastRoar[][]=new int [roar2.length][2]; int boucl=0; int lasti=0;
+		int centres[][]=new int [centreX.length][2]; int boucl=0; int lasti=0;
 		int t=0;
-		for (int l=1;l<=img.getHeight()*img.getWidth() && (roar2[l-1][1]!=0 || roar2[l-1][0]!=0);l++) {
+		for (int l=1;l<=img.getHeight()*img.getWidth() && (centreX[l-1][1]!=0 || centreX[l-1][0]!=0);l++) {
 
 
 			
-			int diffx=roar2[l][0]-roar2[l-1][0];
-			int diffy=roar2[l][1]-roar2[l-1][1];
+			int diffx=centreX[l][0]-centreX[l-1][0];
+			int diffy=centreX[l][1]-centreX[l-1][1];
 			int diff=Math.abs(diffx)+Math.abs(diffy);
 			if (diff>img.getWidth()*0.85)
 			{
-				points[t]=roar2[l];
+				points[t]=centreX[l];
 				t++;
 			}
 			
@@ -239,29 +270,24 @@ public class Recadrage {
 				boucl++;
 			}
 			else {
-				lastRoar[lasti][0]=roar2[l-boucl/2][0];
-				lastRoar[lasti][1]=roar2[l-boucl/2][1];
+				centres[lasti][0]=centreX[l-boucl/2][0];
+				centres[lasti][1]=centreX[l-boucl/2][1];
 				lasti++;boucl=0;
 			}
 		}
 		
 		
 		
-		//System.out.println("lasrorar");
-		for (int l=0;l<=lastRoar.length && (lastRoar[l][1]!=0 || lastRoar[l][0]!=0);l++) {
-			//System.out.println("x: "+lastRoar[l][0]+"   y: "+lastRoar[l][1]);	//reste a grouper les coord pour avoir le centre des ronds
-		}
 		
-		
-		for (int l=0;l<=lastRoar.length && (lastRoar[l][1]!=0 || lastRoar[l][0]!=0);l++) {	
+		for (int l=0;l<=centres.length && (centres[l][1]!=0 || centres[l][0]!=0);l++) {	
 			boolean test=true;
 			int maxPoint=0;
 			for (int li=0;li<=points.length && (points[li][1]!=0 || points[li][0]!=0);li++) {
-				int diffx=	Math.abs(lastRoar[l][0]-points[li][0]);
-				int diffy=	Math.abs(lastRoar[l][1]-points[li][1]);
+				int diffx=	Math.abs(centres[l][0]-points[li][0]);
+				int diffy=	Math.abs(centres[l][1]-points[li][1]);
 				boolean testx=		diffx>img.getWidth()*0.85 	|| diffx<img.getWidth()*0.2;	//diff   <0.1 ou >0.8 x la largeur de feuille
 				boolean testy=		diffy>img.getHeight()*0.8 	|| diffy<img.getWidth()*0.2;
-				boolean Repeat=	diffx+diffy>img.getWidth()*0.2;	 //si point deja présent
+				boolean Repeat=	diffx+diffy>img.getWidth()*0.2;	 //si point deja prÃ©sent
 
 				if (!Repeat || (!testx || !testy) )	// si 0.2>diffx>0.8 ou "diffy" et  
 				{
@@ -272,15 +298,10 @@ public class Recadrage {
 			
 			if(test && maxPoint<2) {
 				//System.out.println(lastRoar[l][0]+"   "+lastRoar[l][1]);
-				points[maxPoint+1][0]=lastRoar[l][0];
-				points[maxPoint+1][1]=lastRoar[l][1];
+				points[maxPoint+1][0]=centres[l][0];
+				points[maxPoint+1][1]=centres[l][1];
 			}
 		}
-		//System.out.println("point");
-		/*for (int l=1;l<=points.length;l++) {
-			System.out.println("x: "+points[l-1][0]+"   y: "+points[l-1][1]);	
-		}*/
-
 		return points;
 
 	}
@@ -293,9 +314,9 @@ public class Recadrage {
 	public boolean checkCircle(int x,int y,int radius) {
 		double pi=Math.PI; //3.14
 		Color tmp;
-		for (double k=-1;k<=1;k+=0.05) {						// de 0 à 2 pi
-			int px=x+(int)Math.round(radius*Math.cos(k*pi));		//px = pos x du contour du supposé cercle
-			int py=y+(int)Math.round(radius*Math.sin(k*pi));		//diam calculé +/- 42 pixels
+		for (double k=-1;k<=1;k+=0.05) {						// de 0 Ã  2 pi
+			int px=x+(int)Math.round(radius*Math.cos(k*pi));		//px = pos x du contour du supposÃ© cercle
+			int py=y+(int)Math.round(radius*Math.sin(k*pi));		//diam calculÃ© +/- 42 pixels
 			if(py<0)py=0;
 			if(py>=img.getHeight())py=img.getHeight()-1;
 			if(px<0)px=0;
@@ -349,7 +370,7 @@ public class Recadrage {
 				//System.out.println("dadj "+dadj + " dhypo "+dhypo);
 				
 				
-				if (dhypo<img.getWidth() && dhypo!=0) {	//deux points selectionnés sont des diagonales
+				if (dhypo<img.getWidth() && dhypo!=0) {	//deux points selectionnÃ©s sont des diagonales
 					double retour=Math.acos(dadj/dhypo)*(180/Math.PI);
 					if (retour>90/2)
 						retour=180-90-retour;
