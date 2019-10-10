@@ -1,4 +1,4 @@
-package config;
+﻿package config;
 
 import java.io.*;
 import java.util.*;
@@ -27,15 +27,15 @@ public class Config {
 		this.questions = questions;
 	}
 
-    public boolean isParsable(String s) {
-	    try {
-	        Integer.valueOf(s);
-	        return true;
-	    } catch (NumberFormatException e) {
-	        return false;
-	    }
+	public boolean isParsable(String s) {
+		try {
+			Integer.valueOf(s);
+			return true;
+		} catch (NumberFormatException e) {
+			return false;
+		}
 	}
-	
+
 	public Config(String s) {
 		// Constructeur, prend en parametre le chemin vers le fichier source
 		source = s;
@@ -85,26 +85,28 @@ public class Config {
 			// ce caractere apparait uniquement en debut de fichier
 			if (ligne.startsWith("\uFEFF"))
 				ligne = ligne.substring(1);
-			while (ligne.equals("")) // on saute les lignes vides si elles sont au debut du fichier
-				ligne = scan.nextLine();
-			while (scan.hasNext()) {
-				if (!(ligne.substring(0, 1).equals("#"))) // si ligne commence par un # c'est un commentaire, donc on
-															// l'ignore
-				{
-					if (ligne.substring(0, 1).equals("*")) // si ligne commence par une *, c'est une question
+			while (scan.hasNext() || !ligne.isEmpty() || ligne.equals(System.lineSeparator())) {
+				if (!ligne.equals("")) {
+					if (!(ligne.substring(0, 1).equals("#"))) // si ligne commence par un # c'est un commentaire, donc
+																// on
+																// l'ignore
 					{
-						q = makeQuestion(ligne);
-						ligne = scan.nextLine(); // on scan la prochaine ligne
-						while (!ligne.equals("")) // tant que la ligne n'est pas vide, on lit la suite qui est supposé
-													// etre les reponses
+						if (ligne.substring(0, 1).equals("*")) // si ligne commence par une *, c'est une question
 						{
-							q.addReponse(ligne);
-							ligne = scan.nextLine();
+							q = makeQuestion(ligne);
+							ligne = scan.nextLine(); // on scan la prochaine ligne
+							while (!ligne.equals("")) // tant que la ligne n'est pas vide, on lit la suite qui est
+														// supposé
+														// etre les reponses
+							{
+								q.addReponse(ligne);
+								ligne = scan.nextLine();
+							}
+							questions.add(q);
+						} else // si c'est pas une *, alors c'est un parametre (on ignore les lignes vides)
+						{
+							lireParam(ligne);
 						}
-						questions.add(q);
-					} else // si c'est pas une *, alors c'est un parametre (on ignore les lignes vides)
-					{
-						lireParam(ligne);
 					}
 				}
 				ligne = scan.nextLine();
@@ -154,57 +156,61 @@ public class Config {
 	public void lireParam(String s) {
 		int n = s.indexOf(":"); // recherche de position du premier ":" pour pouvoir separer le nom du param de
 								// sa valeur
-		String spl[] = { s.substring(0, n), s.substring(n + 1, s.length()) };
-		while (spl[1].substring(0, 1).equals(" "))
-			spl[1] = spl[1].substring(1, spl[1].length());
-		spl[0] = spl[0].toUpperCase(); // pour eviter la casse, on met tout en upper case
-		switch (spl[0]) // chaque case correspond é un parametre, pour le moment on ignore tout
-						// parametre qui n'est pas utile au programme.
+		if (n != -1) // si -1 alors il n'y a pas de : et donc ce n'est pas un paramètre
 		{
-		case "PAPERSIZE":
-			setPaperSize(spl[1]);
-			break;
+			String spl[] = { s.substring(0, n), s.substring(n + 1, s.length()) };
+			while (spl[1].substring(0, 1).equals(" "))
+				spl[1] = spl[1].substring(1, spl[1].length());
+			spl[0] = spl[0].toUpperCase().trim(); // pour eviter la casse, on met tout en upper case
+			switch (spl[0]) // chaque case correspond é un parametre, pour le moment on ignore tout
+							// parametre qui n'est pas utile au programme.
+			{
+			case "PAPERSIZE":
+				setPaperSize(spl[1]);
 
-		case "CODE":
-			setCode(spl[1]);
+				break;
 
-			break;
+			case "CODE":
+				setCode(spl[1]);
 
-		case "MARKFORMAT":
-			setMarkFormat(spl[1]);
+				break;
 
-			break;
+			case "MARKFORMAT":
+				setMarkFormat(spl[1]);
 
-		case "NAMEFIELD":
-			setNameField(spl[1]);
+				break;
 
-			break;
+			case "NAMEFIELD":
+				setNameField(spl[1]);
 
-		case "STUDENTIDFIELD":
-			setStudentIdField(spl[1]);
+				break;
 
-			break;
+			case "STUDENTIDFIELD":
+				setStudentIdField(spl[1]);
 
-		case "MARKFIELD":
-			setMarkField(spl[1]);
+				break;
 
-			break;
+			case "MARKFIELD":
+				setMarkField(spl[1]);
 
-		case "SEPARATEANSWERSHEET":
-			setSeparateAnswerSheet(spl[1]);
+				break;
 
-			break;
+			case "SEPARATEANSWERSHEET":
+				setSeparateAnswerSheet(spl[1]);
 
-		case "ANSWERSHEETTITLE":
-			setAnswerSheetTitle(spl[1]);
+				break;
 
-			break;
+			case "ANSWERSHEETTITLE":
+				setAnswerSheetTitle(spl[1]);
 
-		case "ANSWERSHEETPRESENTATION":
-			setAnswerSheetPresentation(spl[1]);
+				break;
 
-			break;
-		default: // parametre mal tapé ou non utile (pour le moment) au programme, on l'ignore
+			case "ANSWERSHEETPRESENTATION":
+				setAnswerSheetPresentation(spl[1]);
+
+				break;
+			default: // parametre mal tapé ou non utile (pour le moment) au programme, on l'ignore
+			}
 		}
 	}
 
