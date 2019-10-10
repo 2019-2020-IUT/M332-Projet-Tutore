@@ -75,9 +75,10 @@ public class GenerateCSV {
 
 						if (this.isValid(etud)) {
 							writer.write(etud + ";" + etudiants.get(etud) + System.getProperty("line.separator"));
+							logger.debug("Added "+etud+" to csv");
 						}
 						else {
-							logger.debug("Invalid id not added to csv");
+							logger.debug("Invalid id for "+etud+" not added to csv");
 						}
 
 					} else {
