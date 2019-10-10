@@ -2,6 +2,7 @@ package commands;
 
 import picocli.CommandLine;
 
+
 import picocli.CommandLine.*;
 import progressbar.ProgressBar;
 
@@ -151,7 +152,7 @@ public class Read implements Callable <Void> {
 			String filePath = new File("").getAbsolutePath();
 			
 			// Instantie l'OCR
-			GestionnaireCopies ocr = new GestionnaireCopies("../"+directory_name);
+			GestionnaireCopies ocr = new GestionnaireCopies(directory_name);
 						
 			
 			logger.debug("CSV initialized with : "+ocr.createHashMapforCSV()+" , "+config.getParam().get("Code")+" , "+result_name);

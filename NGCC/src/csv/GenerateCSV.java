@@ -1,9 +1,10 @@
 package csv;
 
 import java.io.File;
+
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.util.HashMap;
+
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
@@ -13,7 +14,7 @@ public class GenerateCSV {
 
 	Map<String, String> etudiants;
 	int numLength;
-	String path = "../export";
+	String path = "export";
 	Logger logger = LogManager.getLogger(GenerateCSV.class);
 
 	public GenerateCSV(Map<String, String> map, String length, String pth) {
