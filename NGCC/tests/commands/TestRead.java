@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import ch.qos.logback.classic.Level;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
-import picocli.CommandLine.HelpCommand;
 
 @Command(
 		name = "TestRead",

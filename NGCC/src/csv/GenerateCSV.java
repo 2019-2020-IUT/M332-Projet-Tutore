@@ -36,7 +36,7 @@ public class GenerateCSV {
 				int nb = Character.getNumericValue(s.charAt(i));
 
 				
-				if (nb <= 0 || nb >= 9) {
+				if (nb < 0 || nb > 9) {
 					
 					logger.fatal("Student id's characters are not recognized");
 					return false;
@@ -72,12 +72,12 @@ public class GenerateCSV {
 					// Si etudiant HashMap est null, pas ecrit
 					if (etud != null) {
 
-						//if (this.isValid(etud)) {
+						if (this.isValid(etud)) {
 							writer.write(etud + ";" + etudiants.get(etud) + System.getProperty("line.separator"));
-						//}
-//						else {
-//							logger.debug("Invalid id not added to csv");
-//						}
+						}
+						else {
+							logger.debug("Invalid id not added to csv");
+						}
 
 					} else {
 

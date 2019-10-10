@@ -65,11 +65,11 @@ public class Read implements Callable <Void> {
 	public Read(PrintStream out) {
 	}
 
-	
-//	public boolean isCsv(String file) {
-//		return file.endsWith(".csv");
-//		
-//	}
+	// Check de l'extension csv (à améliorer)
+	public boolean isCsv(String file) {
+		return file.endsWith(".csv");
+		
+	}
 	
 
 	@Override
@@ -138,7 +138,10 @@ public class Read implements Callable <Void> {
 			logger.debug("Source : "+source_path);
 		
 			
-			
+			if (!isCsv(result_name)) {
+				result_name = result_name+".csv";
+				logger.info("Result file name changed to '"+result_name+"'");
+			}
 
 			
 			
@@ -147,9 +150,9 @@ public class Read implements Callable <Void> {
 			
 			String filePath = new File("").getAbsolutePath();
 			
-			
+			// Instantie l'OCR
 			GestionnaireCopies ocr = new GestionnaireCopies("../"+directory_name);
-						// Instantie l'ocr
+						
 			
 			logger.debug("CSV initialized with : "+ocr.createHashMapforCSV()+" , "+config.getParam().get("Code")+" , "+result_name);
 			
