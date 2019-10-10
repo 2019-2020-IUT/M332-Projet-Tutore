@@ -115,7 +115,6 @@ public class Config {
 			}
 			scan.close();
 		} catch (Exception e) {
-			System.err.println(e.getMessage());
 		}
 	}
 
