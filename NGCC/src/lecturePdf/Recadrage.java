@@ -83,14 +83,20 @@ public class Recadrage  {
 
 	
 	
-	public BufferedImage[] listAutomation(BufferedImage[] list){
-		BufferedImage[] retour=new BufferedImage[list.length];
-		int i=0;
-		for (BufferedImage imag:list)
+	public ArrayList<BufferedImage> listAutomation(ArrayList<BufferedImage>list){
+		ArrayList<BufferedImage> retour =new ArrayList<BufferedImage>();
+		
+		for (BufferedImage imag:list) {
 			this.img=imag;
-			this.automation();
-			retour[i]=this.img;
-			i++;
+			try {
+				this.automation();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			retour.add(this.img);
+		}
+		return retour;
 	}
 	
 	

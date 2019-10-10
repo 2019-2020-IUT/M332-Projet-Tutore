@@ -17,6 +17,8 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.rendering.ImageType;
 import org.apache.pdfbox.rendering.PDFRenderer;
 
+import lecturePdf.Recadrage;
+
 public class PdfToImage {
 
 	public List<String> listAllFiles(String directory, String extension) {
@@ -30,6 +32,7 @@ public class PdfToImage {
 		}
 		return files;
 	}
+
 
 	public BufferedImage blackWhiteConvert(BufferedImage image) {
 		// Convertit une image en image en noir et blanc
@@ -86,7 +89,10 @@ public class PdfToImage {
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
-		return images;
+		Recadrage recadrage=new Recadrage();
+		return recadrage.listAutomation(images);
+		//return images;
+		
 	}
 
 	public void saveOnDisk(List<BufferedImage> images, String originalFileDir) {
