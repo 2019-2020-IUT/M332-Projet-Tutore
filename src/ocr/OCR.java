@@ -15,7 +15,7 @@ public abstract class OCR {
 			tesseract.setDatapath("Tess4J");
 			tesseract.setLanguage("eng");
 			//tesseract.setOcrEngineMode(2);
-			tesseract.setTessVariable("tessedit_char_whitelist","0123456789");
+			tesseract.setTessVariable("tessedit_char_whitelist",",0123456789");
 			str=tesseract.doOCR(img);
 		} catch (TesseractException e) {
 			

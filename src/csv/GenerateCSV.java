@@ -48,6 +48,12 @@ public class GenerateCSV {
 			}
 			logger.debug("String validity ok");
 			return true;
+			
+		} else if (s.length()==0 || s==null){
+			
+			logger.fatal("Id not recognized");
+			return false;
+			
 		} else {
 			logger.fatal("Student id's length is not correct");
 			return false;
