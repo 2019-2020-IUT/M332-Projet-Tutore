@@ -8,11 +8,10 @@ compileAndTests :
   before_script:
     - ls -la
     - mkdir bin
-    - javac -cp LIB/*:NGCC/jar/*:bin:. -d bin NGCC/src/*/*.java
+    - javac -cp ".;jar/*" -d bin src/commands/Analyse.java src/commands/Build.java src/commands/Evaluate.java src/commands/Generate.java src/commands/Produce.java src/commands/Read.java src/config/Config.java src/config/Question.java src/config/QuestionBoite.java src/config/Reponse.java src/csv/GenerateCSV.java src/GenerateurPdf/SubjectGenerator.java src/lecturePdf/Recadrage.java src/ocr/Copie.java src/ocr/GestionnaireCopies.java src/ocr/ImagesCopie.java src/ocr/Img.java src/ocr/ImgNote.java src/ocr/ImgNumEtu.java src/ocr/OCR.java src/ocr/PdfToImage.java src/ocr/Rogneur.java src/picocli/CommandLine.java src/progressbar/ProgressBar.java src/Exec.java
     - ls bin
     - javac -cp LIB/*:NGCC/jar/*:bin:. -d bin NGCC/tests/*/*.java
   script:
     - java -jar LIB/junit-platform-console-standalone-1.5.1.jar --class-path bin --scan-class-path
   #allow_failure: true
   
-
