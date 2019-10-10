@@ -13,6 +13,8 @@ import java.util.Map;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 
+import lecturePdf.Recadrage;
+
  
 public class GestionnaireCopies {
 
@@ -43,18 +45,22 @@ public class GestionnaireCopies {
 		List<BufferedImage> images = new ArrayList<>(); // stockera les images (resultat)
 		// CONVERT PAGES TO IMAGES
 		
-		
 		try {
 			
 			
-			// nom du fichier pdf à ouvrir (TODO: changer le chemin)
+			// nom du fichier pdf Ã  ouvrir (TODO: changer le chemin)
 			List<String> files = pdfAnalyzer.listAllFiles(path, ".pdf");
+
+			Recadrage recadrage=new Recadrage();
 			
 			for (String fname : files) {
 				pdfFile = new File(fname);
 				document = PDDocument.load(pdfFile); // charge le fichier pdf cree pour le traiter
 				
-				images.addAll(pdfAnalyzer.convertPagesToBWJPG(document,1));
+				
+				
+				images.addAll( recadrage.listAutomation(pdfAnalyzer.convertPagesToBWJPG(document,1)));
+						
 				// appelle la methode qui convertit les pages en images (jpg) noir et blanches
 				document.close();
 			}

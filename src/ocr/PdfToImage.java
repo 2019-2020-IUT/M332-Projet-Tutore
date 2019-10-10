@@ -89,9 +89,8 @@ public class PdfToImage {
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
-		Recadrage recadrage=new Recadrage();
-		return recadrage.listAutomation(images);
-		//return images;
+		
+		return images;
 		
 	}
 
