@@ -83,7 +83,7 @@ public class PdfToImage {
 																											// noir et
 																											// blanc
 				images.add(bim);
-				System.out.println("Ajout n°" + pageCounter);
+				System.out.println("Ajout numero" + pageCounter);
 			}
 			 document.close();
 		} catch (IOException ioe) {

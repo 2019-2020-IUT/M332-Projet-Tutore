@@ -1,5 +1,7 @@
 package lecturePdf;
 
+
+
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
@@ -17,11 +19,10 @@ import javax.imageio.ImageIO;
 
 
 
-public class Recadrage  {
+public class Recadrage {
 	String dir="";
 	String filename="";
 	BufferedImage img;
-
 
 	public Recadrage(String directory,String file) {
 		dir=directory;
@@ -40,7 +41,7 @@ public class Recadrage  {
 	public Recadrage(){
 	}
 
-	public boolean estDroite() {	//determine si l'image png/jpg du pdf est droite  (doit etre en noir et blanc)
+	public boolean estDroite1() {	//determine si l'image png/jpg du pdf est droite  (doit etre en noir et blanc)
 		int count=0;
 		boolean stop=false;
 		for (int ty=0; ty<100 && !stop;ty++) {
@@ -57,6 +58,77 @@ public class Recadrage  {
 			return true;
 		return false;
 	}
+	
+	
+	
+	public boolean estDroite(){
+		int count=0;
+		boolean stop=false;
+		for (int ty=0; ty<100 && !stop;ty++) {
+			for (int tx=0;tx<img.getWidth();tx++) {
+	
+				Color tmp=new Color(img.getRGB(tx, ty));				
+				if (tmp.getGreen()<20) {
+					count++;
+				}
+			}
+			if (count>img.getWidth()/5.4 && count <img.getWidth()/5)
+				return true;
+			count=0;
+			if (ty>img.getHeight()*0.1)
+				stop=true;
+		}
+		if (entreeEnvers())
+			this.img=Recadrage.rotate(img, 180);
+		return false;
+	}
+	
+	public boolean aLEnvers() {
+		boolean stop2=false;
+		int count=0;
+		for (int ty2=img.getHeight()-100; ty2<img.getHeight() && !stop2;ty2++) {
+			
+			for (int tx2=0;tx2<img.getWidth();tx2++) {
+				
+				Color tmp=new Color(img.getRGB(tx2, ty2));
+				if (tmp.getGreen()<20) {
+					count++;
+				}
+			}
+			if (count>img.getWidth()/5.4 && count <img.getWidth()/5) {
+				return true;
+			}
+			count=0;
+			if (ty2>img.getHeight()*0.1)
+				stop2=true;
+		}
+		return false;
+	}
+	
+	public boolean entreeEnvers() {
+		boolean stop2=false;
+		int count=0;
+		int maxwid=img.getWidth();
+		for (int ty2=img.getHeight()-100; ty2<img.getHeight() && !stop2;ty2++) {	
+			
+			for (int tx2=(int)(maxwid*0.1);tx2<maxwid*0.9;tx2++) {
+				
+				Color tmp=new Color(img.getRGB(tx2, ty2));
+				if (tmp.getGreen()<20) {
+					count++;						//detecte si le nombre de pix noir present au milieu haut
+				}									// de la copie correspond au carré sinon swap
+			}
+			if (ty2>img.getHeight()*0.1)
+				stop2=true;
+		
+		}
+		if (count<img.getWidth()/5.4) 
+			return true;
+			
+		return false;
+	
+	}
+	
 
 	public void setImage(BufferedImage entree){
 		this.img=entree;
@@ -71,8 +143,10 @@ public class Recadrage  {
 		if (!this.estDroite()) {
 			int[][] points=RdB();
 			double angle=getAngle(points);
-			System.out.println("l'angle est de = "+angle);		    
+			    
 		    img=rotate(img,angle);
+		    if (aLEnvers())
+				this.img=Recadrage.rotate(img, 180);
 		    String nomImage="sortie";
 			File nomfichier = new File("C:\\Users\\Xxsafirex\\Desktop\\Image\\" + nomImage + ".jpg");// ou jpg
 			ImageIO.write(img, "JPG", nomfichier);//ou JPG
@@ -203,9 +277,9 @@ public class Recadrage  {
 			}
 		}
 		//System.out.println("point");
-		for (int l=1;l<=points.length;l++) {
+		/*for (int l=1;l<=points.length;l++) {
 			System.out.println("x: "+points[l-1][0]+"   y: "+points[l-1][1]);	
-		}
+		}*/
 
 		return points;
 
@@ -223,9 +297,11 @@ public class Recadrage  {
 			int px=x+(int)Math.round(radius*Math.cos(k*pi));		//px = pos x du contour du supposé cercle
 			int py=y+(int)Math.round(radius*Math.sin(k*pi));		//diam calculé +/- 42 pixels
 			if(py<0)py=0;
-			if(py>img.getHeight())py=img.getHeight()-1;
+			if(py>=img.getHeight())py=img.getHeight()-1;
 			if(px<0)px=0;
-			if (px>img.getWidth())px=img.getWidth()-1;
+			if (px>=img.getWidth())px=img.getWidth()-1;
+			//System.out.println("px ="+px+"  /"+img.getWidth());
+			//System.out.println("py ="+py+"  /"+img.getHeight());
 			tmp=new Color(img.getRGB(px, py));
 			if (tmp.getGreen()>20) {		//si pixel == blanc
 				return false;
@@ -270,7 +346,7 @@ public class Recadrage  {
 				
 				double dadj=Math.sqrt(Math.pow(xb-pointx, 2)+Math.pow(yb-pointy, 2));	//adjacent / rapport a xb,yb
 				
-				System.out.println("dadj "+dadj + " dhypo "+dhypo);
+				//System.out.println("dadj "+dadj + " dhypo "+dhypo);
 				
 				
 				if (dhypo<img.getWidth() && dhypo!=0) {	//deux points selectionnés sont des diagonales
