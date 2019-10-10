@@ -13,7 +13,7 @@ import java.util.Map;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 
-
+ 
 public class GestionnaireCopies {
 
 	private List<Copie> listeCopie;
@@ -56,6 +56,7 @@ public class GestionnaireCopies {
 				
 				images.addAll(pdfAnalyzer.convertPagesToBWJPG(document,1));
 				// appelle la methode qui convertit les pages en images (jpg) noir et blanches
+				document.close();
 			}
 			
 		} catch (IOException e) {

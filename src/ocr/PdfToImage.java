@@ -1,6 +1,5 @@
 package ocr;
 import java.awt.image.BufferedImage;
-import java.util.logging.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -21,8 +20,6 @@ import org.apache.pdfbox.rendering.PDFRenderer;
 import lecturePdf.Recadrage;
 
 public class PdfToImage {
-	
-	//Logger.getLogger("org.apache.pdfbox").setLevel(java.util.logging.Level.OFF);
 
 	public List<String> listAllFiles(String directory, String extension) {
 		// https://www.mkyong.com/java/java-how-to-list-all-files-in-a-directory/

@@ -145,7 +145,6 @@ public class Read implements Callable <Void> {
 			}
 
 			
-			
 			Config config = new Config(source_path);	//Initialise le fichier de configuration selon le chemin donné
 			config.readConfig();
 			
