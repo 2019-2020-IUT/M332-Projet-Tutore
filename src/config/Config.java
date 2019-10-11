@@ -49,7 +49,7 @@ public class Config {
 		param.put("ShuffleQuestions", "1"); // 1 = qt mélangées, 0 = non mél
 		param.put("ShuffleAnswers", "1"); // 1= proposition rép mélangées, 0= non
 		param.put("Code", "8"); // code étudiant = 8 chiffres (entre 1 et 16)
-		param.put("MarkFormat", "20/4"); // expl "20/4" pour des notes entre 0 et 20 notées é 0.25 points
+		param.put("MarkFormat", "20"); // expl "20" pour des notes entre 0 et 20 notées é 0.25 points
 		param.put("NameField", "Nom et Prénom"); // remplace le texte
 		param.put("StudentField",
 				"Veuillez coder votre numéro\r\n d'étudiant ci-contre et écrire votre nom \r\n dans la case ci-dessous");

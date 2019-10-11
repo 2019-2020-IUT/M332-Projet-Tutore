@@ -16,6 +16,7 @@
 package net.sourceforge.tess4j.util;
 
 import java.io.*;
+
 import java.util.*;
 import javax.imageio.*;
 import javax.imageio.stream.*;

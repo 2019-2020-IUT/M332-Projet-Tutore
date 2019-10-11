@@ -2,7 +2,6 @@ package commands;
 
 import picocli.CommandLine;
 
-
 import picocli.CommandLine.*;
 import progressbar.ProgressBar;
 
@@ -156,7 +155,7 @@ public class Read implements Callable <Void> {
 			
 			logger.debug("CSV initialized with : "+ocr.createHashMapforCSV()+" , "+config.getParam().get("Code")+" , "+result_name);
 			
-			GenerateCSV csv = new GenerateCSV(ocr.createHashMapforCSV(),config.getParam().get("Code"), result_name);
+		    GenerateCSV csv = new GenerateCSV(ocr.createHashMapforCSV(),config.getParam().get("Code"),config.getParam().get("MarkFormat"), result_name);
 			
 			csv.createFile();  //Génère le fichier csv à partir de la HMap retournée par l'OCR
 			

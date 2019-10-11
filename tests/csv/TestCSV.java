@@ -13,8 +13,9 @@ public class TestCSV {
 	
 	Map<String,String> map = new HashMap<String,String>();
 	String length = "8";
+	String format = "20";
 	String path = "../export/result.csv";
-	GenerateCSV csv = new GenerateCSV(map,length,path);
+	GenerateCSV csv = new GenerateCSV(map,length,format,path);
 	
 	@BeforeEach
 	void setUp() {
@@ -27,7 +28,7 @@ public class TestCSV {
 	void testNotNull() {
 		
 		map.put("21705239", "17");
-		csv = new GenerateCSV(map,length,path);
+		csv = new GenerateCSV(map,length,format,path);
 		
 		assertFalse(csv == null);	
 	}
@@ -37,10 +38,10 @@ public class TestCSV {
 	
 		map.put("21435712", "9");
 		map.put("21705239", "17");
-		csv = new GenerateCSV(map,length,path);
+		csv = new GenerateCSV(map,length,format,path);
 		
 		for (String etud : csv.etudiants.keySet()) {
-			assertTrue(csv.isValid(etud));
+			assertTrue(csv.isNumValid(etud));
 		}
 		
 	}
@@ -51,10 +52,10 @@ public class TestCSV {
 	
 		map.put("21435", "9");
 		map.put("1705239", "17");
-		csv = new GenerateCSV(map,length,path);
+		csv = new GenerateCSV(map,length,format,path);
 		
 		for (String etud : csv.etudiants.keySet()) {
-			assertFalse(csv.isValid(etud));
+			assertFalse(csv.isNumValid(etud));
 		}
 		
 	}
