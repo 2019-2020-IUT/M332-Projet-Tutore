@@ -21,6 +21,7 @@ public class TestCSV {
 	void setUp() {
 		map = new HashMap<String,String>();
 		length = "8";
+		format = "20";
 		path = "../export/result.csv";
 	}
 	

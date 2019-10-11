@@ -52,7 +52,7 @@ public class Exec implements Callable <Void> {
 				.addSubcommand("-e", new Evaluate(System.out))	
 				.addSubcommand("help", new HelpCommand()); 			// Aide générée automatiquement par l'API
 		
-		cmd.execute(args);  //t
+		cmd.execute(args);  
 		
 	}
 	
