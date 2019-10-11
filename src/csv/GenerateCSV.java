@@ -82,6 +82,26 @@ public class GenerateCSV {
 		}
 		
 	}
+	
+	
+	public boolean alreadyExists(String etd) {
+		int count = 0;
+		
+		for(String etud : etudiants.keySet()) {
+			if (etud.contentEquals(etd)) {
+				count++;
+			}	
+		}
+		
+		if(count >= 2) {	
+			logger.info("Student's id "+etd+" already checked");
+			return true;
+		}
+		else {
+			return false;
+		}	
+		
+	}
 
 	public void createFile() {
 		try (PrintWriter writer = new PrintWriter(new File(this.path))) {
@@ -95,6 +115,7 @@ public class GenerateCSV {
 
 			writer.write(sb.toString());
 
+			//Si l'id n'est pas vide
 			if (!etudiants.isEmpty()) {
 
 				for (String etud : this.etudiants.keySet()) {
@@ -102,15 +123,24 @@ public class GenerateCSV {
 					// Si etudiant HashMap est null, pas ecrit
 					if (etud != null) {
 
-						if (this.isNumValid(etud) && this.isMarkValid(etudiants.get(etud))) {
-							writer.write(etud + ";" + etudiants.get(etud) + System.getProperty("line.separator"));
-							logger.debug("Added "+etud+" to csv");
+						// Si n'existe pas deja (pas de double)
+						if(!alreadyExists(etud)) {
+							
+							if (this.isNumValid(etud) && this.isMarkValid(etudiants.get(etud))) {
+								writer.write(etud + ";" + etudiants.get(etud) + System.getProperty("line.separator"));
+								logger.debug("Added "+etud+" to csv");
+							}
+							else {
+								logger.debug("Invalid pair for "+etud+" and "+etudiants.get(etud)+" not added to csv");
+							}
+							
 						}
 						else {
-							logger.debug("Invalid pair for "+etud+" and "+etudiants.get(etud)+" not added to csv");
+							logger.debug("Already existing id not added to csv");
 						}
 
-					} else {
+					} 
+					else {
 
 						logger.debug("Null id not added to csv");
 					}
