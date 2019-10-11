@@ -178,9 +178,9 @@ public class Recadrage {
 		    img=rotate(img,angle);
 		    if (aLEnvers())
 				this.img=Recadrage.rotate(img, 180);
-		    String nomImage="sortie";
-			File nomfichier = new File("C:\\Users\\Xxsafirex\\Desktop\\Image\\" + nomImage + ".jpg");// ou jpg
-			ImageIO.write(img, "JPG", nomfichier);//ou JPG
+		    //String nomImage="sortie";
+			//File nomfichier = new File("C:\\Users\\Xxsafirex\\Desktop\\Image\\" + nomImage + ".jpg");// ou jpg
+			//ImageIO.write(img, "JPG", nomfichier);//ou JPG
 			
 		}	
 		return img;
