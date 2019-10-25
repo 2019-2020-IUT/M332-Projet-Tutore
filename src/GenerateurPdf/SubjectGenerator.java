@@ -2,6 +2,7 @@ package GenerateurPdf;
 
 import java.awt.Color;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -9,6 +10,9 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
+
+import config.Config;
+import config.Question;
 
 // infor concernant strok, fill, ... : https://stackoverflow.com/a/27959484
 
@@ -314,6 +318,172 @@ public class SubjectGenerator {
 			ioe.printStackTrace();
 		}
 	}
+	
+	public static PDDocument generateBody(PDDocument pdDocument) {
+		try {
+			PDPageContentStream pdPageContentStream = new PDPageContentStream(pdDocument, pdDocument.getPage(0), 
+					PDPageContentStream.AppendMode.APPEND, true);
+			PDFont font = PDType1Font.HELVETICA_BOLD;
+			
+			// Boucle sur les questions
+			int qIndex = 1;
+			int heightOffset = 265;
+			int pageIndex = 0;
+			for (Question q : Config.getQuestions()) {
+				int height = (int) pdDocument.getPage(0).getMediaBox().getHeight();
+				PDPage page = pdDocument.getPage(pageIndex);
+				SubjectGenerator.generateQ(q, qIndex, pdDocument, page, 25, heightOffset);
+				qIndex++;
+				heightOffset += 100;
+				
+				if (heightOffset > height - 10) {
+					heightOffset = 265;
+					pageIndex++;
+				}
+			}
+			
+			pdPageContentStream.close();
+		} 
+		
+		catch (IOException ioe) {
+			ioe.printStackTrace();
+		}
+
+		return pdDocument;
+	}
+	
+	public static void generateQ(Question q, int qIndex, PDDocument pdDocument, PDPage curPage, int widthOffset, int heightOffset) {
+		try {		
+			// Il faut rendre plus générale la génération des Q (en fonction du nombre de réponses, recycler le heightOffset)
+			
+			
+			int width = (int) pdDocument.getPage(0).getMediaBox().getWidth();
+			int height = (int) pdDocument.getPage(0).getMediaBox().getHeight();
+			
+			
+			PDPageContentStream pdPageContentStream = new PDPageContentStream(pdDocument, curPage,
+					PDPageContentStream.AppendMode.APPEND, true);
+			PDFont font = PDType1Font.TIMES_ROMAN;
+			int fontSize = 10;
+			pdPageContentStream.setFont(font, fontSize);
+			float titleLength = (font.getStringWidth(q.getTitre()) / 1000)* fontSize;
+			
+			System.out.println(qIndex + ". " + q.getTitre() + " - Width: " + titleLength + "/" + width + " - " + height + " - NbRep: " + q.getReponses().size() + "\n");
+			
+
+			// Titre
+			// Si titre plus long que largeur page -> mise sur plusieurs lignes
+			if (titleLength > width - 20) {
+				pdPageContentStream.beginText();
+				pdPageContentStream.newLineAtOffset(widthOffset, height - heightOffset);
+				pdPageContentStream.showText("Q." + qIndex + " -");
+				pdPageContentStream.endText();
+				
+				for (String line : setTextOnMultLines(q.getTitre(), widthOffset, pdDocument, font, fontSize)) {
+					pdPageContentStream.beginText();
+					pdPageContentStream.newLineAtOffset(widthOffset + 22, height - heightOffset);
+					pdPageContentStream.showText(line);
+					pdPageContentStream.endText();
+					System.out.println("\n" + line + "\n");
+					heightOffset += 20;
+				}
+			} else {
+				pdPageContentStream.beginText();
+				pdPageContentStream.newLineAtOffset(widthOffset, height - heightOffset);
+				pdPageContentStream.showText("Q." + qIndex + " - " + q.getTitre());
+				pdPageContentStream.endText();
+			}
+			
+			
+			
+			
+			
+
+			// Reponses (QCM)
+			/// Rectangle
+			//pdPageContentStream.addRect(widthOffset + 20, height - heightOffset - 15, 100, 100);
+			
+			/// Texte		
+			for (int i = 0; i < q.getReponses().size(); i++) {
+				pdPageContentStream.beginText();
+				pdPageContentStream.newLineAtOffset(widthOffset + 40, height - heightOffset - 15);
+				pdPageContentStream.showText(q.getReponses().get(i).getIntitule());
+				pdPageContentStream.endText();
+				heightOffset += 17.5;
+			}
+			
+			pdPageContentStream.close();
+			
+			
+			
+			/*
+			pdPageContentStream.beginText();
+			pdPageContentStream.newLineAtOffset(80 + (22 * i) + 12, height - 105);
+			pdPageContentStream.showText(String.valueOf(i));
+			pdPageContentStream.endText();
+			// draw second range of rectangles
+			pdPageContentStream.addRect(80 + (22 * i), height - 124, 11, 11);
+			// write second range of numbers
+			pdPageContentStream.beginText();
+			pdPageContentStream.newLineAtOffset(80 + (22 * i) + 12, height - 122);
+			pdPageContentStream.showText(String.valueOf(i));
+			pdPageContentStream.endText();*/
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		}
+	}
+	
+	public static ArrayList<String> setTextOnMultLines (String text, int widthOffset, PDDocument pdDocument, PDFont font, int fontSize){
+		int width = (int) pdDocument.getPage(0).getMediaBox().getWidth();
+		float subStrLength = 0;
+		
+		ArrayList<String> lines = new ArrayList<String>();
+		int widthMargin = 60;
+		int lastSpace = -2;
+		int spaceIndex = 0;
+		while (text.length() > 0) { 
+			//System.out.println("1. Si: " + spaceIndex + " - Ls: " + lastSpace + " TxtL: " + text.length());
+			spaceIndex = text.indexOf(' ', lastSpace + 2);
+			//System.out.println("2. Si: " + spaceIndex + " - Ls: " + lastSpace + " : " + text +  "\n");
+			String subStr = "";
+			//System.out.println("1. SubL: " + subStrLength + " - W: " + (width - widthOffset));
+			
+			if (spaceIndex == -1) {
+				lines.add(text);
+				text = "";
+			}
+			else 
+				subStr = text.substring(0, spaceIndex);
+			
+			try {
+				subStrLength = (font.getStringWidth(subStr) / 1000)* fontSize;
+			} catch (IOException ioe) {
+				System.err.print(ioe.getMessage());
+			}
+			
+			//System.out.println("2. SubL: " + subStrLength + " - W: " + (width - widthOffset));
+			
+			if (subStrLength > width - widthOffset - widthMargin) {
+				if (lastSpace > 0) 
+					lastSpace = spaceIndex;
+				
+				//System.out.println("[IF] SubL: " + subStrLength + " - W: " + (width - widthOffset));
+				subStr = text.substring(0, lastSpace);
+				lines.add(subStr);
+				text = text.substring(lastSpace).trim();
+				lastSpace = -1;
+			} else if (spaceIndex == lastSpace) {
+				lines.add(text);
+				text = "";
+				//System.out.println("LTxt: " + text.length());
+			} else {
+				lastSpace = spaceIndex;
+			}
+			
+		}
+		
+		return lines;
+	}
 
 	public static void main(String args[]) throws IOException {
 		// Create a Document object.
@@ -324,16 +494,24 @@ public class SubjectGenerator {
 		// System.out.println("Width : " + pdPage1.getMediaBox().getWidth());
 		PDPage pdPage2 = new PDPage(PDRectangle.A4);
 		PDPage pdPage3 = new PDPage(PDRectangle.A4);
+		PDPage pdPage4 = new PDPage(PDRectangle.A4);
+		PDPage pdPage5 = new PDPage(PDRectangle.A4);
 
 		// Add the page to the document and save the document to a desired file.
 		pdDocument.addPage(pdPage1);
 		pdDocument.addPage(pdPage2);
 		pdDocument.addPage(pdPage3);
+		pdDocument.addPage(pdPage4);
+		pdDocument.addPage(pdPage5);
+		
+		Config c = new Config("E:\\sourceB.txt"); // SourceB ne contient auucn '\n'
+		c.readConfig();
 
 		pdDocument = SubjectGenerator.generateMarks(pdDocument);
 		pdDocument = SubjectGenerator.generateNumEtudAreaBis(pdDocument);
 		pdDocument = SubjectGenerator.generateNameArea(pdDocument);
 		pdDocument = SubjectGenerator.generateFooter(pdDocument);
+		pdDocument = SubjectGenerator.generateBody(pdDocument);
 
 		// pdDocument.save("C:\\Users\\Nico\\Desktop\\testPDFMarks.pdf");
 		pdDocument.save("E:\\testPDFMarks.pdf");
