@@ -14,9 +14,48 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import config.Config;
 import config.Question;
 
-// infor concernant strok, fill, ... : https://stackoverflow.com/a/27959484
+// infos concernant strok, fill, ... : https://stackoverflow.com/a/27959484
+
+// TODO: voir ouverture puis fermeture de stream dans chaque méthode
+// ou ouverture de stream à l'instanciation puis fermeture dans save
 
 public class SubjectGenerator {
+
+	private Config config;
+	private PDDocument pdDocument;
+
+	public SubjectGenerator(Config c, PDDocument doc) {
+		this.config = c;
+		this.pdDocument = doc;
+	}
+
+	public SubjectGenerator(Config c, int nbPages, PDRectangle format) {
+		this.config = c;
+		this.pdDocument = new PDDocument();
+		for (int i = 0; i < nbPages; i++) {
+			this.pdDocument.addPage(new PDPage(format));
+		}
+	}
+
+	public SubjectGenerator() {
+		this(null, null);
+	}
+
+	public Config getConfig() {
+		return this.config;
+	}
+
+	public void setConfig(Config config) {
+		this.config = config;
+	}
+
+	public PDDocument getPdDocument() {
+		return this.pdDocument;
+	}
+
+	public void setPdDocument(PDDocument pdDocument) {
+		this.pdDocument = pdDocument;
+	}
 
 	private static void drawDotedLine(PDPageContentStream contentStream, int xi, int yi, int xf, int yf)
 			throws IOException {
@@ -40,13 +79,13 @@ public class SubjectGenerator {
 		contentStream.fill();
 	}
 
-	public static PDDocument generateFooter(PDDocument pdDocument) {
-		int nbTotal = pdDocument.getNumberOfPages();
+	public void generateFooter() {
+		int nbTotal = this.pdDocument.getNumberOfPages();
 		int count = 1;
 
 		try {
-			for (PDPage page : pdDocument.getPages()) {
-				PDPageContentStream pdPageContentStream = new PDPageContentStream(pdDocument, page,
+			for (PDPage page : this.pdDocument.getPages()) {
+				PDPageContentStream pdPageContentStream = new PDPageContentStream(this.pdDocument, page,
 						PDPageContentStream.AppendMode.APPEND, true);
 				PDFont font = PDType1Font.TIMES_ROMAN;
 				int width = (int) page.getMediaBox().getWidth();
@@ -65,14 +104,14 @@ public class SubjectGenerator {
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
-		return pdDocument;
-
 	}
 
-	public static PDDocument generateMarks(PDDocument pdDocument) {
-		for (PDPage page : pdDocument.getPages()) {
+	public void generateMarks() {
+		// TODO: divide generateMarks to avoid header's generation for all pages
+		// the header part should be added to generateHeader
+		for (PDPage page : this.pdDocument.getPages()) {
 			try {
-				PDPageContentStream pdPageContentStream = new PDPageContentStream(pdDocument, page,
+				PDPageContentStream pdPageContentStream = new PDPageContentStream(this.pdDocument, page,
 						PDPageContentStream.AppendMode.APPEND, true);
 				PDFont font = PDType1Font.TIMES_ROMAN;
 
@@ -174,19 +213,16 @@ public class SubjectGenerator {
 				ioe.printStackTrace();
 			}
 		}
-		return pdDocument;
 	}
 
 	/*
-	 * public static PDDocument generateIDPageArea(PDDocument pdDocument) {
-	 *
-	 * }
+	 * public static PDDocument generateIDPageArea(PDDocument pdDocument) { }
 	 */
 
-	public static PDDocument generateNameArea(PDDocument pdDocument) {
+	public void generateNameArea() {
 		try {
-			PDPage page = pdDocument.getPage(0);
-			PDPageContentStream pdPageContentStream = new PDPageContentStream(pdDocument, page,
+			PDPage page = this.pdDocument.getPage(0);
+			PDPageContentStream pdPageContentStream = new PDPageContentStream(this.pdDocument, page,
 					PDPageContentStream.AppendMode.APPEND, true);
 			PDFont font = PDType1Font.TIMES_ROMAN;
 
@@ -199,7 +235,7 @@ public class SubjectGenerator {
 			int width = (int) page.getMediaBox().getWidth();
 
 			// generate rectangle nom
-			
+
 			pdPageContentStream.addRect(width - 238, height - 196, 155, 50); // RECT
 			// text
 			pdPageContentStream.beginText();
@@ -224,13 +260,12 @@ public class SubjectGenerator {
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
-		return pdDocument;
 	}
 
-	public static PDDocument generateNumEtudAreaBis(PDDocument pdDocument) {
+	public void generateNumEtudAreaBis() {
 		try {
-			PDPage page = pdDocument.getPage(0);
-			PDPageContentStream pdPageContentStream = new PDPageContentStream(pdDocument, page,
+			PDPage page = this.pdDocument.getPage(0);
+			PDPageContentStream pdPageContentStream = new PDPageContentStream(this.pdDocument, page,
 					PDPageContentStream.AppendMode.APPEND, true);
 			PDFont font = PDType1Font.TIMES_ROMAN;
 
@@ -268,13 +303,12 @@ public class SubjectGenerator {
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
-		return pdDocument;
 	}
 
-	public static PDDocument generateNumEtudArea(PDDocument pdDocument) {
+	public void generateNumEtudArea() {
 		try {
-			PDPage page = pdDocument.getPage(0);
-			PDPageContentStream pdPageContentStream = new PDPageContentStream(pdDocument, page,
+			PDPage page = this.pdDocument.getPage(0);
+			PDPageContentStream pdPageContentStream = new PDPageContentStream(this.pdDocument, page,
 					PDPageContentStream.AppendMode.APPEND, true);
 			PDFont font = PDType1Font.TIMES_ROMAN;
 
@@ -307,78 +341,78 @@ public class SubjectGenerator {
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
-		return pdDocument;
 	}
 
-	public void generateHeader(PDDocument pdDocument) {
+	public void generateHeader() {
 		try {
-			PDPageContentStream pdPageContentStream = new PDPageContentStream(pdDocument, pdDocument.getPage(0));
+			PDPageContentStream pdPageContentStream = new PDPageContentStream(this.pdDocument,
+					this.pdDocument.getPage(0));
 			PDFont font = PDType1Font.HELVETICA_BOLD;
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
 	}
-	
-	public static PDDocument generateBody(PDDocument pdDocument) {
+
+	public void generateBody() {
 		try {
-			PDPageContentStream pdPageContentStream = new PDPageContentStream(pdDocument, pdDocument.getPage(0), 
-					PDPageContentStream.AppendMode.APPEND, true);
+			PDPageContentStream pdPageContentStream = new PDPageContentStream(this.pdDocument,
+					this.pdDocument.getPage(0), PDPageContentStream.AppendMode.APPEND, true);
 			PDFont font = PDType1Font.HELVETICA_BOLD;
-			
+
 			// Boucle sur les questions
 			int qIndex = 1;
 			int heightOffset = 265;
 			int pageIndex = 0;
-			for (Question q : Config.getQuestions()) {
-				int height = (int) pdDocument.getPage(0).getMediaBox().getHeight();
-				PDPage page = pdDocument.getPage(pageIndex);
-				SubjectGenerator.generateQ(q, qIndex, pdDocument, page, 25, heightOffset);
+			System.out.println(this.config.getQuestions());
+			for (Question q : this.config.getQuestions()) {
+				q.setTitre(q.getTitre().replace("\n", "")); // /\ TODO: must be done in Config /\
+				int height = (int) this.pdDocument.getPage(0).getMediaBox().getHeight();
+				PDPage page = this.pdDocument.getPage(pageIndex);
+				this.generateQ(q, qIndex, this.pdDocument, page, 25, heightOffset);
 				qIndex++;
 				heightOffset += 100;
-				
-				if (heightOffset > height - 10) {
+
+				if (heightOffset > (height - 10)) {
 					heightOffset = 265;
 					pageIndex++;
 				}
 			}
-			
+
 			pdPageContentStream.close();
-		} 
-		
+		}
+
 		catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
-
-		return pdDocument;
 	}
-	
-	public static void generateQ(Question q, int qIndex, PDDocument pdDocument, PDPage curPage, int widthOffset, int heightOffset) {
-		try {		
-			// Il faut rendre plus générale la génération des Q (en fonction du nombre de réponses, recycler le heightOffset)
-			
-			
+
+	public void generateQ(Question q, int qIndex, PDDocument pdDocument, PDPage curPage, int widthOffset,
+			int heightOffset) {
+		try {
+			// Il faut rendre plus générale la génération des Q (en fonction du nombre de
+			// réponses, recycler le heightOffset)
+
 			int width = (int) pdDocument.getPage(0).getMediaBox().getWidth();
 			int height = (int) pdDocument.getPage(0).getMediaBox().getHeight();
-			
-			
+
 			PDPageContentStream pdPageContentStream = new PDPageContentStream(pdDocument, curPage,
 					PDPageContentStream.AppendMode.APPEND, true);
 			PDFont font = PDType1Font.TIMES_ROMAN;
 			int fontSize = 10;
 			pdPageContentStream.setFont(font, fontSize);
-			float titleLength = (font.getStringWidth(q.getTitre()) / 1000)* fontSize;
-			
-			System.out.println(qIndex + ". " + q.getTitre() + " - Width: " + titleLength + "/" + width + " - " + height + " - NbRep: " + q.getReponses().size() + "\n");
-			
+			float titleLength = (font.getStringWidth(q.getTitre()) / 1000) * fontSize;
+
+			System.out.println(qIndex + ". " + q.getTitre() + " - Width: " + titleLength + "/" + width + " - " + height
+					+ " - NbRep: " + q.getReponses().size() + "\n");
 
 			// Titre
 			// Si titre plus long que largeur page -> mise sur plusieurs lignes
-			if (titleLength > width - 20) {
+			if (titleLength > (width - 20)) {
 				pdPageContentStream.beginText();
 				pdPageContentStream.newLineAtOffset(widthOffset, height - heightOffset);
 				pdPageContentStream.showText("Q." + qIndex + " -");
 				pdPageContentStream.endText();
-				
+
 				for (String line : setTextOnMultLines(q.getTitre(), widthOffset, pdDocument, font, fontSize)) {
 					pdPageContentStream.beginText();
 					pdPageContentStream.newLineAtOffset(widthOffset + 22, height - heightOffset);
@@ -393,17 +427,13 @@ public class SubjectGenerator {
 				pdPageContentStream.showText("Q." + qIndex + " - " + q.getTitre());
 				pdPageContentStream.endText();
 			}
-			
-			
-			
-			
-			
 
 			// Reponses (QCM)
 			/// Rectangle
-			//pdPageContentStream.addRect(widthOffset + 20, height - heightOffset - 15, 100, 100);
-			
-			/// Texte		
+			// pdPageContentStream.addRect(widthOffset + 20, height - heightOffset - 15,
+			// 100, 100);
+
+			/// Texte
 			for (int i = 0; i < q.getReponses().size(); i++) {
 				pdPageContentStream.beginText();
 				pdPageContentStream.newLineAtOffset(widthOffset + 40, height - heightOffset - 15);
@@ -411,63 +441,67 @@ public class SubjectGenerator {
 				pdPageContentStream.endText();
 				heightOffset += 17.5;
 			}
-			
+
 			pdPageContentStream.close();
-			
-			
-			
+
 			/*
-			pdPageContentStream.beginText();
-			pdPageContentStream.newLineAtOffset(80 + (22 * i) + 12, height - 105);
-			pdPageContentStream.showText(String.valueOf(i));
-			pdPageContentStream.endText();
-			// draw second range of rectangles
-			pdPageContentStream.addRect(80 + (22 * i), height - 124, 11, 11);
-			// write second range of numbers
-			pdPageContentStream.beginText();
-			pdPageContentStream.newLineAtOffset(80 + (22 * i) + 12, height - 122);
-			pdPageContentStream.showText(String.valueOf(i));
-			pdPageContentStream.endText();*/
+			 * pdPageContentStream.beginText(); pdPageContentStream.newLineAtOffset(80 + (22
+			 * * i) + 12, height - 105); pdPageContentStream.showText(String.valueOf(i));
+			 * pdPageContentStream.endText(); // draw second range of rectangles
+			 * pdPageContentStream.addRect(80 + (22 * i), height - 124, 11, 11); // write
+			 * second range of numbers pdPageContentStream.beginText();
+			 * pdPageContentStream.newLineAtOffset(80 + (22 * i) + 12, height - 122);
+			 * pdPageContentStream.showText(String.valueOf(i));
+			 * pdPageContentStream.endText();
+			 */
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
 	}
-	
-	public static ArrayList<String> setTextOnMultLines (String text, int widthOffset, PDDocument pdDocument, PDFont font, int fontSize){
+
+	public static ArrayList<String> setTextOnMultLines(String text, int widthOffset, PDDocument pdDocument, PDFont font,
+			int fontSize) {
+		// TODO: voir si l'on laisse en static ou non
 		int width = (int) pdDocument.getPage(0).getMediaBox().getWidth();
 		float subStrLength = 0;
-		
+
 		ArrayList<String> lines = new ArrayList<String>();
 		int widthMargin = 60;
 		int lastSpace = -2;
 		int spaceIndex = 0;
-		while (text.length() > 0) { 
-			//System.out.println("1. Si: " + spaceIndex + " - Ls: " + lastSpace + " TxtL: " + text.length());
+		while (text.length() > 0) {
+			// System.out.println("1. Si: " + spaceIndex + " - Ls: " + lastSpace + " TxtL: "
+			// + text.length());
 			spaceIndex = text.indexOf(' ', lastSpace + 2);
-			//System.out.println("2. Si: " + spaceIndex + " - Ls: " + lastSpace + " : " + text +  "\n");
+			// System.out.println("2. Si: " + spaceIndex + " - Ls: " + lastSpace + " : " +
+			// text + "\n");
 			String subStr = "";
-			//System.out.println("1. SubL: " + subStrLength + " - W: " + (width - widthOffset));
-			
+			// System.out.println("1. SubL: " + subStrLength + " - W: " + (width -
+			// widthOffset));
+
 			if (spaceIndex == -1) {
 				lines.add(text);
 				text = "";
-			}
-			else 
+			} else {
 				subStr = text.substring(0, spaceIndex);
-			
+			}
+
 			try {
-				subStrLength = (font.getStringWidth(subStr) / 1000)* fontSize;
+				subStrLength = (font.getStringWidth(subStr) / 1000) * fontSize;
 			} catch (IOException ioe) {
 				System.err.print(ioe.getMessage());
 			}
-			
-			//System.out.println("2. SubL: " + subStrLength + " - W: " + (width - widthOffset));
-			
-			if (subStrLength > width - widthOffset - widthMargin) {
-				if (lastSpace > 0) 
+
+			// System.out.println("2. SubL: " + subStrLength + " - W: " + (width -
+			// widthOffset));
+
+			if (subStrLength > (width - widthOffset - widthMargin)) {
+				if (lastSpace > 0) {
 					lastSpace = spaceIndex;
-				
-				//System.out.println("[IF] SubL: " + subStrLength + " - W: " + (width - widthOffset));
+				}
+
+				// System.out.println("[IF] SubL: " + subStrLength + " - W: " + (width -
+				// widthOffset));
 				subStr = text.substring(0, lastSpace);
 				lines.add(subStr);
 				text = text.substring(lastSpace).trim();
@@ -475,47 +509,57 @@ public class SubjectGenerator {
 			} else if (spaceIndex == lastSpace) {
 				lines.add(text);
 				text = "";
-				//System.out.println("LTxt: " + text.length());
+				// System.out.println("LTxt: " + text.length());
 			} else {
 				lastSpace = spaceIndex;
 			}
-			
+
 		}
-		
+
 		return lines;
 	}
 
+	public void save(String dest) {
+		try {
+			this.pdDocument.save(dest);
+			this.pdDocument.close();
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		}
+	}
+
 	public static void main(String args[]) throws IOException {
-		// Create a Document object.
-		PDDocument pdDocument = new PDDocument();
-		// Create a Page object
-		PDPage pdPage1 = new PDPage(PDRectangle.A4);
-		// System.out.println("Height : " + pdPage1.getMediaBox().getHeight());
-		// System.out.println("Width : " + pdPage1.getMediaBox().getWidth());
-		PDPage pdPage2 = new PDPage(PDRectangle.A4);
-		PDPage pdPage3 = new PDPage(PDRectangle.A4);
-		PDPage pdPage4 = new PDPage(PDRectangle.A4);
-		PDPage pdPage5 = new PDPage(PDRectangle.A4);
-
-		// Add the page to the document and save the document to a desired file.
-		pdDocument.addPage(pdPage1);
-		pdDocument.addPage(pdPage2);
-		pdDocument.addPage(pdPage3);
-		pdDocument.addPage(pdPage4);
-		pdDocument.addPage(pdPage5);
-		
-		Config c = new Config("E:\\sourceB.txt"); // SourceB ne contient auucn '\n'
+		// config initialization
+		// Config c = new Config("E:\\sourceB.txt"); // SourceB ne contient aucun '\n'
+		Config c = new Config("E:\\source.txt");
 		c.readConfig();
+		// Create a Document object.
+		/**
+		 * PDDocument pdDocument = new PDDocument(); // Create a Page object PDPage
+		 * pdPage1 = new PDPage(PDRectangle.A4); // System.out.println("Height : " +
+		 * pdPage1.getMediaBox().getHeight()); // System.out.println("Width : " +
+		 * pdPage1.getMediaBox().getWidth()); PDPage pdPage2 = new
+		 * PDPage(PDRectangle.A4); PDPage pdPage3 = new PDPage(PDRectangle.A4); PDPage
+		 * pdPage4 = new PDPage(PDRectangle.A4); PDPage pdPage5 = new
+		 * PDPage(PDRectangle.A4);
+		 *
+		 * // Add the page to the document pdDocument.addPage(pdPage1);
+		 * pdDocument.addPage(pdPage2); pdDocument.addPage(pdPage3);
+		 * pdDocument.addPage(pdPage4); pdDocument.addPage(pdPage5);
+		 */
 
-		pdDocument = SubjectGenerator.generateMarks(pdDocument);
-		pdDocument = SubjectGenerator.generateNumEtudAreaBis(pdDocument);
-		pdDocument = SubjectGenerator.generateNameArea(pdDocument);
-		pdDocument = SubjectGenerator.generateFooter(pdDocument);
-		pdDocument = SubjectGenerator.generateBody(pdDocument);
+		// instanciate a new SubjectGenerator
+		// TODO: change PDRectangle.A4 to the format specified in the config
+		SubjectGenerator subjectGenerator = new SubjectGenerator(c, 5, PDRectangle.A4);
 
-		// pdDocument.save("C:\\Users\\Nico\\Desktop\\testPDFMarks.pdf");
-		pdDocument.save("E:\\testPDFMarks.pdf");
-		pdDocument.close();
+		subjectGenerator.generateMarks();
+		subjectGenerator.generateNumEtudAreaBis();
+		subjectGenerator.generateNameArea();
+		subjectGenerator.generateFooter();
+		subjectGenerator.generateBody();
+
+		subjectGenerator.save("E:\\testPDFMarks.pdf");
+
 		System.out.println("PDF saved to the location !!!");
 	}
 }

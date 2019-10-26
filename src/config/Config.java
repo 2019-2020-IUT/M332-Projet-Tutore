@@ -1,9 +1,12 @@
 package config;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Scanner;
 
 public class Config {
+
 	private HashMap<String, String> param = new HashMap<String, String>(); // Hashmap des parametres de config, Key =
 																			// nom paramn,
 	private ArrayList<Question> questions = new ArrayList<Question>();
@@ -12,7 +15,7 @@ public class Config {
 
 	// Getters et setters
 	public HashMap<String, String> getParam() {
-		return param;
+		return this.param;
 	}
 
 	public void setParam(HashMap<String, String> param) {
@@ -20,7 +23,7 @@ public class Config {
 	}
 
 	public ArrayList<Question> getQuestions() {
-		return questions;
+		return this.questions;
 	}
 
 	public void setQuestions(ArrayList<Question> questions) {
@@ -36,35 +39,55 @@ public class Config {
 		}
 	}
 
+	public static String clearString(String string) {
+		// Sources :
+		// https://howtodoinjava.com/regex/java-clean-ascii-text-non-printable-chars/
+		// https://stackoverflow.com/a/52559280
+		// https://docs.oracle.com/javase/10/docs/api/java/lang/String.html#trim()
+		// https://stackoverflow.com/a/33724262
+
+		// strips off all non-ASCII characters
+		string = string.replace("\n", "");
+		string = string.replaceAll("[^\\x00-\\xFF]", " ");
+		// erases all the ASCII control characters
+		string = string.replaceAll("[\\p{Cntrl}&&[^\r\n\t]]", "");
+		// removes non-printable characters from Unicode
+		string = string.replaceAll("\\p{C}", "");
+		return string.trim(); // trim() : eliminates leading and trailing spaces
+	}
+
 	public Config(String s) {
 		// Constructeur, prend en parametre le chemin vers le fichier source
-		source = s;
+		this.source = s;
 		// Initialisation des parametres avec les valeurs par défaut.
 		// Les élements avec des placeholders en valeur sont des élements qui ne servent
 		// pas pour le moment
-		param.put("PaperSize", "A4"); // A3 A4 A5 letter
-		param.put("Title", "Placeholder"); // titre de l exam
-		param.put("Presentation", "Placeholder"); // texte de consignes
-		param.put("DocumentModel", "PlaceHolder"); // nom du fichier du modéle
-		param.put("ShuffleQuestions", "1"); // 1 = qt mélangées, 0 = non mél
-		param.put("ShuffleAnswers", "1"); // 1= proposition rép mélangées, 0= non
-		param.put("Code", "8"); // code étudiant = 8 chiffres (entre 1 et 16)
-		param.put("MarkFormat", "20"); // expl "20" pour des notes entre 0 et 20 notées é 0.25 points
-		param.put("NameField", "Nom et Prénom"); // remplace le texte
-		param.put("StudentField",
+		this.param.put("PaperSize", "A4"); // A3 A4 A5 letter
+		this.param.put("Title", "Placeholder"); // titre de l exam
+		this.param.put("Presentation", "Placeholder"); // texte de consignes
+		this.param.put("DocumentModel", "PlaceHolder"); // nom du fichier du modéle
+		this.param.put("ShuffleQuestions", "1"); // 1 = qt mélangées, 0 = non mél
+		this.param.put("ShuffleAnswers", "1"); // 1= proposition rép mélangées, 0= non
+		this.param.put("Code", "8"); // code étudiant = 8 chiffres (entre 1 et 16)
+		this.param.put("MarkFormat", "20"); // expl "20" pour des notes entre 0 et 20 notées é 0.25 points
+		this.param.put("NameField", "Nom et Prénom"); // remplace le texte
+		this.param.put("StudentField",
 				"Veuillez coder votre numéro\r\n d'étudiant ci-contre et écrire votre nom \r\n dans la case ci-dessous");
 		// sert à remplacer le petit texte qui demande de coder son numéro déétudiant et
 		// inscrire son nom
-		param.put("MarkField", "Veuillez coder le numéro de l'étudiant");
-		param.put("SeparateAnswerSheet", "1"); // si 1 = feuille de réponse séparée.
-		param.put("AnswerSheetTitle", "Title"); // titre é inscrire en tete de la feuille de rép
-		param.put("AnswerSheetPresentation", "Presentation"); // Donne le texte de présentation de la feuille de réponse
-		param.put("SingleSided", "Placeholder");// si valeur = 1, aucune page blanche entre feuille de sujet et de
-												// réponse
-		param.put("DefaultScoringS", "Placeholder");// Donne le baréme par défaut pour les questions simples
-		param.put("DefaultScoringM", "Placeholder");// Donne le baréme par défaut pour les questions é choix multiple
-		param.put("QuestionBlocks", "Placeholder");// prend 0 pour valeur pour permettre é la boite d'une question boite
-													// d'etre coupé sur plusieurs pages, prend 1 sinon
+		this.param.put("MarkField", "Veuillez coder le numéro de l'étudiant");
+		this.param.put("SeparateAnswerSheet", "1"); // si 1 = feuille de réponse séparée.
+		this.param.put("AnswerSheetTitle", "Title"); // titre é inscrire en tete de la feuille de rép
+		this.param.put("AnswerSheetPresentation", "Presentation"); // Donne le texte de présentation de la feuille de
+																	// réponse
+		this.param.put("SingleSided", "Placeholder");// si valeur = 1, aucune page blanche entre feuille de sujet et de
+		// réponse
+		this.param.put("DefaultScoringS", "Placeholder");// Donne le baréme par défaut pour les questions simples
+		this.param.put("DefaultScoringM", "Placeholder");// Donne le baréme par défaut pour les questions é choix
+															// multiple
+		this.param.put("QuestionBlocks", "Placeholder");// prend 0 pour valeur pour permettre é la boite d'une question
+														// boite
+		// d'etre coupé sur plusieurs pages, prend 1 sinon
 
 	}
 
@@ -76,15 +99,16 @@ public class Config {
 		// questions.
 		// Gestion de questions mais actuellement inutile pour le programme
 		try {
-			Scanner scan = new Scanner(new File(source), "UTF-8");
+			Scanner scan = new Scanner(new File(this.source), "UTF-8");
 			String ligne;
 			Question q;
 			ligne = scan.nextLine();
 			// ligne pour gerer le code FEFF en UTF-8 BOM qui peut apparaitre si le fichier
 			// txt est edité avec windows notepad
 			// ce caractere apparait uniquement en debut de fichier
-			if (ligne.startsWith("\uFEFF"))
+			if (ligne.startsWith("\uFEFF")) {
 				ligne = ligne.substring(1);
+			}
 			while (scan.hasNext() || !ligne.isEmpty() || ligne.equals(System.lineSeparator())) {
 				if (!ligne.equals("")) {
 					if (!(ligne.substring(0, 1).equals("#"))) // si ligne commence par un # c'est un commentaire, donc
@@ -93,25 +117,26 @@ public class Config {
 					{
 						if (ligne.substring(0, 1).equals("*")) // si ligne commence par une *, c'est une question
 						{
-							q = makeQuestion(ligne);
-							ligne = scan.nextLine(); // on scan la prochaine ligne
+							q = this.makeQuestion(Config.clearString(ligne));
+							ligne = scan.nextLine();
 							while (!ligne.equals("")) // tant que la ligne n'est pas vide, on lit la suite qui est
-														// supposé
+														// supposée
 														// etre les reponses
 							{
-								q.addReponse(ligne);
+								q.addReponse(Config.clearString(ligne));
 								ligne = scan.nextLine();
 							}
-							questions.add(q);
+							this.questions.add(q);
 						} else // si c'est pas une *, alors c'est un parametre (on ignore les lignes vides)
 						{
-							lireParam(ligne);
+							this.lireParam(ligne);
 						}
 					}
 				}
 				ligne = scan.nextLine();
-				while (ligne.equals("")) // on saute les lignes vides avant de recommencer la boucle while
+				while (ligne.equals("")) {
 					ligne = scan.nextLine();
+				}
 			}
 			scan.close();
 		} catch (Exception e) {
@@ -158,54 +183,55 @@ public class Config {
 		if (n != -1) // si -1 alors il n'y a pas de : et donc ce n'est pas un paramètre
 		{
 			String spl[] = { s.substring(0, n), s.substring(n + 1, s.length()) };
-			while (spl[1].substring(0, 1).equals(" "))
+			while (spl[1].substring(0, 1).equals(" ")) {
 				spl[1] = spl[1].substring(1, spl[1].length());
+			}
 			spl[0] = spl[0].toUpperCase().trim(); // pour eviter la casse, on met tout en upper case
 			switch (spl[0]) // chaque case correspond é un parametre, pour le moment on ignore tout
 							// parametre qui n'est pas utile au programme.
 			{
 			case "PAPERSIZE":
-				setPaperSize(spl[1]);
+				this.setPaperSize(spl[1]);
 
 				break;
 
 			case "CODE":
-				setCode(spl[1]);
+				this.setCode(spl[1]);
 
 				break;
 
 			case "MARKFORMAT":
-				setMarkFormat(spl[1]);
+				this.setMarkFormat(spl[1]);
 
 				break;
 
 			case "NAMEFIELD":
-				setNameField(spl[1]);
+				this.setNameField(spl[1]);
 
 				break;
 
 			case "STUDENTIDFIELD":
-				setStudentIdField(spl[1]);
+				this.setStudentIdField(spl[1]);
 
 				break;
 
 			case "MARKFIELD":
-				setMarkField(spl[1]);
+				this.setMarkField(spl[1]);
 
 				break;
 
 			case "SEPARATEANSWERSHEET":
-				setSeparateAnswerSheet(spl[1]);
+				this.setSeparateAnswerSheet(spl[1]);
 
 				break;
 
 			case "ANSWERSHEETTITLE":
-				setAnswerSheetTitle(spl[1]);
+				this.setAnswerSheetTitle(spl[1]);
 
 				break;
 
 			case "ANSWERSHEETPRESENTATION":
-				setAnswerSheetPresentation(spl[1]);
+				this.setAnswerSheetPresentation(spl[1]);
 
 				break;
 			default: // parametre mal tapé ou non utile (pour le moment) au programme, on l'ignore
@@ -223,16 +249,16 @@ public class Config {
 		s = s.toUpperCase();
 		s = s.trim();
 		if (s.equals("A3") || s.equals("A4") || s.equals("A5") || s.equals("LETTER")) {
-			param.replace("PaperSize", s);
+			this.param.replace("PaperSize", s);
 		}
 	}
 
 	public void setCode(String s) {
 		s = s.trim();
-		if (isParsable(s)) {
+		if (this.isParsable(s)) {
 			int n = Integer.parseInt(s);
-			if (n >= 1 && n <= 16) {
-				param.replace("Code", s);
+			if ((n >= 1) && (n <= 16)) {
+				this.param.replace("Code", s);
 			}
 		}
 	}
@@ -240,47 +266,47 @@ public class Config {
 	public void setMarkFormat(String s) {
 		s = s.trim();
 		if (s.equals("20/4") || s.equals("100")) {
-			param.replace("MarkFormat", s);
+			this.param.replace("MarkFormat", s);
 		}
 	}
 
 	public void setNameField(String s) {
 		if (!s.equals("")) {
-			param.replace("NameField", s);
+			this.param.replace("NameField", s);
 		}
 
 	}
 
 	public void setStudentIdField(String s) {
 		if (!s.equals("")) {
-			param.replace("StudentIdField", s);
+			this.param.replace("StudentIdField", s);
 		}
 
 	}
 
 	public void setMarkField(String s) {
 		if (!s.equals("")) {
-			param.replace("MarkField", s);
+			this.param.replace("MarkField", s);
 		}
 	}
 
 	public void setSeparateAnswerSheet(String s) {
 		s = s.trim();
 		int n = Integer.parseInt(s);
-		if (n == 0 || n == 1) {
-			param.replace("SeparateAnswerSheet", s);
+		if ((n == 0) || (n == 1)) {
+			this.param.replace("SeparateAnswerSheet", s);
 		}
 	}
 
 	public void setAnswerSheetTitle(String s) {
 		if (!s.equals("")) {
-			param.replace("AnswerSheetTitle", s);
+			this.param.replace("AnswerSheetTitle", s);
 		}
 	}
 
 	public void setAnswerSheetPresentation(String s) {
 		if (!s.equals("")) {
-			param.replace("AnswerSheetPresentation", s);
+			this.param.replace("AnswerSheetPresentation", s);
 		}
 	}
 }
