@@ -14,4 +14,6 @@ compileAndTests :
   script:
     - java -jar LIB/junit-platform-console-standalone-1.5.1.jar --class-path bin --scan-class-path
   #allow_failure: true
-  
+
+  include:
+    template: Dependency-Scanning.gitlab-ci.yml
