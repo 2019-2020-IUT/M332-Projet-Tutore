@@ -19,26 +19,37 @@ import config.Question;
 // TODO: voir ouverture puis fermeture de stream dans chaque méthode
 // ou ouverture de stream à l'instanciation puis fermeture dans save
 
+// TODO: voir si toutes les méthodes doivent throws IOException plutot que try catch
+
 public class SubjectGenerator {
 
 	private Config config;
 	private PDDocument pdDocument;
+	private PDRectangle format;
+	private int height;
+	private int width;
 
-	public SubjectGenerator(Config c, PDDocument doc) {
+	public SubjectGenerator(Config c, PDDocument doc, PDRectangle format) {
 		this.config = c;
 		this.pdDocument = doc;
+		this.format = format;
+		this.height = (int) Math.floor(format.getHeight());
+		this.width = (int) Math.floor(format.getWidth());
 	}
 
 	public SubjectGenerator(Config c, int nbPages, PDRectangle format) {
 		this.config = c;
 		this.pdDocument = new PDDocument();
+		this.format = format;
+		this.height = (int) Math.floor(format.getHeight());
+		this.width = (int) Math.floor(format.getWidth());
 		for (int i = 0; i < nbPages; i++) {
-			this.pdDocument.addPage(new PDPage(format));
+			this.pdDocument.addPage(new PDPage(this.format));
 		}
 	}
 
 	public SubjectGenerator() {
-		this(null, null);
+		this(null, null, null);
 	}
 
 	public Config getConfig() {
@@ -55,6 +66,30 @@ public class SubjectGenerator {
 
 	public void setPdDocument(PDDocument pdDocument) {
 		this.pdDocument = pdDocument;
+	}
+
+	public PDRectangle getFormat() {
+		return this.format;
+	}
+
+	public void setFormat(PDRectangle format) {
+		this.format = format;
+	}
+
+	public int getHeight() {
+		return this.height;
+	}
+
+	public void setHeight(int height) {
+		this.height = height;
+	}
+
+	public int getWidth() {
+		return this.width;
+	}
+
+	public void setWidth(int width) {
+		this.width = width;
 	}
 
 	private static void drawDotedLine(PDPageContentStream contentStream, int xi, int yi, int xf, int yf)
@@ -107,107 +142,49 @@ public class SubjectGenerator {
 	}
 
 	public void generateMarks() {
-		// TODO: divide generateMarks to avoid header's generation for all pages
-		// the header part should be added to generateHeader
+		// TODO: renommer les variables en fonction de :
+		// signification id page
+		int max = 60;
+		int digA = 1;
+		int digB = 1;
+		int digC = max;
 		for (PDPage page : this.pdDocument.getPages()) {
 			try {
 				PDPageContentStream pdPageContentStream = new PDPageContentStream(this.pdDocument, page,
 						PDPageContentStream.AppendMode.APPEND, true);
 				PDFont font = PDType1Font.TIMES_ROMAN;
 
-				int height = (int) page.getMediaBox().getHeight();
-				int width = (int) page.getMediaBox().getWidth();
-
 				// Set a Color for the marks
 				pdPageContentStream.setNonStrokingColor(Color.BLACK);
 				pdPageContentStream.setNonStrokingColor(0, 0, 0); // black text
 				pdPageContentStream.setFont(font, 9);
 
+				// this.generateRectID(page);
+				// generate page's ID
+				this.generateRectID(pdPageContentStream);
+
 				// generate circle marks in corners
-				SubjectGenerator.drawCircle(pdPageContentStream, 20, height - 30, 5); // top left
-				SubjectGenerator.drawCircle(pdPageContentStream, width - 20, height - 30, 5); // top right
+				SubjectGenerator.drawCircle(pdPageContentStream, 20, this.height - 30, 5); // top left
+				SubjectGenerator.drawCircle(pdPageContentStream, this.width - 20, this.height - 30, 5); // top right
 				SubjectGenerator.drawCircle(pdPageContentStream, 20, 30, 5); // bottom left
-				SubjectGenerator.drawCircle(pdPageContentStream, width - 20, 30, 5); // bottom right
-
-				pdPageContentStream.setLineWidth(0.6f); // largeur du contour des rectangles
-
-				// generate rectangles id (?)
-				for (int i = 0; i < 12; i++) {
-					// draw first range of rectangles
-					pdPageContentStream.addRect(170 + (9 * i), height - 15, 9, 9);
-					// + 9 * i = position du ieme carre
-					// draw second range of rectangles
-					pdPageContentStream.addRect(170 + (9 * i), height - 27, 9, 9);
-					// + 9 * i = position du ieme carre
-				}
-
-				pdPageContentStream.setFont(font, 10);
-
-				// draw the separative line
-				pdPageContentStream.moveTo(28, height - 239);
-				pdPageContentStream.lineTo(width - 28, height - 239);
-
-				// pdPageContentStream.lineTo(width - 28, height - 239);
-				pdPageContentStream.stroke(); // stroke
-
-				pdPageContentStream.setFont(font, 11);
+				SubjectGenerator.drawCircle(pdPageContentStream, this.width - 20, 30, 5); // bottom right
 
 				// number (top of page) +n/n/nn+
 				pdPageContentStream.beginText();
-				pdPageContentStream.newLineAtOffset((width / 2) + 86, height - 30);
-				pdPageContentStream.showText("+1/1/60+");
-				pdPageContentStream.endText();
-
-				// Sujet
-				// center text : https://stackoverflow.com/a/6531362
-				String subject = "Exemple PT S3T : de 1970 à l’an 2000, 30 ans d’histoire";
-				int fontSize = 12;
-				pdPageContentStream.setFont(font, fontSize);
-				float titleWidth = (font.getStringWidth(subject) / 1000) * fontSize;
-				float titleHeight = (font.getFontDescriptor().getFontBoundingBox().getHeight() / 1000) * fontSize;
-				pdPageContentStream.beginText();
-				pdPageContentStream.newLineAtOffset((width - titleWidth) / 2, (height - 57 - titleHeight));
-				pdPageContentStream.showText(subject);
-				pdPageContentStream.endText();
-
-				String subtitle = "Tricherie : Toutes consultations de sources numériques sont interdites !!";
-				titleWidth = (font.getStringWidth(subtitle) / 1000) * fontSize;
-				pdPageContentStream.beginText();
-				pdPageContentStream.newLineAtOffset((width - titleWidth) / 2, (height - 71 - titleHeight));
-				pdPageContentStream.showText(subtitle);
-				pdPageContentStream.endText();
-
-				fontSize = 10;
-
-				// 1st line
-				pdPageContentStream.setFont(font, fontSize);
-				String numConsignePart1 = "          Veuillez coder votre numéro";
-
-				titleWidth = (font.getStringWidth(numConsignePart1) / 1000) * fontSize;
-				pdPageContentStream.beginText();
-				pdPageContentStream.newLineAtOffset(width - 224, height - 94 - titleHeight);
-				pdPageContentStream.showText(numConsignePart1);
-				pdPageContentStream.endText();
-
-				// 2nd line
-				String numConsignePart2 = " d’étudiant ci-contre et écrire votre nom";
-
-				titleWidth = (font.getStringWidth(numConsignePart2) / 1000) * fontSize;
-				pdPageContentStream.beginText();
-				pdPageContentStream.newLineAtOffset(width - 244, height - 105 - titleHeight);
-				pdPageContentStream.showText(numConsignePart2);
-				pdPageContentStream.endText();
-
-				// 3rd line
-				String numConsignePart3 = " dans la case ci-dessous.";
-
-				titleWidth = (font.getStringWidth(numConsignePart3) / 1000) * fontSize;
-				pdPageContentStream.beginText();
-				pdPageContentStream.newLineAtOffset(width - 244, height - 118 - titleHeight);
-				pdPageContentStream.showText(numConsignePart3);
+				pdPageContentStream.newLineAtOffset((this.width / 2) + 86, this.height - 30);
+				pdPageContentStream.showText("+" + digA + "/" + digB + "/" + digC + "+");
 				pdPageContentStream.endText();
 
 				pdPageContentStream.close();
+
+				if (digB == max) {
+					digB = 1;
+					digC = max;
+					digA++;
+				} else {
+					digB++;
+					digC--;
+				}
 
 			} catch (IOException ioe) {
 				ioe.printStackTrace();
@@ -215,9 +192,25 @@ public class SubjectGenerator {
 		}
 	}
 
-	/*
-	 * public static PDDocument generateIDPageArea(PDDocument pdDocument) { }
-	 */
+	public void generateRectID(PDPageContentStream pdPageContentStream) {
+		System.out.println(pdPageContentStream);
+		try {
+			pdPageContentStream.setLineWidth(0.6f); // largeur du contour des rectangles
+
+			// generate rectangles id (?)
+			for (int i = 0; i < 12; i++) {
+				// draw first range of rectangles
+				pdPageContentStream.addRect(170 + (9 * i), this.height - 15, 9, 9);
+				// + 9 * i = position du ieme carre
+				// draw second range of rectangles
+				pdPageContentStream.addRect(170 + (9 * i), this.height - 27, 9, 9);
+				// + 9 * i = position du ieme carre
+			}
+			pdPageContentStream.stroke(); // stroke
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		}
+	}
 
 	public void generateNameArea() {
 		try {
@@ -231,15 +224,12 @@ public class SubjectGenerator {
 			pdPageContentStream.setNonStrokingColor(0, 0, 0); // black text
 			pdPageContentStream.setFont(font, 9);
 
-			int height = (int) page.getMediaBox().getHeight();
-			int width = (int) page.getMediaBox().getWidth();
-
 			// generate rectangle nom
 
-			pdPageContentStream.addRect(width - 238, height - 196, 155, 50); // RECT
+			pdPageContentStream.addRect(this.width - 238, this.height - 196, 155, 50); // RECT
 			// text
 			pdPageContentStream.beginText();
-			pdPageContentStream.newLineAtOffset(width - 236, height - 156);
+			pdPageContentStream.newLineAtOffset(this.width - 236, this.height - 156);
 			pdPageContentStream.showText("Ecrivez votre Nom");
 			pdPageContentStream.endText();
 
@@ -274,25 +264,22 @@ public class SubjectGenerator {
 			pdPageContentStream.setNonStrokingColor(0, 0, 0); // black text
 			pdPageContentStream.setFont(font, 9);
 
-			int height = (int) page.getMediaBox().getHeight();
-			int width = (int) page.getMediaBox().getWidth();
-
 			// num rectangle
-			pdPageContentStream.addRect(width / 4, height - 146, 150, 40);
+			pdPageContentStream.addRect(this.width / 4, this.height - 146, 150, 40);
 			pdPageContentStream.beginText();
-			pdPageContentStream.newLineAtOffset((width / 4) + 2, height - 115);
+			pdPageContentStream.newLineAtOffset((this.width / 4) + 2, this.height - 115);
 			pdPageContentStream.showText("Ecrivez votre Numéro d'étudiant");
 			pdPageContentStream.endText();
 
 			// note rectangle
-			pdPageContentStream.addRect(width / 4, height - 200, 150, 40);
+			pdPageContentStream.addRect(this.width / 4, this.height - 200, 150, 40);
 			pdPageContentStream.beginText();
-			pdPageContentStream.newLineAtOffset((width / 4) + 2, height - 170);
+			pdPageContentStream.newLineAtOffset((this.width / 4) + 2, this.height - 170);
 			pdPageContentStream.showText("Note");
 			pdPageContentStream.endText();
 
-			pdPageContentStream.moveTo((width / 4) + 75, height - 160);
-			pdPageContentStream.lineTo((width / 4) + 75, height - 200);
+			pdPageContentStream.moveTo((this.width / 4) + 75, this.height - 160);
+			pdPageContentStream.lineTo((this.width / 4) + 75, this.height - 200);
 
 			// dotedlines
 
@@ -317,22 +304,20 @@ public class SubjectGenerator {
 			pdPageContentStream.setNonStrokingColor(0, 0, 0); // black text
 			pdPageContentStream.setFont(font, 9);
 
-			int height = (int) page.getMediaBox().getHeight();
-
 			// generate rectangles numero etudiant
 			for (int i = 0; i <= 9; i++) {
 				// draw first range of rectangles
-				pdPageContentStream.addRect(80 + (22 * i), height - 107, 11, 11);
+				pdPageContentStream.addRect(80 + (22 * i), this.height - 107, 11, 11);
 				// write first range of numbers
 				pdPageContentStream.beginText();
-				pdPageContentStream.newLineAtOffset(80 + (22 * i) + 12, height - 105);
+				pdPageContentStream.newLineAtOffset(80 + (22 * i) + 12, this.height - 105);
 				pdPageContentStream.showText(String.valueOf(i));
 				pdPageContentStream.endText();
 				// draw second range of rectangles
-				pdPageContentStream.addRect(80 + (22 * i), height - 124, 11, 11);
+				pdPageContentStream.addRect(80 + (22 * i), this.height - 124, 11, 11);
 				// write second range of numbers
 				pdPageContentStream.beginText();
-				pdPageContentStream.newLineAtOffset(80 + (22 * i) + 12, height - 122);
+				pdPageContentStream.newLineAtOffset(80 + (22 * i) + 12, this.height - 122);
 				pdPageContentStream.showText(String.valueOf(i));
 				pdPageContentStream.endText();
 			}
@@ -345,9 +330,76 @@ public class SubjectGenerator {
 
 	public void generateHeader() {
 		try {
-			PDPageContentStream pdPageContentStream = new PDPageContentStream(this.pdDocument,
-					this.pdDocument.getPage(0));
-			PDFont font = PDType1Font.HELVETICA_BOLD;
+
+			PDPage page = this.pdDocument.getPage(0);
+
+			PDPageContentStream pdPageContentStream = new PDPageContentStream(this.pdDocument, page,
+					PDPageContentStream.AppendMode.APPEND, true);
+			PDFont font = PDType1Font.TIMES_ROMAN;
+
+			pdPageContentStream.setFont(font, 10);
+
+			// draw the separative line
+			pdPageContentStream.moveTo(28, this.height - 239);
+			pdPageContentStream.lineTo(this.width - 28, this.height - 239);
+
+			// pdPageContentStream.lineTo(width - 28, height - 239);
+			pdPageContentStream.stroke(); // stroke
+
+			// Sujet
+			// center text : https://stackoverflow.com/a/6531362
+			String subject = "Exemple PT S3T : de 1970 à l’an 2000, 30 ans d’histoire";
+			int fontSize = 12;
+			pdPageContentStream.setFont(font, fontSize);
+			float titleWidth = (font.getStringWidth(subject) / 1000) * fontSize;
+			float titleHeight = (font.getFontDescriptor().getFontBoundingBox().getHeight() / 1000) * fontSize;
+			pdPageContentStream.beginText();
+			pdPageContentStream.newLineAtOffset((this.width - titleWidth) / 2, (this.height - 57 - titleHeight));
+			pdPageContentStream.showText(subject);
+			pdPageContentStream.endText();
+
+			String subtitle = "Tricherie : Toutes consultations de sources numériques sont interdites !!";
+			titleWidth = (font.getStringWidth(subtitle) / 1000) * fontSize;
+			pdPageContentStream.beginText();
+			pdPageContentStream.newLineAtOffset((this.width - titleWidth) / 2, (this.height - 71 - titleHeight));
+			pdPageContentStream.showText(subtitle);
+			pdPageContentStream.endText();
+
+			fontSize = 10;
+
+			// 1st line
+			pdPageContentStream.setFont(font, fontSize);
+			String numConsignePart1 = "          Veuillez coder votre numéro";
+
+			titleWidth = (font.getStringWidth(numConsignePart1) / 1000) * fontSize;
+			pdPageContentStream.beginText();
+			pdPageContentStream.newLineAtOffset(this.width - 224, this.height - 94 - titleHeight);
+			pdPageContentStream.showText(numConsignePart1);
+			pdPageContentStream.endText();
+
+			// 2nd line
+			String numConsignePart2 = " d’étudiant ci-contre et écrire votre nom";
+
+			titleWidth = (font.getStringWidth(numConsignePart2) / 1000) * fontSize;
+			pdPageContentStream.beginText();
+			pdPageContentStream.newLineAtOffset(this.width - 244, this.height - 105 - titleHeight);
+			pdPageContentStream.showText(numConsignePart2);
+			pdPageContentStream.endText();
+
+			// 3rd line
+			String numConsignePart3 = " dans la case ci-dessous.";
+
+			titleWidth = (font.getStringWidth(numConsignePart3) / 1000) * fontSize;
+			pdPageContentStream.beginText();
+			pdPageContentStream.newLineAtOffset(this.width - 244, this.height - 118 - titleHeight);
+			pdPageContentStream.showText(numConsignePart3);
+			pdPageContentStream.endText();
+
+			pdPageContentStream.close();
+
+			this.generateNumEtudAreaBis();
+			this.generateNameArea();
+
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
@@ -363,7 +415,7 @@ public class SubjectGenerator {
 			int qIndex = 1;
 			int heightOffset = 265;
 			int pageIndex = 0;
-			System.out.println(this.config.getQuestions());
+			// System.out.println(this.config.getQuestions());
 			for (Question q : this.config.getQuestions()) {
 				q.setTitre(q.getTitre().replace("\n", "")); // /\ TODO: must be done in Config /\
 				int height = (int) this.pdDocument.getPage(0).getMediaBox().getHeight();
@@ -392,9 +444,6 @@ public class SubjectGenerator {
 			// Il faut rendre plus générale la génération des Q (en fonction du nombre de
 			// réponses, recycler le heightOffset)
 
-			int width = (int) pdDocument.getPage(0).getMediaBox().getWidth();
-			int height = (int) pdDocument.getPage(0).getMediaBox().getHeight();
-
 			PDPageContentStream pdPageContentStream = new PDPageContentStream(pdDocument, curPage,
 					PDPageContentStream.AppendMode.APPEND, true);
 			PDFont font = PDType1Font.TIMES_ROMAN;
@@ -402,28 +451,29 @@ public class SubjectGenerator {
 			pdPageContentStream.setFont(font, fontSize);
 			float titleLength = (font.getStringWidth(q.getTitre()) / 1000) * fontSize;
 
-			System.out.println(qIndex + ". " + q.getTitre() + " - Width: " + titleLength + "/" + width + " - " + height
-					+ " - NbRep: " + q.getReponses().size() + "\n");
+			// System.out.println(qIndex + ". " + q.getTitre() + " - Width: " + titleLength
+			// + "/" + this.width + " - " + this.height + " - NbRep: " +
+			// q.getReponses().size() + "\n");
 
 			// Titre
 			// Si titre plus long que largeur page -> mise sur plusieurs lignes
-			if (titleLength > (width - 20)) {
+			if (titleLength > (this.width - 20)) {
 				pdPageContentStream.beginText();
-				pdPageContentStream.newLineAtOffset(widthOffset, height - heightOffset);
+				pdPageContentStream.newLineAtOffset(widthOffset, this.height - heightOffset);
 				pdPageContentStream.showText("Q." + qIndex + " -");
 				pdPageContentStream.endText();
 
 				for (String line : setTextOnMultLines(q.getTitre(), widthOffset, pdDocument, font, fontSize)) {
 					pdPageContentStream.beginText();
-					pdPageContentStream.newLineAtOffset(widthOffset + 22, height - heightOffset);
+					pdPageContentStream.newLineAtOffset(widthOffset + 22, this.height - heightOffset);
 					pdPageContentStream.showText(line);
 					pdPageContentStream.endText();
-					System.out.println("\n" + line + "\n");
+					// System.out.println("\n" + line + "\n");
 					heightOffset += 20;
 				}
 			} else {
 				pdPageContentStream.beginText();
-				pdPageContentStream.newLineAtOffset(widthOffset, height - heightOffset);
+				pdPageContentStream.newLineAtOffset(widthOffset, this.height - heightOffset);
 				pdPageContentStream.showText("Q." + qIndex + " - " + q.getTitre());
 				pdPageContentStream.endText();
 			}
@@ -436,7 +486,7 @@ public class SubjectGenerator {
 			/// Texte
 			for (int i = 0; i < q.getReponses().size(); i++) {
 				pdPageContentStream.beginText();
-				pdPageContentStream.newLineAtOffset(widthOffset + 40, height - heightOffset - 15);
+				pdPageContentStream.newLineAtOffset(widthOffset + 40, this.height - heightOffset - 15);
 				pdPageContentStream.showText(q.getReponses().get(i).getIntitule());
 				pdPageContentStream.endText();
 				heightOffset += 17.5;
@@ -529,32 +579,17 @@ public class SubjectGenerator {
 	}
 
 	public static void main(String args[]) throws IOException {
-		// config initialization
-		// Config c = new Config("E:\\sourceB.txt"); // SourceB ne contient aucun '\n'
 		Config c = new Config("E:\\source.txt");
 		c.readConfig();
-		// Create a Document object.
-		/**
-		 * PDDocument pdDocument = new PDDocument(); // Create a Page object PDPage
-		 * pdPage1 = new PDPage(PDRectangle.A4); // System.out.println("Height : " +
-		 * pdPage1.getMediaBox().getHeight()); // System.out.println("Width : " +
-		 * pdPage1.getMediaBox().getWidth()); PDPage pdPage2 = new
-		 * PDPage(PDRectangle.A4); PDPage pdPage3 = new PDPage(PDRectangle.A4); PDPage
-		 * pdPage4 = new PDPage(PDRectangle.A4); PDPage pdPage5 = new
-		 * PDPage(PDRectangle.A4);
-		 *
-		 * // Add the page to the document pdDocument.addPage(pdPage1);
-		 * pdDocument.addPage(pdPage2); pdDocument.addPage(pdPage3);
-		 * pdDocument.addPage(pdPage4); pdDocument.addPage(pdPage5);
-		 */
 
 		// instanciate a new SubjectGenerator
 		// TODO: change PDRectangle.A4 to the format specified in the config
 		SubjectGenerator subjectGenerator = new SubjectGenerator(c, 5, PDRectangle.A4);
 
+		subjectGenerator.generateHeader();
 		subjectGenerator.generateMarks();
-		subjectGenerator.generateNumEtudAreaBis();
-		subjectGenerator.generateNameArea();
+		// subjectGenerator.generateNumEtudAreaBis();
+		// subjectGenerator.generateNameArea();
 		subjectGenerator.generateFooter();
 		subjectGenerator.generateBody();
 
