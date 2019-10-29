@@ -11,9 +11,8 @@
 ## Présentation du projet
 
 NGCC est un projet réalisé en java lors de notre 3ème semestre de notre formation (DUT informatique traditionel).
-NGCC est une solution de traitement automatique de QCM pour les examens fonctionnant en ligne de commande.
+L'objectif du projet est de concevoir un logiciel en ligne de commande permettant d'aider les enseignants dans la saisie des notes et la correction des copies à l'aide de techniques de reconnaissance optique de cases noircies et de reconnaissance de caractères.
 
-Cela va permettre d'aider dans la saisie des notes et la correction des copies à l'aide de techniques de reconnaissance optique.
 
 ## Comment l'utiliser
 
