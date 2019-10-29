@@ -44,3 +44,4 @@ local.properties
 
 # Exclude csv files on push/pull
 *.csv
+/export/
