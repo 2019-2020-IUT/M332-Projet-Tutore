@@ -3,6 +3,7 @@ package GenerateurPdf;
 import java.awt.Color;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -13,6 +14,7 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
 import config.Config;
 import config.Question;
+import config.Reponse;
 
 // infos concernant strok, fill, ... : https://stackoverflow.com/a/27959484
 
@@ -329,6 +331,7 @@ public class SubjectGenerator {
 	}
 
 	public void generateHeader() {
+		// TODO: change text considering config data
 		try {
 
 			PDPage page = this.pdDocument.getPage(0);
@@ -405,7 +408,7 @@ public class SubjectGenerator {
 		}
 	}
 
-	public void generateBody() {
+	public void generateBody(boolean isCorrected) {
 		try {
 			PDPageContentStream pdPageContentStream = new PDPageContentStream(this.pdDocument,
 					this.pdDocument.getPage(0), PDPageContentStream.AppendMode.APPEND, true);
@@ -416,20 +419,25 @@ public class SubjectGenerator {
 			int heightOffset = 265;
 			int pageIndex = 0;
 			// System.out.println(this.config.getQuestions());
-			for (Question q : this.config.getQuestions()) {
+			// pour chaque question
+			ArrayList<Question> questions = this.config.getQuestions();
+			// si les questions doivent etre melangees
+			if (this.config.getParam().get("ShuffleQuestions") == "1") {
+				Collections.shuffle(questions);
+			}
+			for (Question q : questions) {
 				q.setTitre(q.getTitre().replace("\n", "")); // /\ TODO: must be done in Config /\
-				int height = (int) this.pdDocument.getPage(0).getMediaBox().getHeight();
 				PDPage page = this.pdDocument.getPage(pageIndex);
-				this.generateQ(q, qIndex, this.pdDocument, page, 25, heightOffset);
+				this.generateQCM(q, qIndex, this.pdDocument, page, 25, heightOffset, isCorrected);
 				qIndex++;
 				heightOffset += 100;
 
-				if (heightOffset > (height - 10)) {
-					heightOffset = 265;
-					pageIndex++;
+				// si on depasse la longeur de la page
+				if (heightOffset > (this.height - 10)) {
+					pageIndex++; // on va a la page suivante
+					heightOffset = 55; // on se place en haut de la page
 				}
 			}
-
 			pdPageContentStream.close();
 		}
 
@@ -438,8 +446,11 @@ public class SubjectGenerator {
 		}
 	}
 
-	public void generateQ(Question q, int qIndex, PDDocument pdDocument, PDPage curPage, int widthOffset,
-			int heightOffset) {
+	public void generateQCM(Question q, int qIndex, PDDocument pdDocument, PDPage curPage, int widthOffset,
+			int heightOffset, boolean isCorrected) {
+		// TODO: calculer automatiquement widthOffset
+		// TODO: regler probleme de debordement de page (verifiee pour chaque question
+		// mais pas pour chaque reponse)
 		try {
 			// Il faut rendre plus générale la génération des Q (en fonction du nombre de
 			// réponses, recycler le heightOffset)
@@ -457,6 +468,7 @@ public class SubjectGenerator {
 
 			// Titre
 			// Si titre plus long que largeur page -> mise sur plusieurs lignes
+			// TODO: revoir structure (factorisation possible)
 			if (titleLength > (this.width - 20)) {
 				pdPageContentStream.beginText();
 				pdPageContentStream.newLineAtOffset(widthOffset, this.height - heightOffset);
@@ -478,17 +490,35 @@ public class SubjectGenerator {
 				pdPageContentStream.endText();
 			}
 
-			// Reponses (QCM)
-			/// Rectangle
-			// pdPageContentStream.addRect(widthOffset + 20, height - heightOffset - 15,
-			// 100, 100);
-
-			/// Texte
-			for (int i = 0; i < q.getReponses().size(); i++) {
+			ArrayList<Reponse> reponses = q.getReponses();
+			// si les reponses doivent etre melangees
+			if (this.config.getParam().get("ShuffleAnswers") == "1") {
+				Collections.shuffle(reponses);
+			}
+			// pour chaque reponse
+			for (Reponse r : reponses) {
+				/**
+				 * if (heightOffset > (this.height - 10)) { pageIndex++; // on va a la page
+				 * suivante heightOffset = 55; // on se place en haut de la page }
+				 */
+				// on ecrit la reponse
 				pdPageContentStream.beginText();
 				pdPageContentStream.newLineAtOffset(widthOffset + 40, this.height - heightOffset - 15);
-				pdPageContentStream.showText(q.getReponses().get(i).getIntitule());
+				pdPageContentStream.showText(r.getIntitule());
 				pdPageContentStream.endText();
+				// on ajoute une zone pour cocher (carre)
+				pdPageContentStream.addRect(widthOffset + 20, this.height - heightOffset - 16, 10, 10);
+				// si l'on souhait generer le corrige
+				if (isCorrected) {
+					// si c'est une bonne reponse
+					if (r.isJuste()) {
+						pdPageContentStream.fillAndStroke(); // carre noirci
+					} else {
+						pdPageContentStream.stroke(); // carre vide
+					}
+				} else {
+					pdPageContentStream.stroke(); // carre vide
+				}
 				heightOffset += 17.5;
 			}
 
@@ -507,6 +537,10 @@ public class SubjectGenerator {
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
+	}
+
+	public void generateOpenQ() {
+
 	}
 
 	public static ArrayList<String> setTextOnMultLines(String text, int widthOffset, PDDocument pdDocument, PDFont font,
@@ -584,6 +618,7 @@ public class SubjectGenerator {
 
 		// instanciate a new SubjectGenerator
 		// TODO: change PDRectangle.A4 to the format specified in the config
+		// TODO: number of page = automatic
 		SubjectGenerator subjectGenerator = new SubjectGenerator(c, 5, PDRectangle.A4);
 
 		subjectGenerator.generateHeader();
@@ -591,7 +626,7 @@ public class SubjectGenerator {
 		// subjectGenerator.generateNumEtudAreaBis();
 		// subjectGenerator.generateNameArea();
 		subjectGenerator.generateFooter();
-		subjectGenerator.generateBody();
+		subjectGenerator.generateBody(false); // false = on genere le sujet, pas le corrige
 
 		subjectGenerator.save("E:\\testPDFMarks.pdf");
 
