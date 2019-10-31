@@ -14,6 +14,7 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
 import config.Config;
 import config.Question;
+import config.QuestionBoite;
 import config.Reponse;
 
 // infos concernant strok, fill, ... : https://stackoverflow.com/a/27959484
@@ -94,26 +95,33 @@ public class SubjectGenerator {
 		this.width = width;
 	}
 
-	private static void drawDotedLine(PDPageContentStream contentStream, int xi, int yi, int xf, int yf)
+	public static void drawDotedLine(PDPageContentStream pdPageContentStream, int xi, int yi, int xf, int yf)
 			throws IOException {
-		contentStream.moveTo(xi, yi);
+		pdPageContentStream.moveTo(xi, yi);
 		for (int i = xi; i <= xf; i += 3) {
-			contentStream.lineTo(i, yf);
-			contentStream.moveTo(i + 2, yf);
-
+			pdPageContentStream.lineTo(i, yf);
+			pdPageContentStream.moveTo(i + 2, yf);
 		}
 		// contentStream.fill();
 	}
 
-	private static void drawCircle(PDPageContentStream contentStream, int cx, int cy, int r) throws IOException {
+	public static void drawCircle(PDPageContentStream pdPageContentStream, int cx, int cy, int r) throws IOException {
 		// https://stackoverflow.com/a/42836210
 		final float k = 0.552284749831f;
-		contentStream.moveTo(cx - r, cy);
-		contentStream.curveTo(cx - r, cy + (k * r), cx - (k * r), cy + r, cx, cy + r);
-		contentStream.curveTo(cx + (k * r), cy + r, cx + r, cy + (k * r), cx + r, cy);
-		contentStream.curveTo(cx + r, cy - (k * r), cx + (k * r), cy - r, cx, cy - r);
-		contentStream.curveTo(cx - (k * r), cy - r, cx - r, cy - (k * r), cx - r, cy);
-		contentStream.fill();
+		pdPageContentStream.moveTo(cx - r, cy);
+		pdPageContentStream.curveTo(cx - r, cy + (k * r), cx - (k * r), cy + r, cx, cy + r);
+		pdPageContentStream.curveTo(cx + (k * r), cy + r, cx + r, cy + (k * r), cx + r, cy);
+		pdPageContentStream.curveTo(cx + r, cy - (k * r), cx + (k * r), cy - r, cx, cy - r);
+		pdPageContentStream.curveTo(cx - (k * r), cy - r, cx - r, cy - (k * r), cx - r, cy);
+		pdPageContentStream.fill();
+	}
+
+	public static void writeText(PDPageContentStream pdPageContentStream, String text, int x, int y)
+			throws IOException {
+		pdPageContentStream.beginText();
+		pdPageContentStream.newLineAtOffset(x, y);
+		pdPageContentStream.showText(text);
+		pdPageContentStream.endText();
 	}
 
 	public void generateFooter() {
@@ -195,7 +203,6 @@ public class SubjectGenerator {
 	}
 
 	public void generateRectID(PDPageContentStream pdPageContentStream) {
-		System.out.println(pdPageContentStream);
 		try {
 			pdPageContentStream.setLineWidth(0.6f); // largeur du contour des rectangles
 
@@ -428,7 +435,11 @@ public class SubjectGenerator {
 			for (Question q : questions) {
 				q.setTitre(q.getTitre().replace("\n", "")); // /\ TODO: must be done in Config /\
 				PDPage page = this.pdDocument.getPage(pageIndex);
-				this.generateQCM(q, qIndex, this.pdDocument, page, 25, heightOffset, isCorrected);
+				if (q instanceof QuestionBoite) {
+					this.generateOpenQ((QuestionBoite) q, qIndex, this.pdDocument, page, 25, heightOffset, isCorrected);
+				} else {
+					this.generateQCM(q, qIndex, this.pdDocument, page, 25, heightOffset, isCorrected);
+				}
 				qIndex++;
 				heightOffset += 100;
 
@@ -539,15 +550,77 @@ public class SubjectGenerator {
 		}
 	}
 
-	public void generateOpenQ() {
+	public void generateOpenQ(QuestionBoite q, int qIndex, PDDocument pdDocument, PDPage curPage, int widthOffset,
+			int heightOffset, boolean isCorrected) {
+		try {
+			PDPageContentStream pdPageContentStream = new PDPageContentStream(pdDocument, curPage,
+					PDPageContentStream.AppendMode.APPEND, true);
+			PDFont font = PDType1Font.TIMES_ROMAN;
+			int fontSize = 10;
+			pdPageContentStream.setFont(font, fontSize);
+			float titleLength = (font.getStringWidth(q.getTitre()) / 1000) * fontSize;
+			float lastLineLenght = titleLength;
 
+			if (titleLength > (this.width - 20)) {
+				SubjectGenerator.writeText(pdPageContentStream, "Q." + qIndex + " -", widthOffset,
+						this.height - heightOffset);
+
+				for (String line : setTextOnMultLines(q.getTitre(), widthOffset, pdDocument, font, fontSize)) {
+					SubjectGenerator.writeText(pdPageContentStream, line, widthOffset + 22, this.height - heightOffset);
+					heightOffset += 20;
+					lastLineLenght = (font.getStringWidth(line) / 1000) * fontSize;
+				}
+			} else {
+				SubjectGenerator.writeText(pdPageContentStream, "Q." + qIndex + " - " + q.getTitre(), widthOffset,
+						this.height - heightOffset);
+			}
+			for (Reponse r : q.getReponses()) {
+				if ((titleLength + 16) > (this.width - 20)) {
+					SubjectGenerator.writeText(pdPageContentStream, r.getIntitule(), widthOffset + 20,
+							this.height - heightOffset - 15);
+					pdPageContentStream.addRect(widthOffset + 20, this.height - heightOffset - 16, 10, 10);
+				} else {
+					SubjectGenerator.writeText(pdPageContentStream, r.getIntitule(),
+							widthOffset + (int) lastLineLenght + 15, this.height - heightOffset - 15);
+					pdPageContentStream.addRect(widthOffset + (int) lastLineLenght, this.height - heightOffset - 16, 10,
+							10);
+				}
+				if (isCorrected) {
+					// si c'est une bonne reponse
+					if (r.isJuste()) {
+						pdPageContentStream.fillAndStroke(); // carre noirci
+					} else {
+						pdPageContentStream.stroke(); // carre vide
+					}
+				} else {
+					pdPageContentStream.stroke(); // carre vide
+				}
+			}
+			heightOffset += 17.5;
+
+			// zone d'ecriture (rectangle)
+			int widthMargin = 60;
+			int linesLenght = q.getNbligne() * 20; // 20 = taille d'une ligne
+			int yLenght = (this.width - widthOffset - widthMargin);
+			pdPageContentStream.addRect(widthOffset + 20, this.height - heightOffset - 16, yLenght, linesLenght);
+			int yCursor = this.height - heightOffset - 16;
+			for (int i = 0; i < q.getNbligne(); i++) {
+				yCursor = this.height - heightOffset - 16 - (i * 2); // on descends y de la taille d'une ligne
+				// SubjectGenerator.drawDotedLine(pdPageContentStream, xi, widthOffset + 30, xf,
+				// yLenght);
+			}
+
+			pdPageContentStream.close();
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		}
 	}
 
 	public static ArrayList<String> setTextOnMultLines(String text, int widthOffset, PDDocument pdDocument, PDFont font,
 			int fontSize) {
 		// TODO: voir si l'on laisse en static ou non
-		int width = (int) pdDocument.getPage(0).getMediaBox().getWidth();
 		float subStrLength = 0;
+		int width = (int) pdDocument.getPage(0).getMediaBox().getWidth();
 
 		ArrayList<String> lines = new ArrayList<String>();
 		int widthMargin = 60;
