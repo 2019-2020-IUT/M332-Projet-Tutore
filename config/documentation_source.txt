@@ -1,0 +1,125 @@
+Cette documentation a pour but de détailler l'utilisation du fichier de configuration du QCM.
+Vous devrez, pour le configurer, compléter les champs après les ":" sauf si une valeur par défaut vous convient.
+
+Voici les différents options à paramétrer:
+
+
+PaperSize: 
+Permet de configurer le format de papier utilisé pour la copie.
+Vous avez le choix entre A3, A4, A5 et letter. 
+Par défaut la valeur sera A4.
+
+Title:
+Correspond au titre de l'examen.
+
+Presentation:
+Correspond au texte introductif de l'examen notamment pour présenter les consignes. 
+
+DocumentModel:
+Indique le modèle de document utilisé pour la génération du sujet. 
+Il est proposé que cet élément soit le nom du fichier du modèle.
+
+ShuffleQuestions:  
+Permet de configurer si les questions seront dans le même ordre ou non dans chacune des copies.
+Pour qu'elles ne soient pas mélangées il faut mettre "0" sinon, la valeur par défaut: "1" fait qu'elles seront mélangées.
+
+ShuffleAnswers: 
+Permet de configurer si les réponses aux questions seront mélangées ou non dans chacune des copies.
+Pour qu'elles ne soient pas mélangées il faut mettre "0" sinon, la valeur par défaut: "1" fait qu'elles seront mélangées.
+
+Code: 
+Permet de configurer le nombre de chiffres que comportent les numéros d'étudiants.
+Ce nombre doit être compris entre 1 et 16.
+Ainsi, si le numéro d'étudiant est: "21805942" il faudra inscrire "8" après le champ "code: ".
+
+MarkFormat:
+Correspond au format de la note.
+Des exemples de MarkFormat seraient "20/4" pour des notes entre 0 et 20 notées à 0.25 près
+et "100" pour des notes entières entre 0 et 100.
+
+NameField:
+Cette option sert à remplacer le texte « Nom et prénom » inscrit dans le cadre où l’étudiant doit inscrire son identité. 
+
+StudentIdField: 
+Cette option sert à remplacer le petit texte qui demande de coder son numéro d’étudiant
+et d’inscrire son nom sur les copies (quand l’option Code a été utilisée).
+
+MarkField: 
+Cette option sert à remplacer le petit texte qui demande de coder la note de l’étudiant 
+
+SeparateAnswerSheet:
+Cette option permet d'obtenir une feuille de réponses séparée.
+La valeur par défaut est 1, sinon attendu 0.
+
+AnswerSheetTitle: permet de configurer le titre à inscrire en tête de la feuille de réponse. 
+Par défaut, le titre sera celui de « Title ».
+
+AnswerSheetPresentation:
+Donne le texte de présentation de la feuille de réponse. 
+Par défaut, le texte utilisé pour présenter sera celui de « Presentation ».
+
+SingleSided:
+Permet de configurer si une page blanche sera ajoutée entre le sujet et la feuille de réponses.
+En mettant "1", il n'y aura pas de page blanche.
+
+DefaultScoringS:
+Permet de configurer le barème pour les questions à unique réponse correct.
+Il faudra compléter par un nombre entier après les "=".
+Le barème se décompose avec les paramètres suivants:
+
+"e=" correspond à la note en cas de plusieurs cases cochées (alors que l'on attend qu'une réponse).
+"v=" correspond à la note en cas d'aucune case cochée.
+"d=" correspond à une valeur ajoutée à toutes les notes qui ne relèvent pas des cas correspondant aux paramètres e et v.
+"p=" correspond à la note plancher c'est à dire que si la note obtenue à la question donne une valeur inférieure à la valeur plancher, cette valeur plancher prédomine.
+"b=" correspond à la note pour une bonne réponse.
+"m=" correspond à la note pour une mauvaise réponse.
+"formula=" /!\ A APPROFONDIR
+[...]
+[...]
+[...]
+La valeur par défault est: e=0,v=0,b=1,m=-1,p=0,d=0.
+
+DefaultScoringM: 
+Permet de configurer le barème pour les questions à multiples réponses correctes.
+
+"v=" correspond à la note en cas d'aucune case cochée.
+"d=" correspond à une valeur ajoutée à toutes les notes qui ne relèvent pas des cas correspondant aux paramètres e et v.
+[...]
+[...]
+[...]
+[...]
+[...]
+[...]
+[...]
+[...]
+
+QuestionBlocks: 
+Permet de configurer si les questions peuvent être coupées sur plusieurs pages ou plusieurs colonnes.
+Avec la valeur 1, les questions ne pourront pas être coupées tandis qu'elles peuvent l'être avec la valeur 0.
+
+
+
+/!\NON pris en compte car non obligatoire. A voir si on le fait! 
+Columns: 
+Correspond au nombre de colonne(s) en parallèle sur lesquelles sont écrites les questions par feuille de questionnaire.
+Si vous voulez plusieurs colonnes parallèles de questions par pages, vous le pouvez jusqu'à 4 maximum.
+Par défaut la valeur est 1.
+ 
+ManualDuplex:
+Permet de configurer si le sujet doit être constitué d'un nombre pair de pages ou non.
+Avec la valeur 1, le sujet aura un nombre de pages pair, (idéal pour imprimer les copies recto-verso sans risquer de voir le début d'une copie au recto de la fin d'une autre).
+Sinon, mettre la valeur 0.
+
+----------------------------------------------------------------------------------------------------------
+
+CONCERNANT LES QUESTIONS:
+
+Commencer une question par "*" signifie qu'elle n'a qu'une unique réponse juste.
+Commencer une question par "**" signifie qu'elle a plusieurs réponses justes.
+Commencer une réponse par "+" signifie que la réponse est juste.
+Commencer une réponse par "-" signifie que la réponse est fausse.
+
+Si la question est ouverte, il faut ajouter <lines=n> (avec n un entier) à la suite des étoiles ("*" ou "**") de telles sorte à obtenir par exemple :
+*<lines=1> 
+"n" correspond en fait au nombre de ligne où l'on pourra écrire la réponse.
+ 

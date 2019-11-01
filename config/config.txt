@@ -1,1 +1,186 @@
-Code : 8
+PaperSize: A4
+Title: DS PTut S3T 2019-2020
+Presentation: Aucun appareil électronique et aucun document n’est autorisé. Des points seront retirés en cas d’écriture illisible.
+DocumentModel: source
+ShuffleQuestions: 1  
+ShuffleAnswers: 1  
+Code: 8
+MarkFormat: 20/4
+SingleSided: 0
+DefaultScoringS: e=0,v=0,b=1,m=-1,p=0,d=0
+DefaultScoringM: e=0,v=0,b=1,m=-1,p=0,d=0
+QuestionBlocks: 1
+
+#Intitulé du mot "Question" dans l'énoncé (non présent dans le sujet)
+L-Question: Q.
+
+#Intitulé de Nom & Prénom dans le QCM (non présent dans le sujet)
+L-Name: Ecrivez votre Nom 
+
+### Questions
+
+* Selon la serie diffusée en 1991 sur TF1, où le petit Nicolas doit il travailler et s'appliquer ?
++ Au collège des ninjas
+- A l'académie des ninjas
+- A l'école des champions
+- Au collège Fou Fou Fou
+
+* D'après le générique de 1978, jusqu'où bondit le merveilleux génie ?
++ Jupiter
+- La Terre
+- Le fond de l'univers
+- Neugebauer 
+
+* Selon le refrain du générique français de 1983, lequel de ces gadgets n'est pas cité ?
++ gadget aux Jambes
+- gadget à main
+- gadget au poing
+- gadget au chapeau
+
+* Parmis les véhicules suivants, lequel n'est pas un véhicule de la force lumière ?
++ Disquair
+- Scooter de l'espace
+- Trigulair
+- Base de combat
+
+* Quel est le nom du personnage qui parrait de glace et qui veille sur la galaxie avec bibop ?
++ Albator
+- Capitain Flam
+- Jayce
+- Arok le barbare
+
+* Diffusé en France pour la première fois en 1986, ce robot du 21ème siècle n'est pas tout à fait comme les autres. 
+Mais quel est le nom de son clone pourvu d'un « facteur omega » qui le rend maléfique ?
++ Atlas
+- Astro
+- Scara
+- Cobalt
+
+** Dans le générique des "Barbapapa" de 1974, quels sont les personnages cités ?
++ Barbamama 
++ Barbagamelle 
++ Barbalala
+- Barbatata
+
+** Quels sont les métiers qui sont cités dans le générique des bisounours commançant par "Oui je veux être un bisou" ?
++ sapeur-pompier
++ pirate de l'espace
++ grand cuisinier
+- policier
+
+* Quel est le nom de la maman de bouba dans la version française du générique ?
++ Amandine
+- Clementine
+- Caroline
+- Apolline
+
+** Quelles jeunes femmes accompagnent le capitain caverne dans ses aventures ?
++ Brenda
++ Lili
++ Babette
+- Josie
+
+* Quel est le vrai nom (dans la version française) du Capitain Flam ?
++ Curtis Newton
+- Simon Wright
+- Edmond Hamilton
+- William Garnie 
+
+** Selon le générique de Bernard Minet de 1988, les chevaliers vont au combat quand ?
++ l'ennemi se fait pressant
++ le danger est oppressant
+- triomphe le mal
+- un jour viendra enfin
+
+* Dans cobra, quel est le prénom  de la chef de bande des rebelles nommés les « Faucons des neiges » ?
++ Sandra
+- Jane 
+- Catherine 
+- Dominique 
+
+* Qui, Conan, le fils du futur, sauvera-t-il des brigands ?
++ Lana
+- Lala
+- Sara
+- Emma
+
+* Dans l'armée du ruban rouge, les commandants et les capitaines ont des noms de couleurs ou de métaux. Lequel n'est pas capitaine :
++ Copper
+- Yellow
+- Sylver
+- Viollet
+
+** Les Stingers sont un groupe concurrent de Jem et les Hologrammes. Quels sont ses membres ?
++ Rory « Riot » Llewelyn
++ Ingrid « Minx » Krüger
++ Phoebe « Rapture » Ashe
+- Mary « Stormer » Phillips
+
+** Dans M.A.S.K. qui sont les pilotes ou copilote de Rhino (un camion tracteur Kenworth w900)?
++ Matt Trakker 
++ Bruce Sato
++ Alex Sector
+- Boris Bushkin
+
+** Dans 'La gigue de Bic et Bac', vers Arkadia, nous marchons mais dans quelles conditions ?
++ Sous le vent la pluie
++ Dans les flaques de pluie
+- Jusqu'au coeur de la nuit
+- Tous ensemble tous unis
+
+** D'après le générique de 1984 chanté par William Leymergie, PacMan est rond comme ?
++ Comme un ballon
++ Comme un soleil
+- Comme une sphère
+- Comme une boule
+
+*<lines=1> Il s'agit d'un prénom germanique, d'un village situé en Rhénanie-Palatinat en Allemagne, d'une rivière allemande, coulant dans ce même land 
+mais surtout du personnage principal une série télévisée américaine diffusée de 1986 à 1990. Qui est il ?
++ Ok
+- Erreur
+
+*<lines=1> "Personne dans le monde, Ne marche du même pas, Et même si la Terre est ronde, On ne se rencontre pas". Quel est le titre de cette serie ?
++ Ok
+- Erreur
+
+*<lines=1> Cette jeune fille vient d'emménager à Sunnydale avec sa mère et rencontre son nouvel observateur. Quel est le nom de ce dernier ?
++ Ok
+- Erreur
+
+*<lines=1> Jonathan Baker et Francis Poncherello sont deux motards officiers dans la région de Los Angeles. Quel est le nom de leur brigade ?
++ Ok
+- Erreur
+
+*<lines=1> À bord du luxueux paquebot Pacific Princess qui vogue sur l'océan Pacifique, tout le monde, ou presque, cherche l'amour. 
+Une deuxième version de la serie a été produite et diffusée en 1998. Quel est le nouveau nom du bateau ?
++ Ok
+- Erreur
+
+*<lines=1> Lee Stetson, nom de code Scarecrow, est un agent de haut-niveau de « l'Agence », 
+qui par hasard mêle à sa mission une femme au foyer divorcée, Amanda King. Quel est le nom de cette serie ?
++ Ok
+- Erreur
+
+*<lines=3> Le colonel Steve est grièvement blessé et certaines parties de son corps sont remplacées par des prothèses bioniques à six millions de dollars.
+Expliquez le nom français de cette serie ?
++ Ok
+- Erreur
+
+*<lines=2> Colt Seavers, un cascadeur d'Hollywood, exerce le métier de chasseur de primes lorsque le cinéma ne lui fournit pas suffisamment de travail.
+Quels sont les noms et prénoms des deux cascadeurs qui l'accompagnent ?
++ Ok
+- Erreur
+
+*<lines=3> Dans K2000, KITT affronte KARR. Mais que veulent dire ces deux acronymes ? 
++ Ok
+- Erreur
+
+*<lines=1> Cette série met en scène un jeune policier blanc casse-cou, Chase McDonald, et un policier noir plus posé, August Brooks. 
+Ils enquêtent sur différentes affaires criminelles ayant pour cadre Los Angeles. Quel est le nom de cette serie diffusée en 1997 sur M6 ?
++ Ok
+- Erreur
+
+*<lines=1> Amie du personnage principal de la serie, la maladroite Penny Parker est une fille qui rêve de devenir une vedette du music hall. 
+La poursuite effrénée de ce rêve, son insouciance et son charme l'attirent toujours dans des situations incroyables. Quel est cette serie ?
++ Ok
+- Erreur
