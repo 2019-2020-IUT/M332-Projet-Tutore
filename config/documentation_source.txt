@@ -82,16 +82,20 @@ La valeur par défault est: e=0,v=0,b=1,m=-1,p=0,d=0.
 DefaultScoringM: 
 Permet de configurer le barème pour les questions à multiples réponses correctes.
 
+"e=" correspond à la note en cas de case "aucune de ces réponses n'est correcte" cochée en même temps qu'ue autre case.
 "v=" correspond à la note en cas d'aucune case cochée.
 "d=" correspond à une valeur ajoutée à toutes les notes qui ne relèvent pas des cas correspondant aux paramètres e et v.
+"p=" correspond à la note plancher c'est à dire que si la note obtenue à la question donne une valeur inférieure à la valeur plancher, cette valeur plancher prédomine.
+"b=" correspond à la note pour une bonne réponse.
+"m=" correspond à la note pour une mauvaise réponse.
+"mz=" correspond à un barème du type ”maximum ou zéro” : l’élève doit cocher toutes les bonnes réponses pour avoir la note maximale ou a zéro.
+"haut=VALEUR1,VALEUR2" Si l'élève a tout juste il aura la note VALEUR1 sinon on enlèvera à la note maximale (VALEUR1) autant de fois la VALEUR2 qu'il aura d'erreur.
+"formula=FORMULE" Donne directement le score de la question, par le biais d’une formule faisant
+intervenir des variables
 [...]
 [...]
-[...]
-[...]
-[...]
-[...]
-[...]
-[...]
+La valeur par défaut est: e=0,v=0,p=-1, formula=(NBC/NB)-(NMC/NM)
+
 
 QuestionBlocks: 
 Permet de configurer si les questions peuvent être coupées sur plusieurs pages ou plusieurs colonnes.
