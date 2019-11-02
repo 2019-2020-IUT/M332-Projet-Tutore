@@ -24,6 +24,8 @@ import config.Reponse;
 
 // TODO: voir si toutes les méthodes doivent throws IOException plutot que try catch
 
+// TODO: faire un choix entre double et float
+
 public class SubjectGenerator {
 
 	private Config config;
@@ -31,6 +33,7 @@ public class SubjectGenerator {
 	private PDRectangle format;
 	private int height;
 	private int width;
+	private static int widthMargin = 20;
 
 	public SubjectGenerator(Config c) {
 		this.config = c;
@@ -44,7 +47,6 @@ public class SubjectGenerator {
 		this.pdDocument.addPage(new PDPage(this.format));
 		this.height = (int) this.format.getHeight();
 		this.width = (int) this.format.getWidth();
-
 	}
 
 	public Config getConfig() {
@@ -136,8 +138,101 @@ public class SubjectGenerator {
 		pdPageContentStream.endText();
 	}
 
+	public static ArrayList<String> setTextOnMultLines(String text, int widthOffset, PDDocument pdDocument, PDFont font,
+			int fontSize) {
+		int width = (int) pdDocument.getPage(0).getMediaBox().getWidth();
+
+		ArrayList<String> lines = new ArrayList<>();
+
+		if (text.isBlank()) {
+			// si le texte est une chaine vide ou ne contenant que des espaces
+			return lines;
+		}
+
+		int widthMargin = 60;
+		int textSize = 0;
+
+		try {
+			textSize = (int) SubjectGenerator.getStrLenWithFont(text, font, fontSize); // taille totale du texte
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		}
+
+		int availableWidth = width - widthOffset - widthMargin; // largeur disponible (marge enlevee)
+		int index = 0;
+
+		while (textSize > availableWidth) {
+			// tant que la taille du texte restant depasse en largeur
+			try {
+				while (SubjectGenerator.getStrLenWithFont(text.substring(0, index), font, fontSize) < availableWidth) {
+					// tant que la taille de la sous chaine de caractere ne depasse pas
+					index++;
+				}
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+			}
+			if (text.substring(0, index).endsWith(" ") || text.substring(0, index).endsWith("-")
+					|| text.substring(index - 1, text.length() - 1).startsWith(" ")
+					|| text.substring(index - 1, text.length() - 1).startsWith("-")) {
+
+				lines.add(text.substring(0, index));
+				text = text.substring(index);
+			} else if (text.substring(0, index - 1).endsWith(" ") || text.substring(0, index - 1).endsWith("-")) {
+				lines.add(text.substring(0, index - 1));
+				text = text.substring(index - 1);
+			} else {
+				// sinon on coupe le mot
+				lines.add(text.substring(0, index - 1) + "-");
+				text = text.substring(index - 1);
+
+			}
+			try {
+				textSize = (int) SubjectGenerator.getStrLenWithFont(text, font, fontSize);
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+			}
+		}
+		lines.add(text);
+		return lines;
+	}
+
 	public static float getStrLenWithFont(String text, PDFont font, int fontSize) throws IOException {
 		return (font.getStringWidth(text) / 1000) * fontSize;
+	}
+
+	public static float getFontHeight(PDFont font, int fontSize) {
+		return ((font.getFontDescriptor().getCapHeight()) / 1000) * fontSize;
+	}
+
+	public static boolean questionWillFit(Question q, double heightOffset, double maxHeightOffset, double widthOffset,
+			PDDocument pdDocument, PDFont font, int fontSize) throws IOException {
+		System.out.println("\n=== Will It Fit ? ===");
+		// TODO: voir si on laisse en static ou non
+		// ATTENTION : limite = si la question prend plus d'une page a elle seule
+		for (String line : SubjectGenerator.setTextOnMultLines(q.getTitre(), (int) widthOffset, pdDocument, font,
+				fontSize)) {
+			// pour chaque ligne de la question
+			heightOffset += SubjectGenerator.getFontHeight(font, fontSize); // SubjectGenerator.getStrLenWithFont(line,
+																			// font, fontSize) + 5;
+			// on met a jour l'espace vertical pris
+		}
+		for (Reponse reponse : q.getReponses()) {
+			// pour chaque reponse a la question
+			for (String intitule : SubjectGenerator.setTextOnMultLines(reponse.getIntitule(), (int) widthOffset,
+					pdDocument, font, fontSize)) {
+				// pour chaque ligne de la reponse
+				heightOffset += SubjectGenerator.getFontHeight(font, fontSize);// SubjectGenerator.getStrLenWithFont(intitule,
+																				// font, fontSize) + 17.5;
+				// on met a jour l'espace vertical pris
+			}
+		}
+		if (q instanceof QuestionBoite) {
+			heightOffset += ((QuestionBoite) q).getNbligne() * 20;
+		}
+		System.out.println("heightOffset : " + heightOffset);
+		System.out.println("maxHeightOffset : " + maxHeightOffset);
+		System.out.println("fit : " + (heightOffset < maxHeightOffset));
+		return (heightOffset < maxHeightOffset);
 	}
 
 	public void generateFooter() {
@@ -156,6 +251,8 @@ public class SubjectGenerator {
 				float titleWidth = SubjectGenerator.getStrLenWithFont(footer, font, fontSize);
 				float titleHeight = (font.getFontDescriptor().getFontBoundingBox().getHeight() / 1000) * fontSize;
 				SubjectGenerator.writeText(pdPageContentStream, footer, (width - titleWidth) / 2, (35 - titleHeight));
+				System.out.println("						35 - titleHeight : " + (35 - titleHeight));
+				System.out.println("						max" + (this.height - 35 - titleHeight));
 				pdPageContentStream.close();
 				count++;
 			}
@@ -401,9 +498,13 @@ public class SubjectGenerator {
 			PDFont font = PDType1Font.HELVETICA_BOLD;
 
 			// Boucle sur les questions
+			int fontSize = 10;
 			int qIndex = 1;
-			int heightOffset = 265;
+			float heightOffset = 265;
 			int pageIndex = 0;
+			int widthOffset = 25;
+			float footerSize = this.height - (35 * 2) - SubjectGenerator.getFontHeight(font, fontSize);
+
 			// pour chaque question
 			ArrayList<Question> questions = this.config.getQuestions();
 			// si les questions doivent etre melangees
@@ -411,22 +512,23 @@ public class SubjectGenerator {
 				Collections.shuffle(questions);
 			}
 			for (Question q : questions) {
-				q.setTitre(q.getTitre().replace("\n", " ")); // /\ TODO: must be done in Config /\
+				q.setTitre(Config.clearString(q.getTitre())); // /\ TODO: must be done in Config /\
+				if (!SubjectGenerator.questionWillFit(q, heightOffset, footerSize, widthOffset, this.pdDocument, font,
+						10)) {
+					// si la question va dépasser
+					heightOffset = 55;
+					this.pdDocument.addPage(new PDPage(this.format));
+					pageIndex++;
+				}
 				PDPage page = this.pdDocument.getPage(pageIndex);
 				if (q instanceof QuestionBoite) {
-					this.generateOpenQ((QuestionBoite) q, qIndex, this.pdDocument, page, 25, heightOffset, isCorrected);
+					heightOffset = this.generateOpenQ((QuestionBoite) q, qIndex, this.pdDocument, page, widthOffset,
+							heightOffset, isCorrected);
 				} else {
-					this.generateQCM(q, qIndex, this.pdDocument, page, 25, heightOffset, isCorrected);
+					heightOffset = this.generateQCM(q, qIndex, this.pdDocument, page, widthOffset, heightOffset,
+							isCorrected);
 				}
 				qIndex++;
-				heightOffset += 100;
-
-				// si on depasse la longeur de la page
-				if (heightOffset > (this.height - 10)) {
-					pageIndex++; // on va a la page suivante
-					this.pdDocument.addPage(new PDPage(this.format)); // on cree une nouvelle page
-					heightOffset = 55; // on se place en haut de la page
-				}
 			}
 			pdPageContentStream.close();
 		}
@@ -436,8 +538,8 @@ public class SubjectGenerator {
 		}
 	}
 
-	public void generateQCM(Question q, int qIndex, PDDocument pdDocument, PDPage curPage, int widthOffset,
-			int heightOffset, boolean isCorrected) {
+	public float generateQCM(Question q, int qIndex, PDDocument pdDocument, PDPage curPage, float widthOffset,
+			float heightOffset, boolean isCorrected) {
 		// TODO: calculer automatiquement widthOffset
 		// TODO: regler probleme de debordement de page (verifiee pour chaque question
 		// mais pas pour chaque reponse)
@@ -453,13 +555,13 @@ public class SubjectGenerator {
 			float titleLength = SubjectGenerator.getStrLenWithFont(q.getTitre(), font, fontSize);
 
 			// Titre
-			// Si titre plus long que largeur page -> mise sur plusieurs lignes
 			if (titleLength > (this.width - 20)) {
+				// Si titre plus long que largeur page -> mise sur plusieurs lignes
 				// TODO: replace Q by config data
 				SubjectGenerator.writeText(pdPageContentStream, "Q." + qIndex + " - ", widthOffset,
 						this.height - heightOffset);
 
-				for (String line : setTextOnMultLines(q.getTitre(), widthOffset, pdDocument, font, fontSize)) {
+				for (String line : setTextOnMultLines(q.getTitre(), (int) widthOffset, pdDocument, font, fontSize)) {
 					SubjectGenerator.writeText(pdPageContentStream, line, widthOffset + 22, this.height - heightOffset);
 					heightOffset += 20;
 				}
@@ -493,15 +595,19 @@ public class SubjectGenerator {
 				}
 				heightOffset += 17.5;
 			}
+			heightOffset += 20; // espace blanc entre 2 questions
 			pdPageContentStream.close();
 
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
+		return heightOffset;
 	}
 
-	public void generateOpenQ(QuestionBoite q, int qIndex, PDDocument pdDocument, PDPage curPage, int widthOffset,
-			int heightOffset, boolean isCorrected) {
+	public float generateOpenQ(QuestionBoite q, int qIndex, PDDocument pdDocument, PDPage curPage, float widthOffset,
+			float heightOffset, boolean isCorrected) {
+		// TODO: stocker dans une variable la largeur de la police au lieu de mettre des
+		// valeurs numeriques arbitraires
 		try {
 			PDPageContentStream pdPageContentStream = new PDPageContentStream(pdDocument, curPage,
 					PDPageContentStream.AppendMode.APPEND, true);
@@ -510,43 +616,53 @@ public class SubjectGenerator {
 			pdPageContentStream.setFont(font, fontSize);
 			float titleLength = SubjectGenerator.getStrLenWithFont(q.getTitre(), font, fontSize);
 			float lastLineLenght = titleLength;
+			// int widthMargin = 20;
 
 			if (titleLength > (this.width - 20)) {
+				// Si titre plus long que largeur page -> mise sur plusieurs lignes
 				SubjectGenerator.writeText(pdPageContentStream, "Q." + qIndex + " - ", widthOffset,
 						this.height - heightOffset);
 
-				System.out.println("\nTITRE : " + q.getTitre() + "\n");
-
-				for (String line : setTextOnMultLines(q.getTitre(), widthOffset, pdDocument, font, fontSize)) {
+				for (String line : setTextOnMultLines(q.getTitre(), (int) widthOffset, pdDocument, font, fontSize)) {
+					// pour chaque ligne de la question
 					SubjectGenerator.writeText(pdPageContentStream, line, widthOffset + 22, this.height - heightOffset);
-					heightOffset += 20;
+					heightOffset += 20; // on met a jour le offset vertical (une ligne = 20)
 					lastLineLenght = SubjectGenerator.getStrLenWithFont(line, font, fontSize);
 				}
+				heightOffset -= 20;
 			} else {
 				SubjectGenerator.writeText(pdPageContentStream, "Q." + qIndex + " - " + q.getTitre(), widthOffset,
 						this.height - heightOffset);
-				heightOffset += 20;
 			}
-			// on cherche a savoir a partir d'ou on peut mettre le texte pour etre le plus a
-			// droite possible en fonction du nombre de reponses associees
-			int maxX = this.width - widthOffset;
+
+			// on cherche a savoir a partir d'ou on peut mettre le texte des reponses pour
+			// etre le plus a droite possible en fonction du nombre de reponses associees
+			int maxX = this.width - (int) widthOffset;
+
 			for (Reponse r : q.getReponses()) {
-				maxX -= SubjectGenerator.getStrLenWithFont(r.getIntitule(), font, fontSize);
-				// qu'occupe la case a
-				// cocher associee
+				// pour chaque reponse
+				maxX -= (SubjectGenerator.getStrLenWithFont(r.getIntitule(), font, fontSize) + widthMargin);
 			}
+
+			if ((lastLineLenght + widthMargin) > maxX) {
+				// si la reponse est trop longue pour pouvoir mettre les reponses sur la meme
+				// ligne
+				heightOffset += 20; // TODO: revoir 20 avec largeur police
+			}
+
 			// on affiche les reponses et les cases a cocher associees
-			// int varWidthOffset = widthOffset;
+			pdPageContentStream.addRect(maxX - 5, this.height - heightOffset - 5,
+					((this.width - widthMargin) - (maxX) - 5), 20); // cadre
+			pdPageContentStream.setNonStrokingColor(Color.LIGHT_GRAY);
+			pdPageContentStream.fill();
+			// pdPageContentStream.setNonStrokingColor(Color.BLACK);
+			// gris
 			for (Reponse r : q.getReponses()) {
-				if ((lastLineLenght + 5) > maxX) {
-					pdPageContentStream.addRect(maxX, this.height - heightOffset, 10, 10);
-					SubjectGenerator.writeText(pdPageContentStream, r.getIntitule(), maxX + 12,
-							this.height - heightOffset);
-				} else {
-					pdPageContentStream.addRect(maxX, (this.height - heightOffset) + 20, 10, 10);
-					SubjectGenerator.writeText(pdPageContentStream, r.getIntitule(), maxX + 12,
-							(this.height - heightOffset) + 20);
-				}
+				// pour chaque reponse
+				pdPageContentStream.setStrokingColor(Color.BLACK);
+				pdPageContentStream.setNonStrokingColor(Color.BLACK);
+				pdPageContentStream.addRect(maxX, this.height - heightOffset, 10, 10);
+				SubjectGenerator.writeText(pdPageContentStream, r.getIntitule(), maxX + 12, this.height - heightOffset);
 				if (isCorrected) {
 					// si c'est une bonne reponse
 					if (r.isJuste()) {
@@ -558,86 +674,37 @@ public class SubjectGenerator {
 					pdPageContentStream.stroke(); // carre vide
 				}
 				maxX += SubjectGenerator.getStrLenWithFont(r.getIntitule(), font, fontSize) + 20;
+				// taille de la reponse plus du carre
 			}
-			heightOffset += 17.5;
+			// heightOffset += 17.5; // ?
 
 			// zone d'ecriture (rectangle)
 			// TODO: ameliorer
-			int widthMargin = 60;
-			int linesLenght = q.getNbligne() * 20; // 20 = taille d'une ligne
-			int yLenght = (this.width - widthMargin);
-			pdPageContentStream.addRect(widthOffset + 20, this.height - heightOffset - 10, yLenght, linesLenght);
-			int yCursor = this.height - heightOffset - 16;
+			int linesLenght = q.getNbligne() * 20; // nb de lignes * taille d'une ligne (20)
+			int xLenght = this.width - widthMargin - 50;
+
+			// zone d'ecriture
+			heightOffset += 10;
+			pdPageContentStream.addRect(widthOffset + 20, this.height - heightOffset - linesLenght, xLenght,
+					linesLenght);
+
+			// doted lines
+			int yCursor = this.height - (int) heightOffset - 16;
 			for (int i = 0; i < q.getNbligne(); i++) {
-				yCursor = this.height - heightOffset - 16 - (i * 2); // on descends y de la taille d'une ligne
+				yCursor = this.height - (int) heightOffset - 16 - (i * 2); // on descends y de la taille d'une ligne
 				// SubjectGenerator.drawDotedLine(pdPageContentStream, widthOffset + 23,
 				// this.height - heightOffset - (20 * i), yLenght - 23, this.height -
 				// heightOffset - (20 * i));
 			}
 
+			heightOffset += linesLenght; // largeur de la zone d'ecriture
+			heightOffset += 20; // espace blanc entre 2 questions
+
 			pdPageContentStream.close();
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
-	}
-
-	public static ArrayList<String> setTextOnMultLines(String text, int widthOffset, PDDocument pdDocument, PDFont font,
-			int fontSize) {
-		int width = (int) pdDocument.getPage(0).getMediaBox().getWidth();
-
-		ArrayList<String> lines = new ArrayList<>();
-
-		if (text.isBlank()) {
-			// si le texte est une chaine vide ou ne contenant que des espaces
-			return lines;
-		}
-
-		int widthMargin = 60;
-		int textSize = 0;
-
-		try {
-			textSize = (int) SubjectGenerator.getStrLenWithFont(text, font, fontSize); // taille totale du texte
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
-		}
-
-		int availableWidth = width - widthOffset - widthMargin; // largeur disponible (marge enlevee)
-		int index = 0;
-
-		while (textSize > availableWidth) {
-			// tant que la taille du texte restant depasse en largeur
-			try {
-				while (SubjectGenerator.getStrLenWithFont(text.substring(0, index), font, fontSize) < availableWidth) {
-					// tant que la taille de la sous chaine de caractere ne depasse pas
-					index++;
-					System.out.println(index);
-				}
-			} catch (IOException ioe) {
-				ioe.printStackTrace();
-			}
-			if (text.substring(0, index).endsWith(" ") || text.substring(0, index).endsWith("-")
-					|| text.substring(index, text.length() - 1).startsWith(" ")
-					|| text.substring(index, text.length() - 1).startsWith("-")) {
-
-				lines.add(text.substring(0, index));
-				text = text.substring(index);
-			} else if (text.substring(0, index - 1).endsWith(" ") || text.substring(0, index - 1).endsWith("-")) {
-				lines.add(text.substring(0, index - 1));
-				text = text.substring(index - 1);
-			} else {
-				// sinon on coupe le mot
-				lines.add(text.substring(0, index - 1) + "-");
-				text = text.substring(index - 1);
-
-			}
-			try {
-				textSize = (int) SubjectGenerator.getStrLenWithFont(text, font, fontSize);
-			} catch (IOException ioe) {
-				ioe.printStackTrace();
-			}
-		}
-		lines.add(text);
-		return lines;
+		return heightOffset;
 	}
 
 	public void save(String dest) {
