@@ -16,7 +16,7 @@ L'objectif du projet est de concevoir un logiciel en ligne de commande permettan
 
 ## Comment l'utiliser
 
-*A faire*
+Vous trouverez la documentation pour configurer votre QCM ici: [Documentation](https://git-iutinfo.unice.fr/rey/pt-s3t-g4/blob/master/config/documentation_source.txt)
 
 ## Auteurs
 + Anthony Malvesin
