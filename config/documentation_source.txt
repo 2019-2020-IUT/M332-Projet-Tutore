@@ -123,7 +123,12 @@ Commencer une question par "**" signifie qu'elle a plusieurs réponses justes.
 Commencer une réponse par "+" signifie que la réponse est juste.
 Commencer une réponse par "-" signifie que la réponse est fausse.
 
-Si la question est ouverte, il faut ajouter <lines=n> (avec n un entier) à la suite des étoiles ("*" ou "**") de telles sorte à obtenir par exemple :
+Si la question est ouverte, il faut mettre *<lines=n> (avec n un entier ; "n" correspond au nombre de ligne(s) où l'on pourra écrire la réponse. )  
+de telles sorte à obtenir par exemple :
 *<lines=1> 
-"n" correspond en fait au nombre de ligne où l'on pourra écrire la réponse.
+
+Les réponses aux questions ouvertes sont exclusivement:
++ Ok
+- Erreur
+
  
