@@ -1,0 +1,86 @@
+PaperSize: A4
+Title: étape2 PTut S3T 2019-2020
+Presentation: Aucun appareil électronique et aucun document n’est autorisé. Des points seront retirés en cas d’écriture illisible.
+DocumentModel: sourceEtape2.txt
+ShuffleQuestions: 1  
+ShuffleAnswers: 1  
+Code: 8
+MarkFormat: 20
+SingleSided: 0
+DefaultScoringS: e=0,v=0,b=1,m=-1,p=0,d=0
+DefaultScoringM: e=0,v=0,b=1,m=-1,p=0,d=0
+QuestionBlocks: 1
+
+#Intitulé du mot "Question" dans l'énoncé (non présent dans le sujet)
+L-Question: Q.
+
+#Intitulé de Nom & Prénom dans le QCM (non présent dans le sujet)
+L-Name: Ecrivez votre Nom 
+
+### Questions
+
+#20 réponses possibles comme demandé 
+** Quelles sont les 7 couleurs de l'arc en ciel?
++ Violet
+- Gris
+- Noir
++ Indigo
+- Fuschia
+- Rose
+- Kaki
+- Magenta
+- Marron
++ Bleu
+- Mauve
++ Vert
++ Jaune
+- Pourpre
+- Turquoise
+- Bronze
+- Argent
++ Orange
+- Cyan
++ Rouge
+
+*<lines=1> Qui a découvert la décomposition de la lumière blanche?
++ Ok
+- Erreur
+
+* En quelle année a t-on découvert la décomposition de la lumière blanche?
++ 1960
+- 1961
+- 1959
+
+** De quelles couleurs est composé le célèbre système de codage informatique ?
++ Rouge
+- Rose
++ Vert
+- Violet
++ Bleu
++ Beige
+
+#bloc 1 qt parmi 3
+#attendu magenta
+*<lines=1> Que donne le mélange de lumière rouge et bleu?
++ Ok
+- Erreur
+
+#attendu cyan
+*<lines=1> Que donne le mélange de lumière vert et bleu?
++ Ok
+- Erreur
+
+#attendu jaune
+*<lines=1> Que donne le mélange de lumière rouge et vert?
++ Ok
+- Erreur
+
+* Quelles sont les couleurs primaires?
+- Magenta
+- Cyan
+- Jaune
++ Aucue de ces réponses n'est correcte
+
+
+
+
