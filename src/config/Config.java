@@ -53,51 +53,48 @@ public class Config {
 		string = string.replaceAll("[\\p{Cntrl}&&[^\r\n\t]]", "");
 		// removes non-printable characters from Unicode
 		string = string.replaceAll("\\p{C}", "");
-		return string.trim(); // trim() : eliminates leading and trailing spaces
+		return string.trim(); // trim() : suppr. les espaces inutiles
 	}
 
 	public Config(String s) {
 		// Constructeur, prend en parametre le chemin vers le fichier source
 		this.source = s;
 		// Initialisation des parametres avec les valeurs par défaut.
-		// Les élements avec des placeholders en valeur sont des élements qui ne servent
-		// pas pour le moment
-		this.param.put("PaperSize", "A4"); // A3 A4 A5 letter
-		this.param.put("Title", "Placeholder"); // titre de l exam
-		this.param.put("Presentation", "Placeholder"); // texte de consignes
-		this.param.put("DocumentModel", "PlaceHolder"); // nom du fichier du modéle
-		this.param.put("ShuffleQuestions", "1"); // 1 = qt mélangées, 0 = non mél
-		this.param.put("ShuffleAnswers", "1"); // 1= proposition rép mélangées, 0= non
-		this.param.put("Code", "8"); // code étudiant = 8 chiffres (entre 1 et 16)
-		this.param.put("MarkFormat", "20"); // expl "20" pour des notes entre 0 et 20 notées é 0.25 points
-		this.param.put("NameField", "Nom et Prénom"); // remplace le texte
+		// Les élements avec des placeholders en valeur sont des élements non remplis
+		this.param.put("PaperSize", "A4"); // A3 A4 A5 letter sont les valeurs possibles
+		this.param.put("Title", ""); // titre de l'examen
+		this.param.put("Presentation", ""); // texte de consignes
+		this.param.put("DocumentModel", ""); // nom du fichier du modéle
+		this.param.put("ShuffleQuestions", "1"); // 1 = question mélangées, 0 = non mélangées
+		this.param.put("ShuffleAnswers", "1"); // 1= propositions réponse mélangées, 0= non mélangé
+		this.param.put("Code", "8"); // code étudiant (ici = 8 chiffres) (valeur possible: entre 1 et 16)
+		this.param.put("MarkFormat", "20"); // expl "20/4" pour des notes entre 0 et 20 notées à 0.25 points
+		                                    // format assez libre.
+		                                    // laisser 20 par défaut car defaultScoring without decimal point.
+		this.param.put("NameField", "Nom et Prénom"); // remplace le texte demandant d'écrire le nom et prenom
 		this.param.put("StudentField",
-				"Veuillez coder votre numéro\r\n d'étudiant ci-contre et écrire votre nom \r\n dans la case ci-dessous");
+				"Veuillez coder votre numéro\r\n d'étudiant et écrire votre nom \r\n dans la case ci-dessous");
 		// sert à remplacer le petit texte qui demande de coder son numéro déétudiant et
 		// inscrire son nom
-		this.param.put("MarkField", "Veuillez coder le numéro de l'étudiant");
+		this.param.put("MarkField", "Codez la note de l'étudiant ici");
 		this.param.put("SeparateAnswerSheet", "1"); // si 1 = feuille de réponse séparée.
-		this.param.put("AnswerSheetTitle", "Title"); // titre é inscrire en tete de la feuille de rép
-		this.param.put("AnswerSheetPresentation", "Presentation"); // Donne le texte de présentation de la feuille de
-																	// réponse
-		this.param.put("SingleSided", "Placeholder");// si valeur = 1, aucune page blanche entre feuille de sujet et de
-		// réponse
-		this.param.put("DefaultScoringS", "Placeholder");// Donne le baréme par défaut pour les questions simples
-		this.param.put("DefaultScoringM", "Placeholder");// Donne le baréme par défaut pour les questions é choix
-															// multiple
-		this.param.put("QuestionBlocks", "Placeholder");// prend 0 pour valeur pour permettre é la boite d'une question
-														// boite
-		// d'etre coupé sur plusieurs pages, prend 1 sinon
-
+		this.param.put("AnswerSheetTitle", getTitle()); // titre à inscrire en tete de la feuille de réponse (de base, le même que title)
+		this.param.put("AnswerSheetPresentation", getPresentation()); // Donne le texte de présentation de la feuille de réponse
+		this.param.put("SingleSided", "0");// si valeur = 1, aucune page blanche entre feuille de sujet et de réponse
+		this.param.put("DefaultScoringS", "e=0,v=0,p=-1,b=1,m=-1,d=0");// Donne le barème par défaut pour les questions simples
+		this.param.put("DefaultScoringM", "e=0,v=0,p=-1, formula=(NBC/NB)-(NMC/NM)");// Donne le barème par défaut pour les questions à multiple réponses correctes
+		//columns = bonus.
+		this.param.put("Columns", "1");//questionnaire écrit sur n (nbe entier) colonnes < 5.
+		this.param.put("QuestionBlocks", "1");//si 1 = questions sont non coupées entre 2 pages si 0, possibilité qu'elles soient coupées.
 	}
 
 	public void readConfig() {
-		// Methode pour lire le fichier config en chemin dans la variable source
-		// Si une ligne du fichier correspond é un parametre, changer la valeur du
-		// parametre avec celle dans le fichier (si valeur valide)
-		// Gere aussi les questions dans le fichier source et les mets dans une liste de
-		// questions.
-		// Gestion de questions mais actuellement inutile pour le programme
+		/* Methode pour lire le fichier config en chemin dans la variable source
+		   Si une ligne du fichier correspond é un parametre, changer la valeur du
+		   parametre avec celle dans le fichier (si valeur valide)
+		   Gere aussi les questions dans le fichier source et les mets dans une liste de
+		   questions.
+		*/
 		try {
 			Scanner scan = new Scanner(new File(this.source), "UTF-8");
 			String ligne;
@@ -120,14 +117,13 @@ public class Config {
 							q = this.makeQuestion(Config.clearString(ligne));
 							ligne = scan.nextLine();
 							while (!ligne.equals("")) // tant que la ligne n'est pas vide, on lit la suite qui est
-														// supposée
-														// etre les reponses
+														// supposée etre les reponses
 							{
 								q.addReponse(Config.clearString(ligne));
 								ligne = scan.nextLine();
 							}
 							this.questions.add(q);
-						} else // si c'est pas une *, alors c'est un parametre (on ignore les lignes vides)
+						} else // si c'est pas une *, alors c'est un parametre
 						{
 							this.lireParam(ligne);
 						}
@@ -152,7 +148,7 @@ public class Config {
 		switch (s) {
 
 		case "*":
-			// si c'est une * alors c'est une question é choix multiple
+			// si c'est une * alors c'est une question à choix multiple
 			q = new Question(ligne.substring(3, ligne.length()), true);
 
 			break;
@@ -168,8 +164,7 @@ public class Config {
 			break;
 
 		default:
-			// si pas une des conditions citées en haut, alors c'est une question é choix
-			// unique
+			// si pas une des conditions citées en haut, alors c'est une question simple
 			q = new Question(ligne.substring(2, ligne.length()), false);
 		}
 		return q;
@@ -187,60 +182,90 @@ public class Config {
 				spl[1] = spl[1].substring(1, spl[1].length());
 			}
 			spl[0] = spl[0].toUpperCase().trim(); // pour eviter la casse, on met tout en upper case
-			switch (spl[0]) // chaque case correspond é un parametre, pour le moment on ignore tout
+			switch (spl[0]) // chaque case correspond à un parametre, pour le moment on ignore tout
 							// parametre qui n'est pas utile au programme.
 			{
 			case "PAPERSIZE":
 				this.setPaperSize(spl[1]);
-
+				break;
+				
+			case "TITLE":
+				this.setTitle(spl[1]);
+				break;
+				
+			case "PRESENTATION":
+				this.setPresentation(spl[1]);
 				break;
 
+			case "DOCUMENTMODEL":
+				this.setDocumentModel(spl[1]);
+				break;
+				
+			case "SHUFFLEQUESTIONS":
+				this.setShuffleQuestions(spl[1]);
+				break;
+				
+			case "SHUFFLEANSWERS":
+				this.setShuffleAnswers(spl[1]);
+				break;
+				
 			case "CODE":
 				this.setCode(spl[1]);
-
 				break;
-
+				
 			case "MARKFORMAT":
 				this.setMarkFormat(spl[1]);
-
 				break;
 
 			case "NAMEFIELD":
 				this.setNameField(spl[1]);
-
 				break;
 
 			case "STUDENTIDFIELD":
 				this.setStudentIdField(spl[1]);
-
 				break;
 
 			case "MARKFIELD":
 				this.setMarkField(spl[1]);
-
 				break;
 
 			case "SEPARATEANSWERSHEET":
 				this.setSeparateAnswerSheet(spl[1]);
-
 				break;
 
 			case "ANSWERSHEETTITLE":
 				this.setAnswerSheetTitle(spl[1]);
-
 				break;
 
 			case "ANSWERSHEETPRESENTATION":
 				this.setAnswerSheetPresentation(spl[1]);
-
 				break;
-			default: // parametre mal tapé ou non utile (pour le moment) au programme, on l'ignore
+				
+			case "SINGLESIDED":
+				this.setSingleSided(spl[1]);
+				break;
+				
+			case "DEFAULTSCORINGS":
+				this.setDefaultScoringS(spl[1]);
+				break;
+				
+			case "DEFAULTSCORINGM":
+				this.setDefaultScoringM(spl[1]);
+				break;
+				
+			case "COLUMNS":
+				this.setColumns(spl[1]);
+				break;
+				
+			case "QUESTIONBLOCKS":
+				this.setQuestionBlocks(spl[1]);
+				break;
+				
+			default: // par default: parametre ignoré
 			}
 		}
 	}
 
-	// liste des set de chaque valeur de parametre
-	// actuellement, uniquement les parametres de l'étape 1 sont traités
 
 	// TODO
 	// possibilité d'afficher sur la console messages de valeur invalide et valeur
@@ -253,6 +278,36 @@ public class Config {
 		}
 	}
 
+	public void setTitle(String s) {
+		if (s.equals("")) {
+			this.param.replace("Title", s);
+		}
+	}
+	
+	public void setPresentation(String s) {
+		if (s.equals("")) {
+			this.param.replace("Presentation", s);
+		}
+	}
+	
+	public void setDocumentModel(String s) {
+		if (s.equals("")) {
+			this.param.replace("DocumentModel", s);
+		}
+	}
+	
+	private void setShuffleQuestions(String s) {
+		if (s.equals("0")) {
+			this.param.replace("ShuffleQuestions", s);
+		}
+	}
+	
+	private void setShuffleAnswers(String s) {
+		if (s.equals("0")) {
+			this.param.replace("ShuffleAnswers", s);
+		}
+	}
+	
 	public void setCode(String s) {
 		s = s.trim();
 		if (this.isParsable(s)) {
@@ -262,11 +317,17 @@ public class Config {
 			}
 		}
 	}
-
+	
 	public void setMarkFormat(String s) {
 		s = s.trim();
 		if (s.equals("20/4") || s.equals("100")) {
 			this.param.replace("MarkFormat", s);
+		}
+		else {
+			//format libre selon souhait de l'examinateur mais entier demandé.
+			if (this.isParsable(s)) {
+				this.param.replace("MarkFormat", s);
+			}
 		}
 	}
 
@@ -274,14 +335,12 @@ public class Config {
 		if (!s.equals("")) {
 			this.param.replace("NameField", s);
 		}
-
 	}
 
 	public void setStudentIdField(String s) {
 		if (!s.equals("")) {
 			this.param.replace("StudentIdField", s);
 		}
-
 	}
 
 	public void setMarkField(String s) {
@@ -291,9 +350,7 @@ public class Config {
 	}
 
 	public void setSeparateAnswerSheet(String s) {
-		s = s.trim();
-		int n = Integer.parseInt(s);
-		if ((n == 0) || (n == 1)) {
+		if (s.equals("0")) {
 			this.param.replace("SeparateAnswerSheet", s);
 		}
 	}
@@ -309,4 +366,45 @@ public class Config {
 			this.param.replace("AnswerSheetPresentation", s);
 		}
 	}
+	
+	public void setSingleSided(String s) {
+		if (s.equals("1")) {
+			this.param.replace("DocumentModel", s);
+		}
+	}
+	
+	private void setDefaultScoringS(String s) {
+		// TODO Auto-generated method stub
+	}
+	
+	private void setDefaultScoringM(String s) {
+		// TODO Auto-generated method stub
+	}
+
+	private void setColumns(String s) {
+		s = s.trim();
+		if (this.isParsable(s)) {
+			int n = Integer.parseInt(s);
+			if ((n > 1) && (n < 5)) {
+				this.param.replace("Columns", s);
+			}
+		}
+	}
+	
+	public void setQuestionBlocks(String s) {
+		if (s.equals("0")) {
+			this.param.replace("QuestionBlocks", s);
+		}
+	}
+	
+	/*Getters si jamais AnswerSheetTitle
+	   et AnswerSheetPresentation non précisé.
+	  */
+	public String getTitle() {
+		return param.get("Title");
+	}
+	public String getPresentation() {
+		return param.get("Presentation");
+	}
+
 }
