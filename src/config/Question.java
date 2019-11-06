@@ -75,6 +75,23 @@ public class Question {
 		}
 	}
 
-// TODO : methode pour verifier si la question a au moins une bonne reponse ET une mauvaise reponse
-
+    public boolean verifQuestion() {
+		int nbrepf=0;
+		int nbrepj=0;
+		for(Reponse p : reponses) {
+			
+			if(p.isJuste()==true) {
+				nbrepj=nbrepj+1;
+			}
+			else {
+				nbrepf=nbrepf+1;
+			}
+			
+		}
+		if(nbrepf==0||nbrepj==0) {
+			return false;
+		}
+		else
+			return true;
+	}
 }
