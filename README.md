@@ -28,12 +28,12 @@ Vous trouverez la documentation pour configurer votre QCM ici: [Documentation](h
 + Geoffrey Koson-Bourreau
 + Hugo Nortier
 + Hugo Poissonier
-+ José Srifi
 + Jules Vesnat
 + Louis Calas
 + Nawfel Hilal
 + Nicolas Lacroix
 + Paul Gross
++ Pauline Srifi
 + Saad Ahmed
 + Yessine Ben El Bey
 
